@@ -11,6 +11,7 @@ registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept('./App', () => {
+    // eslint-disable-next-line global-require
     const NextApp = require('./App').default;
     ReactDOM.render(<NextApp />, root);
   });

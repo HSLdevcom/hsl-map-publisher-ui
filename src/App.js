@@ -1,11 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class App extends Component {
-  render() {
-    return (
-      <div>HSL Karttajulkaisin</div>
-    );
-  }
-}
+const App = () => <div>HSL Karttajulkaisin</div>;
 
 export default App;
