@@ -6,12 +6,13 @@ import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import './styles/base.css';
 
+injectTapEventPlugin();
+
 const root = document.getElementById('root');
 
 ReactDOM.render(<App />, root);
 
 registerServiceWorker();
-injectTapEventPlugin();
 
 if (module.hot) {
   module.hot.accept('./components/App', () => {
