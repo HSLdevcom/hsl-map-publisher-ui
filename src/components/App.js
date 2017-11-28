@@ -189,7 +189,7 @@ class App extends Component {
             onRequestClose={() => this.onDialogClose()}
             actions={[
               <FlatButton
-                onTouchTap={() => this.onDialogClose()}
+                onClick={() => this.onDialogClose()}
                 label="OK"
                 primary
               />,
@@ -268,7 +268,7 @@ class App extends Component {
           <Footer>
             <RaisedButton
               disabled={!stopCount}
-              onTouchTap={() => this.onGenerate()}
+              onClick={() => this.onGenerate()}
               label={`Generoi (${stopCount})`}
               style={{ height: 45, flexGrow: 1 }}
               primary

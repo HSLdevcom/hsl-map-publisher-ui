@@ -88,7 +88,7 @@ class StopList extends Component {
         />
         {this.state.filterValue && (
           <IconButton
-            onTouchTap={() => this.onFilterValueChange('')}
+            onClick={() => this.onFilterValueChange('')}
             style={{ position: 'absolute', right: 0 }}
           >
             <ClearIcon />
