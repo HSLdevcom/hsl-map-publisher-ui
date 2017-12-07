@@ -1,31 +1,32 @@
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
-const OUTPUT_URL = `${window.location.protocol}//${
-  window.location.host
-}/output`;
 
-async function fetchQueueInfo() {
-  const response = await fetch(`${API_URL}/queueInfo`);
+async function getJson(path) {
+  const response = await fetch(`${API_URL}/${path}`);
   if (!response.ok) throw new Error(response.statusText);
   return response.json();
 }
 
-async function fetchStops() {
-  const response = await fetch(`${API_URL}/stops`);
+async function postJson(path, body) {
+  const options = { method: 'POST', body: JSON.stringify(body) };
+  const response = await fetch(`${API_URL}/${path}`, options);
   if (!response.ok) throw new Error(response.statusText);
   return response.json();
 }
 
-async function generate(component, props, filename) {
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({ component, props, filename }),
-  };
-
-  const response = await fetch(`${API_URL}/generate`, options);
-  if (!response.ok) throw new Error(response.statusText);
-
-  const { path } = await response.json();
-  return `${OUTPUT_URL}/${path}/`;
+function getStops() {
+  return getJson('stops');
 }
 
-export { fetchQueueInfo, fetchStops, generate };
+function getBuilds() {
+  return getJson('builds');
+}
+
+function addBuild({ title }) {
+  return postJson('builds', { title });
+}
+
+function addPosters({ buildId, component, props }) {
+  return postJson('posters', { buildId, props, component });
+}
+
+export { getStops, getBuilds, addBuild, addPosters };

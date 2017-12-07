@@ -22,8 +22,7 @@ const ListContainer = styled.div`
 
 const PrimaryText = ({ title, subtitle }) => (
   <span>
-    {title}
-    <span style={{ opacity: 0.7 }}>{subtitle}</span>
+    {title} <span style={{ opacity: 0.7 }}>{subtitle}</span>
   </span>
 );
 
@@ -36,7 +35,7 @@ function rowRenderer(rows, onCheck) {
   // eslint-disable-next-line react/prop-types
   return ({ key, index, style }) => {
     const { isChecked, title, subtitle } = rows[index];
-    const callback = (event, value) => onCheck(rows[index], value);
+    const callback = (event, value) => onCheck(rows[index], value, index);
 
     return (
       <div key={key} style={style}>
