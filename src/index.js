@@ -14,6 +14,18 @@ const stores = {
   generatorStore,
 };
 
+commonStore.getStops();
+commonStore.getBuilds();
+
+setInterval(() => {
+  if (
+    commonStore.builds.some(({ pending }) => pending > 0) &&
+    document.visibilityState === 'visible'
+  ) {
+    commonStore.getBuilds();
+  }
+}, 5000);
+
 const root = document.getElementById('root');
 
 ReactDOM.render(

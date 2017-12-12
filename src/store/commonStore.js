@@ -46,9 +46,7 @@ store.addPosters = async (buildId, component, props) => {
     store.message = `Lisääminen epäonnistui: ${error.message}`;
     console.error(error); // eslint-disable-line no-console
   }
+  store.getBuilds();
 };
-
-store.getStops();
-store.getBuilds();
 
 export default store;
