@@ -102,7 +102,7 @@ class StopList extends Component {
                 rowCount={this.state.rows.length}
                 rowHeight={35}
                 rowRenderer={renderer}
-                tabIndex="none"
+                style={{ outlineWidth: 0 }}
               />
             )}
           </AutoSizer>

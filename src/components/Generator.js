@@ -84,6 +84,7 @@ const Generator = props => {
         <Column>
           <h3>Päivämäärä</h3>
           <DatePicker
+            name="Päivämäärä"
             value={generatorStore.date}
             onChange={(event, value) => generatorStore.setDate(value)}
             container="inline"
@@ -93,6 +94,7 @@ const Generator = props => {
         <Column>
           <h3>Voimassaolokausi alkaa</h3>
           <DatePicker
+            name="Voimassaolokausi alkaa"
             value={generatorStore.dateBegin}
             onChange={(event, value) => generatorStore.setDateBegin(value)}
             hintText="oletus"
@@ -103,6 +105,7 @@ const Generator = props => {
         <Column>
           <h3>Voimassaolokausi loppuu</h3>
           <DatePicker
+            name="Voimassaolokausi loppuu"
             value={generatorStore.dateEnd}
             onChange={(event, value) => generatorStore.setDateEnd(value)}
             hintText="oletus"
