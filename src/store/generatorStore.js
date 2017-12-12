@@ -89,6 +89,7 @@ store.generate = () => {
       dateBegin: store.dateBegin ? format(store.dateBegin) : null,
       dateEnd: store.dateEnd ? format(store.dateEnd) : null,
     }));
+  store.resetRows();
   commonStore.addPosters(store.buildId, store.component.name, props);
 };
 
