@@ -29,4 +29,19 @@ function addPosters({ buildId, component, props }) {
   return postJson('posters', { buildId, props, component });
 }
 
-export { getStops, getBuilds, addBuild, addPosters };
+function downloadPoster({ id }) {
+  window.open(`${API_URL}/downloadPoster/${id}`, '_blank');
+}
+
+function downloadBuild({ id }) {
+  window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+}
+
+export {
+  getStops,
+  getBuilds,
+  addBuild,
+  addPosters,
+  downloadPoster,
+  downloadBuild,
+};

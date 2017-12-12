@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 import CircularProgress from 'material-ui/CircularProgress';
+import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
+
+import { downloadBuild } from '../util/api';
 
 const Root = styled.div`
   width: calc(100vw - 120px);
@@ -64,6 +67,15 @@ const Build = props => {
       </Row>
 
       <Buttons>
+        {props.pending < 1 &&
+          props.ready > 0 && (
+            <RaisedButton
+              onClick={() => downloadBuild({ id: props.id })}
+              label="Lataa PDF"
+              style={{ height: 40, marginLeft: 10 }}
+              primary
+            />
+          )}
         {props.pending > 0 && (
           <CircularProgress size={30} style={{ margin: '0 15px' }} />
         )}
@@ -74,6 +86,8 @@ const Build = props => {
 };
 
 Build.propTypes = {
+  id: PropTypes.string.isRequired,
+
   title: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   pending: PropTypes.number.isRequired,
