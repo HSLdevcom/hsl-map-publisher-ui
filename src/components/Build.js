@@ -5,6 +5,8 @@ import moment from 'moment';
 
 import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from 'material-ui/RaisedButton';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 
 import { downloadBuild } from '../util/api';
@@ -12,7 +14,7 @@ import { downloadBuild } from '../util/api';
 const Root = styled.div`
   width: calc(100vw - 120px);
   max-width: 880px;
-  margin-top: 20px;
+  margin-top: 10px;
   white-space: nowrap;
 `;
 
@@ -21,33 +23,32 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
 `;
 
 const Title = styled.div`
   flex: 1;
-  padding-right: 15px;
+  padding-right: 10px;
+  margin: 20px 0;
   font-weight: 500;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
 const Text = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  flex: 1;
+  padding-right: 10px;
   text-overflow: ellipsis;
   opacity: 0.75;
-  line-height: 2em;
+  overflow: hidden;
 `;
 
 const Buttons = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   flex-flow: row wrap;
   min-height: 50px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `;
 
 const Build = props => {
@@ -67,12 +68,22 @@ const Build = props => {
       </Row>
 
       <Buttons>
+        <SelectField
+          floatingLabelText="Tila"
+          value={props.status}
+          onChange={(event, key, value) => props.onStatusChange(value)}
+          style={{ marginBottom: 15 }}
+        >
+          <MenuItem value="OPEN" primaryText="Sisältö muokattavissa" />
+          <MenuItem value="CLOSED" primaryText="Sisältö lukittu" />
+          <MenuItem value="PRODUCTION" primaryText="Lähetty painoon" />
+        </SelectField>
         {props.pending < 1 &&
           props.ready > 0 && (
             <RaisedButton
               onClick={() => downloadBuild({ id: props.id })}
               label="Lataa PDF"
-              style={{ height: 40, marginLeft: 10 }}
+              style={{ marginLeft: 10 }}
               primary
             />
           )}
@@ -87,12 +98,13 @@ const Build = props => {
 
 Build.propTypes = {
   id: PropTypes.string.isRequired,
-
   title: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   pending: PropTypes.number.isRequired,
   failed: PropTypes.number.isRequired,
   ready: PropTypes.number.isRequired,
+  status: PropTypes.oneOf(['OPEN', 'CLOSED', 'PRODUCTION']).isRequired,
+  onStatusChange: PropTypes.func.isRequired,
 };
 
 export default Build;

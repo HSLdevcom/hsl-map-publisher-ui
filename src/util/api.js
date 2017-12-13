@@ -13,6 +13,13 @@ async function postJson(path, body) {
   return response.json();
 }
 
+async function putJson(path, body) {
+  const options = { method: 'PUT', body: JSON.stringify(body) };
+  const response = await fetch(`${API_URL}/${path}`, options);
+  if (!response.ok) throw new Error(response.statusText);
+  return response.json();
+}
+
 function getStops() {
   return getJson('stops');
 }
@@ -23,6 +30,10 @@ function getBuilds() {
 
 function addBuild({ title }) {
   return postJson('builds', { title });
+}
+
+function updateBuild({ id, status }) {
+  return putJson(`builds/${id}`, { status });
 }
 
 function addPosters({ buildId, component, props }) {
@@ -41,6 +52,7 @@ export {
   getStops,
   getBuilds,
   addBuild,
+  updateBuild,
   addPosters,
   downloadPoster,
   downloadBuild,

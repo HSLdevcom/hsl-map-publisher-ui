@@ -1,5 +1,11 @@
 import { observable } from 'mobx';
-import { getStops, getBuilds, addBuild, addPosters } from '../util/api';
+import {
+  getStops,
+  getBuilds,
+  addBuild,
+  updateBuild,
+  addPosters,
+} from '../util/api';
 
 const store = observable({
   confirm: null,
@@ -62,6 +68,16 @@ store.addBuild = async () => {
     store.getBuilds();
   };
   store.showPrompt('Anna nimi tulostelistalle', callback);
+};
+
+store.updateBuild = async ({ id, status }) => {
+  try {
+    await updateBuild({ id, status });
+  } catch (error) {
+    console.error(error); // eslint-disable-line no-console
+    store.showConfirm(`Listan päivitys epäonnistui: ${error.message}`);
+  }
+  store.getBuilds();
 };
 
 store.addPosters = async (buildId, component, props) => {

@@ -18,7 +18,15 @@ const Root = styled.div`
 
 const BuildList = props => (
   <Root>
-    {props.commonStore.builds.map(build => <Build key={build.id} {...build} />)}
+    {props.commonStore.builds.map(build => (
+      <Build
+        key={build.id}
+        {...build}
+        onStatusChange={value =>
+          props.commonStore.updateBuild({ id: build.id, status: value })
+        }
+      />
+    ))}
   </Root>
 );
 
