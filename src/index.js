@@ -6,13 +6,9 @@ import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import './styles/base.css';
 
-import commonStore from './store/commonStore';
-import generatorStore from './store/generatorStore';
+import stores from './stores/stores';
 
-const stores = {
-  commonStore,
-  generatorStore,
-};
+const { commonStore } = stores;
 
 commonStore.getStops();
 commonStore.getBuilds();

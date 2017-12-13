@@ -19,7 +19,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "bundle": "react-scripts build",
+    "build": "yarn lint && CI=true yarn test && yarn bundle",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "serve": "serve build"
