@@ -1,12 +1,15 @@
 import React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject, PropTypes } from 'mobx-react';
 import styled from 'styled-components';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
+import ConfirmDialog from './ConfirmDialog';
+import PromptDialog from './PromptDialog';
 import Generator from './Generator';
 import BuildList from './BuildList';
+
 import theme from './theme';
 
 const Root = styled.div`
@@ -24,23 +27,33 @@ const TabPane = styled.div`
   height: calc(100vh - 70px);
 `;
 
-const App = () => (
-  <MuiThemeProvider muiTheme={theme}>
-    <Root>
-      <Tabs>
-        <Tab label="Generointi">
-          <TabPane>
-            <Generator />
-          </TabPane>
-        </Tab>
-        <Tab label="Tulosteet">
-          <TabPane>
-            <BuildList />
-          </TabPane>
-        </Tab>
-      </Tabs>
-    </Root>
-  </MuiThemeProvider>
-);
+const App = props => {
+  const { confirm, prompt } = props.commonStore;
+  return (
+    <MuiThemeProvider muiTheme={theme}>
+      <Root>
+        {confirm && <ConfirmDialog {...confirm} />}
+        {prompt && <PromptDialog {...prompt} />}
+        <Tabs>
+          <Tab label="Generointi">
+            <TabPane>
+              <Generator />
+            </TabPane>
+          </Tab>
+          <Tab label="Tulosteet">
+            <TabPane>
+              <BuildList />
+            </TabPane>
+          </Tab>
+        </Tabs>
+      </Root>
+    </MuiThemeProvider>
+  );
+};
 
-export default observer(App);
+App.propTypes = {
+  // eslint-disable-next-line react/no-typos
+  commonStore: PropTypes.observableObject.isRequired,
+};
+
+export default inject('commonStore')(observer(App));
