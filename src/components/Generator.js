@@ -57,7 +57,7 @@ const Generator = props => {
         <Column>
           <h3>Tuloste</h3>
           <RadioGroup
-            valuesByLabel={generatorStore.componentsByType}
+            valuesByLabel={generatorStore.componentsByLabel}
             valueSelected={generatorStore.component}
             onChange={value => generatorStore.setComponent(value)}
           />
@@ -66,9 +66,9 @@ const Generator = props => {
         <Column>
           <h3>Näytä</h3>
           <RadioGroup
-            valuesByLabel={generatorStore.rowFactoriesByType}
-            valueSelected={generatorStore.rowFactory}
-            onChange={value => generatorStore.setRowFactory(value)}
+            valuesByLabel={generatorStore.rowTypesByLabel}
+            valueSelected={generatorStore.rowType}
+            onChange={value => generatorStore.setRowType(value)}
           />
         </Column>
 
