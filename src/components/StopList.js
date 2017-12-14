@@ -50,32 +50,44 @@ function rowRenderer(rows, onCheck) {
 }
 
 class StopList extends Component {
-  static filterRows(rows, filterValue) {
+  static getVisibleRows(rows, filterValue) {
+    const keywords = filterValue
+      .split(',')
+      .map(keyword => keyword.trim())
+      .filter(keyword => keyword.length > 0);
+    if (keywords.length < 1) {
+      return rows;
+    }
     return rows.filter(({ title, subtitle }) =>
-      `${title}${subtitle}`.toLowerCase().includes(filterValue.toLowerCase()),
+      keywords.some(keyword =>
+        `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
+      ),
     );
   }
 
   constructor(props) {
     super(props);
-    this.state = { rows: props.rows, filterValue: '' };
+    this.state = { visibleRows: props.rows, filterValue: '' };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      rows: StopList.filterRows(nextProps.rows, this.state.filterValue),
+      visibleRows: StopList.getVisibleRows(
+        nextProps.rows,
+        this.state.filterValue,
+      ),
     });
   }
 
   onFilterValueChange(filterValue) {
     this.setState({
-      rows: StopList.filterRows(this.props.rows, filterValue),
+      visibleRows: StopList.getVisibleRows(this.props.rows, filterValue),
       filterValue,
     });
   }
 
   render() {
-    const renderer = rowRenderer(this.state.rows, this.props.onCheck);
+    const renderer = rowRenderer(this.state.visibleRows, this.props.onCheck);
 
     return (
       <Root>
@@ -99,7 +111,7 @@ class StopList extends Component {
               <List
                 width={width}
                 height={height}
-                rowCount={this.state.rows.length}
+                rowCount={this.state.visibleRows.length}
                 rowHeight={35}
                 rowRenderer={renderer}
                 style={{ outlineWidth: 0 }}
