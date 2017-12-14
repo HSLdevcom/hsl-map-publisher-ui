@@ -79,7 +79,9 @@ class StopList extends Component {
     });
   }
 
-  onFilterValueChange(filterValue) {
+  onFilterValueChange(value) {
+    const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
+    const filterValue = value.replace(shortIdRegexp, '$1$2, ');
     this.setState({
       visibleRows: StopList.getVisibleRows(this.props.rows, filterValue),
       filterValue,
