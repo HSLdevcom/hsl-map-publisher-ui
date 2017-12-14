@@ -6,18 +6,32 @@ import { AutoSizer, List } from 'react-virtualized';
 import { ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 
 const Root = styled.div`
-  position: relative;
   flex-grow: 1;
   display: flex;
   flex-flow: column;
 `;
 
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TextFieldContainer = styled.div`
+  position: relative;
+  flex-grow: 1;
+`;
+
 const ListContainer = styled.div`
   flex-grow: 1;
+`;
+
+const Spacer = styled.div`
+  width: 10px;
 `;
 
 const PrimaryText = ({ title, subtitle }) => (
@@ -35,7 +49,7 @@ function rowRenderer(rows, onCheck) {
   // eslint-disable-next-line react/prop-types
   return ({ key, index, style }) => {
     const { isChecked, title, subtitle } = rows[index];
-    const callback = (event, value) => onCheck(rows[index], value, index);
+    const callback = (event, value) => onCheck([rows[index]], value, index);
 
     return (
       <div key={key} style={style}>
@@ -93,20 +107,36 @@ class StopList extends Component {
 
     return (
       <Root>
-        <TextField
-          onChange={(event, value) => this.onFilterValueChange(value)}
-          value={this.state.filterValue}
-          hintText="Suodata..."
-          fullWidth
-        />
-        {this.state.filterValue && (
-          <IconButton
-            onClick={() => this.onFilterValueChange('')}
-            style={{ position: 'absolute', right: 0 }}
-          >
-            <ClearIcon />
-          </IconButton>
-        )}
+        <Row>
+          <TextFieldContainer>
+            <TextField
+              onChange={(event, value) => this.onFilterValueChange(value)}
+              value={this.state.filterValue}
+              hintText="Suodata..."
+              fullWidth
+            />
+            {this.state.filterValue && (
+              <IconButton
+                onClick={() => this.onFilterValueChange('')}
+                style={{ position: 'absolute', right: 0 }}
+              >
+                <ClearIcon />
+              </IconButton>
+            )}
+          </TextFieldContainer>
+          <Spacer />
+          <FlatButton
+            disabled={!this.props.rows.some(({ isChecked }) => isChecked)}
+            onClick={() => this.props.onReset()}
+            label="Tyhjennä valinnat"
+          />
+          <Spacer />
+          <FlatButton
+            disabled={!this.state.filterValue.length}
+            onClick={() => this.props.onCheck(this.state.visibleRows, true)}
+            label="Valitse kaikki"
+          />
+        </Row>
         <ListContainer>
           <AutoSizer>
             {({ height, width }) => (
@@ -135,6 +165,7 @@ StopList.propTypes = {
     }),
   ).isRequired,
   onCheck: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
 };
 
 export default StopList;

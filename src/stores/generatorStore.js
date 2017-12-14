@@ -62,10 +62,12 @@ store.setIsSummerTimetable = value => {
   store.isSummerTimetable = !!value;
 };
 
-store.setChecked = (row, isChecked) => {
-  if (store.rows.includes(row)) {
-    row.isChecked = isChecked; // eslint-disable-line no-param-reassign
-  }
+store.setChecked = (rows, isChecked) => {
+  rows.forEach(row => {
+    if (store.rows.includes(row)) {
+      row.isChecked = isChecked; // eslint-disable-line no-param-reassign
+    }
+  });
 };
 
 store.resetRows = () => {

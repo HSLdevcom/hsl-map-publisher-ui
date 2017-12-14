@@ -118,6 +118,7 @@ const Generator = props => {
         <StopList
           rows={generatorStore.rows.toJS()}
           onCheck={generatorStore.setChecked}
+          onReset={generatorStore.resetRows}
         />
       </Main>
 
