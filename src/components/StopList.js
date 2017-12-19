@@ -6,18 +6,32 @@ import { AutoSizer, List } from 'react-virtualized';
 import { ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 
 const Root = styled.div`
-  position: relative;
   flex-grow: 1;
   display: flex;
   flex-flow: column;
 `;
 
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TextFieldContainer = styled.div`
+  position: relative;
+  flex-grow: 1;
+`;
+
 const ListContainer = styled.div`
   flex-grow: 1;
+`;
+
+const Spacer = styled.div`
+  width: 10px;
 `;
 
 const PrimaryText = ({ title, subtitle }) => (
@@ -35,7 +49,7 @@ function rowRenderer(rows, onCheck) {
   // eslint-disable-next-line react/prop-types
   return ({ key, index, style }) => {
     const { isChecked, title, subtitle } = rows[index];
-    const callback = (event, value) => onCheck(rows[index], value, index);
+    const callback = (event, value) => onCheck([rows[index]], value, index);
 
     return (
       <div key={key} style={style}>
@@ -50,56 +64,86 @@ function rowRenderer(rows, onCheck) {
 }
 
 class StopList extends Component {
-  static filterRows(rows, filterValue) {
+  static getVisibleRows(rows, filterValue) {
+    const keywords = filterValue
+      .split(',')
+      .map(keyword => keyword.trim())
+      .filter(keyword => keyword.length > 0);
+    if (keywords.length < 1) {
+      return rows;
+    }
     return rows.filter(({ title, subtitle }) =>
-      `${title}${subtitle}`.toLowerCase().includes(filterValue.toLowerCase()),
+      keywords.some(keyword =>
+        `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
+      ),
     );
   }
 
   constructor(props) {
     super(props);
-    this.state = { rows: props.rows, filterValue: '' };
+    this.state = { visibleRows: props.rows, filterValue: '' };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      rows: StopList.filterRows(nextProps.rows, this.state.filterValue),
+      visibleRows: StopList.getVisibleRows(
+        nextProps.rows,
+        this.state.filterValue,
+      ),
     });
   }
 
-  onFilterValueChange(filterValue) {
+  onFilterValueChange(value) {
+    const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
+    const filterValue = value.replace(shortIdRegexp, '$1$2, ');
     this.setState({
-      rows: StopList.filterRows(this.props.rows, filterValue),
+      visibleRows: StopList.getVisibleRows(this.props.rows, filterValue),
       filterValue,
     });
   }
 
   render() {
-    const renderer = rowRenderer(this.state.rows, this.props.onCheck);
+    const renderer = rowRenderer(this.state.visibleRows, this.props.onCheck);
 
     return (
       <Root>
-        <TextField
-          onChange={(event, value) => this.onFilterValueChange(value)}
-          value={this.state.filterValue}
-          hintText="Suodata..."
-          fullWidth
-        />
-        {this.state.filterValue && (
-          <IconButton
-            onClick={() => this.onFilterValueChange('')}
-            style={{ position: 'absolute', right: 0 }}
-          >
-            <ClearIcon />
-          </IconButton>
-        )}
+        <Row>
+          <TextFieldContainer>
+            <TextField
+              onChange={(event, value) => this.onFilterValueChange(value)}
+              value={this.state.filterValue}
+              hintText="Suodata..."
+              fullWidth
+            />
+            {this.state.filterValue && (
+              <IconButton
+                onClick={() => this.onFilterValueChange('')}
+                style={{ position: 'absolute', right: 0 }}
+              >
+                <ClearIcon />
+              </IconButton>
+            )}
+          </TextFieldContainer>
+          <Spacer />
+          <FlatButton
+            disabled={!this.props.rows.some(({ isChecked }) => isChecked)}
+            onClick={() => this.props.onReset()}
+            label="Tyhjennä valinnat"
+          />
+          <Spacer />
+          <FlatButton
+            disabled={!this.state.filterValue.length}
+            onClick={() => this.props.onCheck(this.state.visibleRows, true)}
+            label="Valitse kaikki"
+          />
+        </Row>
         <ListContainer>
           <AutoSizer>
             {({ height, width }) => (
               <List
                 width={width}
                 height={height}
-                rowCount={this.state.rows.length}
+                rowCount={this.state.visibleRows.length}
                 rowHeight={35}
                 rowRenderer={renderer}
                 style={{ outlineWidth: 0 }}
@@ -121,6 +165,7 @@ StopList.propTypes = {
     }),
   ).isRequired,
   onCheck: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
 };
 
 export default StopList;
