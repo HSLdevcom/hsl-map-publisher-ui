@@ -5,32 +5,22 @@ import { stopsToRows, stopsToGroupRows } from '../util/stops';
 
 import commonStore from './commonStore';
 
-const componentsByType = {
-  Pysäkkijuliste: {
-    name: 'StopPoster',
-    filter: stop => stop.hasShelter,
-  },
-  Aikataulu: {
-    name: 'Timetable',
-    filter: stop => !stop.hasShelter,
-  },
+const componentsByLabel = {
+  Pysäkkijuliste: 'StopPoster',
+  Aikataulu: 'Timetable',
 };
 
-const rowFactoriesByType = {
-  Pysäkit: {
-    factory: stops => stopsToRows(stops),
-  },
-  Ajolistat: {
-    factory: stops => stopsToGroupRows(stops),
-  },
+const rowTypesByLabel = {
+  Pysäkit: 'stop',
+  Ajolistat: 'group',
 };
 
 const store = observable({
   rows: [],
-  componentsByType,
-  rowFactoriesByType,
-  component: null,
-  rowFactory: null,
+  componentsByLabel,
+  rowTypesByLabel,
+  component: 'StopPoster',
+  rowType: 'stop',
   date: new Date(),
   dateBegin: null,
   dateEnd: null,
@@ -42,8 +32,8 @@ store.setComponent = value => {
   store.component = value;
 };
 
-store.setRowFactory = value => {
-  store.rowFactory = value;
+store.setRowType = value => {
+  store.rowType = value;
 };
 
 store.setDate = value => {
@@ -71,8 +61,11 @@ store.setChecked = (rows, isChecked) => {
 };
 
 store.resetRows = () => {
-  const visibleStops = commonStore.stops.filter(store.component.filter);
-  store.rows = store.rowFactory.factory(visibleStops);
+  if (store.rowType === 'stop') {
+    store.rows = stopsToRows(commonStore.stops);
+  } else {
+    store.rows = stopsToGroupRows(commonStore.stops);
+  }
 };
 
 store.setBuildId = id => {
@@ -92,14 +85,10 @@ store.generate = () => {
       dateEnd: store.dateEnd ? format(store.dateEnd) : null,
     }));
   store.resetRows();
-  commonStore.addPosters(store.buildId, store.component.name, props);
+  commonStore.addPosters(store.buildId, store.component, props);
 };
 
-store.setComponent(Object.values(store.componentsByType)[0]);
-store.setRowFactory(Object.values(store.rowFactoriesByType)[0]);
-
 observe(commonStore, 'stops', () => store.resetRows());
-observe(store, 'component', () => store.resetRows());
-observe(store, 'rowFactory', () => store.resetRows());
+observe(store, 'rowType', () => store.resetRows());
 
 export default store;
