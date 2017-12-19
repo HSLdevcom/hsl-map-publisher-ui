@@ -1,31 +1,59 @@
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
-const OUTPUT_URL = `${window.location.protocol}//${
-  window.location.host
-}/output`;
 
-async function fetchQueueInfo() {
-  const response = await fetch(`${API_URL}/queueInfo`);
+async function getJson(path) {
+  const response = await fetch(`${API_URL}/${path}`);
   if (!response.ok) throw new Error(response.statusText);
   return response.json();
 }
 
-async function fetchStops() {
-  const response = await fetch(`${API_URL}/stops`);
+async function postJson(path, body) {
+  const options = { method: 'POST', body: JSON.stringify(body) };
+  const response = await fetch(`${API_URL}/${path}`, options);
   if (!response.ok) throw new Error(response.statusText);
   return response.json();
 }
 
-async function generate(component, props, filename) {
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({ component, props, filename }),
-  };
-
-  const response = await fetch(`${API_URL}/generate`, options);
+async function putJson(path, body) {
+  const options = { method: 'PUT', body: JSON.stringify(body) };
+  const response = await fetch(`${API_URL}/${path}`, options);
   if (!response.ok) throw new Error(response.statusText);
-
-  const { path } = await response.json();
-  return `${OUTPUT_URL}/${path}/`;
+  return response.json();
 }
 
-export { fetchQueueInfo, fetchStops, generate };
+function getStops() {
+  return getJson('stops');
+}
+
+function getBuilds() {
+  return getJson('builds');
+}
+
+function addBuild({ title }) {
+  return postJson('builds', { title });
+}
+
+function updateBuild({ id, status }) {
+  return putJson(`builds/${id}`, { status });
+}
+
+function addPosters({ buildId, component, props }) {
+  return postJson('posters', { buildId, props, component });
+}
+
+function downloadPoster({ id }) {
+  window.open(`${API_URL}/downloadPoster/${id}`, '_blank');
+}
+
+function downloadBuild({ id }) {
+  window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+}
+
+export {
+  getStops,
+  getBuilds,
+  addBuild,
+  updateBuild,
+  addPosters,
+  downloadPoster,
+  downloadBuild,
+};

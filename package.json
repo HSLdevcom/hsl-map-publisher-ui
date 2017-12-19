@@ -7,6 +7,8 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "material-ui": "^0.19.4",
+    "mobx": "^3.4.1",
+    "mobx-react": "^4.3.5",
     "moment": "^2.19.2",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",
@@ -17,9 +19,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "bundle": "react-scripts build",
+    "build": "yarn lint && CI=true yarn test && yarn bundle",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "lint": "yarn eslint src",
     "serve": "serve build"
   },
   "devDependencies": {
