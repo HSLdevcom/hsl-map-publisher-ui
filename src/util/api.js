@@ -20,12 +20,23 @@ async function putJson(path, body) {
   return response.json();
 }
 
+async function deleteJson(path) {
+  const options = { method: 'DELETE' };
+  const response = await fetch(`${API_URL}/${path}`, options);
+  if (!response.ok) throw new Error(response.statusText);
+  return response.json();
+}
+
 function getStops() {
   return getJson('stops');
 }
 
 function getBuilds() {
   return getJson('builds');
+}
+
+function getBuild({ id }) {
+  return getJson(`builds/${id}`);
 }
 
 function addBuild({ title }) {
@@ -36,8 +47,16 @@ function updateBuild({ id, status }) {
   return putJson(`builds/${id}`, { status });
 }
 
+function removeBuild({ id }) {
+  return deleteJson(`builds/${id}`);
+}
+
 function addPosters({ buildId, component, props }) {
   return postJson('posters', { buildId, props, component });
+}
+
+function removePoster({ id }) {
+  return deleteJson(`posters/${id}`);
 }
 
 function downloadPoster({ id }) {
@@ -51,9 +70,12 @@ function downloadBuild({ id }) {
 export {
   getStops,
   getBuilds,
+  getBuild,
   addBuild,
   updateBuild,
+  removeBuild,
   addPosters,
+  removePoster,
   downloadPoster,
   downloadBuild,
 };

@@ -7,6 +7,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 
 import ConfirmDialog from './ConfirmDialog';
 import PromptDialog from './PromptDialog';
+import BuildDetails from './BuildDetails';
 import Generator from './Generator';
 import BuildList from './BuildList';
 
@@ -28,12 +29,19 @@ const TabPane = styled.div`
 `;
 
 const App = props => {
-  const { confirm, prompt } = props.commonStore;
+  const { confirm, prompt, selectedBuild } = props.commonStore;
   return (
     <MuiThemeProvider muiTheme={theme}>
       <Root>
         {confirm && <ConfirmDialog {...confirm} />}
         {prompt && <PromptDialog {...prompt} />}
+        {selectedBuild && (
+          <BuildDetails
+            {...selectedBuild}
+            onRemovePoster={props.commonStore.removePoster}
+            onClose={props.commonStore.clearBuild}
+          />
+        )}
         <Tabs>
           <Tab label="Generointi">
             <TabPane>
