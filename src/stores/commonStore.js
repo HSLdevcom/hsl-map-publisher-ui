@@ -2,9 +2,12 @@ import { observable } from 'mobx';
 import {
   getStops,
   getBuilds,
+  getBuild,
   addBuild,
   updateBuild,
+  removeBuild,
   addPosters,
+  removePoster,
 } from '../util/api';
 
 const store = observable({
@@ -12,6 +15,7 @@ const store = observable({
   prompt: null,
   stops: [],
   builds: [],
+  selectedBuild: null,
 });
 
 store.showConfirm = (message, callback = null) => {
@@ -38,6 +42,30 @@ store.showPrompt = (message, callback, defaultValue = '') => {
   };
 };
 
+store.showBuild = async id => {
+  try {
+    store.selectedBuild = await getBuild({ id });
+  } catch (error) {
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
+store.refreshBuild = async () => {
+  if (!store.selectedBuild) return;
+  try {
+    store.selectedBuild = await getBuild({ id: store.selectedBuild.id });
+  } catch (error) {
+    store.selectedBuild = null;
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
+store.clearBuild = () => {
+  store.selectedBuild = null;
+};
+
 store.getStops = async () => {
   try {
     store.stops = await getStops();
@@ -51,7 +79,7 @@ store.getBuilds = async () => {
   try {
     store.builds = await getBuilds();
   } catch (error) {
-    store.showConfirm(`Tulosteiden lataaminen epäonnistui: ${error.message}`);
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
   }
 };
@@ -80,14 +108,43 @@ store.updateBuild = async ({ id, status }) => {
   store.getBuilds();
 };
 
+store.removeBuild = async id => {
+  const callback = async () => {
+    try {
+      await removeBuild({ id });
+      if (store.selectedBuildId === id) {
+        store.selectedBuildId = null;
+      }
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Listan poistaminen epäonnistui: ${error.message}`);
+    }
+    store.getBuilds();
+  };
+  store.showConfirm('Haluatko varmasti poistaa listan?', callback);
+};
+
 store.addPosters = async (buildId, component, props) => {
   try {
     await addPosters({ buildId, component, props });
   } catch (error) {
-    store.showConfirm(`Lisääminen epäonnistui: ${error.message}`);
+    store.showConfirm(`Julisteen lisääminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
   }
   store.getBuilds();
+};
+
+store.removePoster = async id => {
+  const callback = async () => {
+    try {
+      await removePoster({ id });
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Julisteen poistaminen epäonnistui: ${error.message}`);
+    }
+    store.refreshBuild();
+  };
+  store.showConfirm('Haluatko varmasti poistaa julisteen?', callback);
 };
 
 export default store;

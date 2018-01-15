@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 import CircularProgress from 'material-ui/CircularProgress';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -51,13 +52,17 @@ const Buttons = styled.div`
   margin-bottom: 10px;
 `;
 
+const Spacer = styled.div`
+  flex-grow: 1;
+`;
+
 const Build = props => {
   const total = props.pending + props.failed + props.ready;
   return (
     <Root>
       <Row>
         <Title title={props.title}>{props.title}</Title>
-        <div>{moment(props.createdAt).format('D.M.YYYY HH:mm')}</div>
+        <div>Luotu: {moment(props.createdAt).format('D.M.YYYY HH:mm')}</div>
       </Row>
 
       <Row>
@@ -76,8 +81,20 @@ const Build = props => {
         >
           <MenuItem value="OPEN" primaryText="Sisältö muokattavissa" />
           <MenuItem value="CLOSED" primaryText="Sisältö lukittu" />
-          <MenuItem value="PRODUCTION" primaryText="Lähetty painoon" />
+          <MenuItem value="PRODUCTION" primaryText="Lähetetty painoon" />
         </SelectField>
+        <Spacer />
+        <FlatButton
+          disabled={props.status !== 'OPEN'}
+          onClick={() => props.onRemoveBuild()}
+          label="Poista"
+          style={{ marginLeft: 10 }}
+        />
+        <FlatButton
+          onClick={() => props.onSelect()}
+          label="Näytä tiedot"
+          style={{ marginLeft: 10 }}
+        />
         {props.pending < 1 &&
           props.ready > 0 && (
             <RaisedButton
@@ -105,6 +122,8 @@ Build.propTypes = {
   ready: PropTypes.number.isRequired,
   status: PropTypes.oneOf(['OPEN', 'CLOSED', 'PRODUCTION']).isRequired,
   onStatusChange: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  onRemoveBuild: PropTypes.func.isRequired,
 };
 
 export default Build;
