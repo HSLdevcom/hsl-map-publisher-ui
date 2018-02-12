@@ -26,10 +26,20 @@ const store = observable({
   dateEnd: null,
   isSummerTimetable: false,
   buildId: null,
+  timetableAsA4Format: true,
+  timetableAsGreyscale: false,
 });
 
 store.setComponent = value => {
   store.component = value;
+};
+
+store.setTimetableA4Format = value => {
+  store.timetableAsA4Format = value;
+};
+
+store.setTimetableGreyscale = value => {
+  store.timetableAsGreyscale = value;
 };
 
 store.setRowType = value => {
@@ -83,6 +93,12 @@ store.generate = () => {
       isSummerTimetable: store.isSummerTimetable,
       dateBegin: store.dateBegin ? format(store.dateBegin) : null,
       dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+      printTimetablesAsA4:
+        store.timetableAsA4Format &&
+        store.component === componentsByLabel.Aikataulu,
+      printTimetablesAsGreyscale:
+        store.timetableAsGreyscale &&
+        store.component === componentsByLabel.Aikataulu,
     }));
   store.resetRows();
   commonStore.addPosters(store.buildId, store.component, props);
