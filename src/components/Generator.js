@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 
 import RadioGroup from './RadioGroup';
+import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
 
@@ -61,6 +62,24 @@ const Generator = props => {
             valueSelected={generatorStore.component}
             onChange={value => generatorStore.setComponent(value)}
           />
+          <div>
+            {generatorStore.component === 'Timetable' && (
+              <div>
+                <Checkbox
+                  label="A4 Format"
+                  defaultValueTrue={generatorStore.timetableAsA4Format}
+                  onChange={value => generatorStore.setTimetableA4Format(value)}
+                />
+                <Checkbox
+                  label="Greyscale"
+                  defaultValueTrue={generatorStore.timetableAsGreyscale}
+                  onChange={value =>
+                    generatorStore.setTimetableGreyscale(value)
+                  }
+                />
+              </div>
+            )}
+          </div>
         </Column>
 
         <Column>
