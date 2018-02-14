@@ -19,15 +19,28 @@ function groupKey(shortId) {
 }
 
 function groupStops(stops) {
+  // Filtering duplicates
+  let filteredStops = Object.values(
+    groupBy(
+      stops.filter(stop => stop.shortId.length > 0 && stop.group.length > 0),
+      ({ shortId, group }) => `${shortId}_${group}`,
+    ),
+  ).map(s => s[0]);
+
+  // Adding stops missing either shortId or group
+  filteredStops = filteredStops.concat(
+    stops.filter(stop => !(stop.shortId.length > 0 && stop.group.length > 0)),
+  );
+
   return {
     ...groupBy(
-      stops
+      filteredStops
         .filter(({ group }) => group.length > 0)
         .sort((a, b) => a.index - b.index),
       'group',
     ),
     ...groupBy(
-      stops
+      filteredStops
         .filter(({ group }) => !group.length)
         .sort((a, b) => a.shortId.localeCompare(b.shortId)),
       ({ shortId }) => groupKey(shortId),
