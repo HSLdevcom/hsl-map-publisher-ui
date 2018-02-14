@@ -19,7 +19,7 @@ function groupKey(shortId) {
 }
 
 function groupStops(stops) {
-  // Filtering duplicates
+  // Filtering shortId & group duplicates
   let filteredStops = Object.values(
     groupBy(
       stops.filter(stop => stop.shortId.length > 0 && stop.group.length > 0),
