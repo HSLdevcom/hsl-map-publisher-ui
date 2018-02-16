@@ -38,13 +38,13 @@ function groupStops(stops) {
   return {
     ...groupBy(
       filteredStops
-        .filter(({ group }) => group.length > 0)
+        .filter(({ group }) => group.length > 0 && group !== ' ')
         .sort((a, b) => a.index - b.index),
       'group',
     ),
     ...groupBy(
       filteredStops
-        .filter(({ group }) => !group.length)
+        .filter(({ group }) => !group.length || group === ' ')
         .sort((a, b) => a.shortId.localeCompare(b.shortId)),
       ({ shortId }) => groupKey(shortId),
     ),
