@@ -18,19 +18,22 @@ function groupKey(shortId) {
   return shortId.substring(0, keyLength);
 }
 
-function groupStops(stops) {
-  // Filtering shortId & group duplicates
-  let filteredStops = Object.values(
+function removeDuplicates(stops) {
+  const filteredStops = Object.values(
     groupBy(
       stops.filter(stop => stop.shortId.length > 0 && stop.group.length > 0),
       ({ shortId, group }) => `${shortId}_${group}`,
     ),
   ).map(s => s[0]);
 
-  // Adding stops missing either shortId or group
-  filteredStops = filteredStops.concat(
+  // Adding stops missing shortId or group
+  return filteredStops.concat(
     stops.filter(stop => !(stop.shortId.length > 0 && stop.group.length > 0)),
   );
+}
+
+function groupStops(stops) {
+  const filteredStops = removeDuplicates(stops);
 
   return {
     ...groupBy(
