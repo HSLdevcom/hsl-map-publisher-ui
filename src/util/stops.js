@@ -18,16 +18,32 @@ function groupKey(shortId) {
   return shortId.substring(0, keyLength);
 }
 
+function removeDuplicates(stops) {
+  const filteredStops = Object.values(
+    groupBy(
+      stops.filter(stop => stop.shortId.length > 0 && stop.group.length > 0),
+      ({ shortId, group }) => `${shortId}_${group}`,
+    ),
+  ).map(s => s[0]);
+
+  // Adding stops missing shortId or group
+  return filteredStops.concat(
+    stops.filter(stop => !(stop.shortId.length > 0 && stop.group.length > 0)),
+  );
+}
+
 function groupStops(stops) {
+  const filteredStops = removeDuplicates(stops);
+
   return {
     ...groupBy(
-      stops
+      filteredStops
         .filter(({ group }) => group.length > 0)
         .sort((a, b) => a.index - b.index),
       'group',
     ),
     ...groupBy(
-      stops
+      filteredStops
         .filter(({ group }) => !group.length)
         .sort((a, b) => a.shortId.localeCompare(b.shortId)),
       ({ shortId }) => groupKey(shortId),
