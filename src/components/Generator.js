@@ -66,12 +66,12 @@ const Generator = props => {
             {generatorStore.component === 'Timetable' && (
               <div>
                 <Checkbox
-                  label="A4 Format"
+                  label="A4 Formaatti"
                   defaultValueTrue={generatorStore.timetableAsA4Format}
                   onChange={value => generatorStore.setTimetableA4Format(value)}
                 />
                 <Checkbox
-                  label="Greyscale"
+                  label="Mustavalkoisena"
                   defaultValueTrue={generatorStore.timetableAsGreyscale}
                   onChange={value =>
                     generatorStore.setTimetableGreyscale(value)
