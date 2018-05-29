@@ -72,11 +72,13 @@ class StopList extends Component {
     if (keywords.length < 1) {
       return rows;
     }
-    return rows.filter(({ title, subtitle }) =>
-      keywords.some(keyword =>
+    let filterord = []
+    for (const keyword of keywords) {
+      filterord = filterord.concat(rows.filter(({ title, subtitle }) =>
         `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
-      ),
-    );
+      ));
+    }
+    return filterord;
   }
 
   constructor(props) {
