@@ -35,10 +35,6 @@ function getBuilds() {
   return getJson('builds');
 }
 
-function getTemplates() {
-  return getJson('templates');
-}
-
 function getBuild({ id }) {
   return getJson(`builds/${id}`);
 }
@@ -74,7 +70,6 @@ function downloadBuild({ id }) {
 export {
   getStops,
   getBuilds,
-  getTemplates,
   getBuild,
   addBuild,
   updateBuild,

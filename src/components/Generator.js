@@ -10,7 +10,6 @@ import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
-import ConfigureLayout from "./ConfigureLayout";
 
 const Root = styled.div`
   display: flex;
@@ -140,7 +139,6 @@ const Generator = props => {
           onCheck={generatorStore.setChecked}
           onReset={generatorStore.resetRows}
         />
-        <ConfigureLayout />
       </Main>
 
       <Footer>

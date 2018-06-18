@@ -8,7 +8,6 @@ import {
   removeBuild,
   addPosters,
   removePoster,
-  getTemplates,
 } from '../util/api';
 
 const store = observable({
@@ -16,7 +15,6 @@ const store = observable({
   prompt: null,
   stops: [],
   builds: [],
-  templates: [],
   selectedBuild: null,
 });
 
@@ -85,15 +83,6 @@ store.getBuilds = async () => {
     console.error(error); // eslint-disable-line no-console
   }
 };
-
-store.getTemplates = async () => {
-  try {
-    store.templates = await getTemplates();
-  } catch( error ) {
-    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
-    console.error(error); // eslint-disable-line no-console
-  }
-}
 
 store.addBuild = async () => {
   const callback = async title => {
