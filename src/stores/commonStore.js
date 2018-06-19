@@ -16,8 +16,9 @@ const store = observable({
   prompt: null,
   stops: [],
   builds: [],
-  templates: [],
   selectedBuild: null,
+  templates: [],
+  selectedTemplate: null,
 });
 
 store.showConfirm = (message, callback = null) => {
@@ -86,15 +87,6 @@ store.getBuilds = async () => {
   }
 };
 
-store.getTemplates = async () => {
-  try {
-    store.templates = await getTemplates();
-  } catch( error ) {
-    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
-    console.error(error); // eslint-disable-line no-console
-  }
-}
-
 store.addBuild = async () => {
   const callback = async title => {
     try {
@@ -133,6 +125,19 @@ store.removeBuild = async id => {
     store.getBuilds();
   };
   store.showConfirm('Haluatko varmasti poistaa listan?', callback);
+};
+
+store.getTemplates = async () => {
+  try {
+    store.templates = await getTemplates();
+  } catch (error) {
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
+store.selectTemplate = id => {
+  store.selectedTemplate = id;
 };
 
 store.addPosters = async (buildId, component, props) => {

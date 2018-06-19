@@ -5,17 +5,18 @@
   "license": "MIT",
   "homepage": "./",
   "dependencies": {
-    "lodash": "^4.17.4",
-    "material-ui": "^0.19.4",
-    "mobx": "^3.4.1",
-    "mobx-react": "^4.3.5",
-    "moment": "^2.19.2",
-    "prop-types": "^15.6.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-scripts": "1.0.17",
-    "react-virtualized": "^9.12.0",
-    "styled-components": "^2.2.3"
+    "custom-react-scripts": "^0.2.2",
+    "lodash": "^4.17.10",
+    "material-ui": "^0.20.1",
+    "mobx": "^5.0.3",
+    "mobx-react": "^5.2.3",
+    "moment": "^2.22.2",
+    "prop-types": "^15.6.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-resizable": "^1.7.5",
+    "react-virtualized": "^9.19.1",
+    "styled-components": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -24,17 +25,19 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "yarn eslint src",
-    "serve": "serve build"
+    "serve": "serve build",
+    "prettier": "prettier src/**/* --write"
   },
   "devDependencies": {
-    "eslint": "^4.12.0",
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-prettier": "^2.3.1",
-    "eslint-plugin-react": "^7.5.1",
-    "prettier": "^1.8.2",
-    "serve": "^6.4.1"
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.9.1",
+    "prettier": "^1.13.5",
+    "serve": "^9.1.0"
   }
 }

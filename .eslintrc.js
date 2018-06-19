@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ["airbnb", "prettier"],
+  extends: ["airbnb", "plugin:prettier/recommended"],
   plugins: ["prettier"],
+  parser: "babel-eslint",
   env: {
     browser: true,
     jest: true,
@@ -9,10 +10,11 @@ module.exports = {
     "react/jsx-filename-extension": ["error", {
       "extensions": [".js"]
     }],
-    "prettier/prettier": ["error", {
-      singleQuote: true,
-      trailingComma: "all",
-      bracketSpacing: true,
-    }]
+    "import/first": 0,
+    "react/forbid-prop-types": 0,
+    "react/no-array-index-key": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "react/sort-comp": 0,
+    "operator-assignment": 0
   },
 };

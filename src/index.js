@@ -12,6 +12,7 @@ const { commonStore } = stores;
 
 commonStore.getStops();
 commonStore.getBuilds();
+commonStore.getTemplates();
 
 setInterval(() => {
   if (

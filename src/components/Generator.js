@@ -10,12 +10,11 @@ import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
-import ConfigureLayout from "./ConfigureLayout";
+import ConfigureLayout from './ConfigureLayout';
 
 const Root = styled.div`
   display: flex;
   flex-flow: column;
-  height: 100%;
   padding: 10px 30px;
   margin: auto;
   box-sizing: border-box;
@@ -36,7 +35,7 @@ const Column = styled.div`
 const Main = styled.div`
   flex: 1;
   display: flex;
-  min-height: 300px;
+  flex-direction: column;
 `;
 
 const Footer = styled.div`
@@ -140,7 +139,11 @@ const Generator = props => {
           onCheck={generatorStore.setChecked}
           onReset={generatorStore.resetRows}
         />
-        <ConfigureLayout />
+        <ConfigureLayout
+          onSelectTemplate={commonStore.selectTemplate}
+          selectedTemplate={commonStore.selectedTemplate}
+          templates={commonStore.templates}
+        />
       </Main>
 
       <Footer>
