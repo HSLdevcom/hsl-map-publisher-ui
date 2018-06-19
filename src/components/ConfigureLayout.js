@@ -26,7 +26,8 @@ const Area = styled.div`
   display: grid;
   grid-gap: 2rem;
   grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
-  direction: ${({ direction = 'right' }) => direction};
+  writing-mode: ${({ direction = 'ltr' }) => (direction === 'rtl' ? 'bt-rl' : 'horizontal-tb')};
+  direction: ${({ direction = 'ltr' }) => direction};
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
 `;
 
@@ -37,6 +38,7 @@ const AreaSlot = styled.div`
   position: relative;
   height: 15rem;
   overflow: hidden;
+  width: calc(100% + ${({ resizeValue = 0 }) => resizeValue}px);
 
   svg {
     width: 100%;
@@ -91,9 +93,7 @@ class ConfigureLayout extends Component {
   @computed
   get currentTemplate() {
     const { selectedTemplate, templates } = this.props;
-    const currentTemplate = templates.find(
-      template => template.id === selectedTemplate,
-    );
+    const currentTemplate = templates.find(template => template.id === selectedTemplate);
 
     return currentTemplate || templates[0];
   }
@@ -136,12 +136,13 @@ class ConfigureLayout extends Component {
     }
 
     const image = this.currentlyResizingImage;
+    const { size = 1 } = image;
     const { start, direction } = image.resizing;
     const mouseX = e.clientX;
     const delta = direction === 'left' ? start - mouseX : mouseX - start;
 
     // eslint-disable-next-line
-    image.resizing.value = this.imageCount > 1 ? Math.max(delta, 0) : delta;
+    image.resizing.value = this.imageCount > 1 || size === 1 ? Math.max(delta, 0) : delta;
   };
 
   onHandleMouseUp = e => {
@@ -151,19 +152,18 @@ class ConfigureLayout extends Component {
       const { width } = e.target.getBoundingClientRect(); // Measure Area el
 
       const index = this.visibleImages.indexOf(image);
-      
-      const slotCount = this.visibleImages.reduce(
-        (count, img) => count + img.size,
-        0,
-      );
+
+      const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
       const slotWidth = width / slotCount;
+      const affectedSiblingIdx = direction === 'left' && index > 0 ? index - 1 : index + 1;
 
       if (this.imageCount > 1 && value > slotWidth) {
         image.size = image.size + 1;
-        const removeIdx =
-          direction === 'left' && index > 0 ? index - 1 : index + 1;
-        this.visibleImages[removeIdx].size = 0;
-      } else {
+        this.visibleImages[affectedSiblingIdx].size = 0;
+      } else if (value < -slotWidth && image.size > 1) {
+        image.size = image.size - 1;
+        const siblingSize = get(this, `visibleImages[${affectedSiblingIdx}].size`, 0);
+        this.visibleImages[affectedSiblingIdx].size = siblingSize + 1;
       }
     }
 
@@ -177,14 +177,9 @@ class ConfigureLayout extends Component {
 
   render() {
     const { templates, selectedTemplate, onSelectTemplate } = this.props;
-    const resizeDirection = get(
-      this,
-      'currentlyResizingImage.resizing.direction',
-      'right',
-    );
+    const resizeDirection = get(this, 'currentlyResizingImage.resizing.direction', 'right');
 
-    const direction =
-      resizeDirection === 'left' && this.imageCount === 1 ? 'rtl' : 'ltr';
+    const direction = resizeDirection === 'left' ? 'rtl' : 'ltr';
 
     return (
       <Root>
@@ -213,27 +208,16 @@ class ConfigureLayout extends Component {
                 const { resizing = null } = image;
 
                 const resizeValue = get(resizing, 'value', 0);
-                const resizeDir = get(resizing, 'direction', 'right');
 
                 return (
                   <AreaSlot
-                    style={{
-                      transform:
-                        resizeDir === 'left' && this.imageCount > 1
-                          ? `translateX(-${resizeValue}px)`
-                          : 'none',
-                      width: `calc(100% + ${resizeValue}px)`,
-                    }}
+                    resizeValue={resizeValue}
                     key={`template_slot_${this.currentTemplate.id}_${idx}`}>
                     {(!isFirst || this.visibleImages.length === 1) && (
-                      <HandleLeft
-                        onMouseDown={this.onHandleMouseDown(image, 'left')}
-                      />
+                      <HandleLeft onMouseDown={this.onHandleMouseDown(image, 'left')} />
                     )}
                     {(!isLast || this.visibleImages.length === 1) && (
-                      <HandleRight
-                        onMouseDown={this.onHandleMouseDown(image, 'right')}
-                      />
+                      <HandleRight onMouseDown={this.onHandleMouseDown(image, 'right')} />
                     )}
                     <Item dangerouslySetInnerHTML={{ __html: image.svg }} />
                   </AreaSlot>
