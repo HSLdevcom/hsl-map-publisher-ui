@@ -5,7 +5,7 @@ import { blue50 } from 'material-ui/styles/colors';
 import { computed, observable } from 'mobx';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import TemplateImage from './TemplateImage';
+import TemplateSlot from './TemplateSlot';
 
 const AreaContainer = styled.div`
   padding: 1rem;
@@ -148,9 +148,10 @@ class TemplateArea extends Component {
           resizing={!!this.currentlyResizingImage}
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}
+          onMouseLeave={this.resetResize}
           columns={this.currentTemplateColumns}>
           {this.visibleImages.map((image, idx, all) => (
-            <TemplateImage
+            <TemplateSlot
               key={`template_image_${template.id}_${idx}`}
               image={image}
               index={idx}

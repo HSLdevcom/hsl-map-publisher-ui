@@ -9,6 +9,8 @@ import {
   addPosters,
   removePoster,
   getTemplates,
+  addTemplate,
+  saveTemplate
 } from '../util/api';
 
 const store = observable({
@@ -136,8 +138,33 @@ store.getTemplates = async () => {
   }
 };
 
+store.addTemplate = async () => {
+  const callback = async label => {
+    try {
+      const { id } = await addTemplate({ label });
+      store.selectedTemplate = id;
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Sommittelun lisääminen epäonnistui: ${error.message}`);
+    }
+    store.getTemplates();
+  };
+  store.showPrompt('Anna nimi sommittelulle', callback);
+};
+
 store.selectTemplate = id => {
   store.selectedTemplate = id;
+};
+
+store.saveTemplate = async template => {
+  try {
+    await saveTemplate(template);
+  } catch (error) {
+    console.error(error); // eslint-disable-line no-console
+    store.showConfirm(`Sommittelun tallennus epäonnistui: ${error.message}`);
+  }
+
+  store.getTemplates();
 };
 
 store.addPosters = async (buildId, component, props) => {

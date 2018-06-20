@@ -39,6 +39,14 @@ function getTemplates() {
   return getJson('templates');
 }
 
+function addTemplate({ label }) {
+  return postJson('templates', { label });
+}
+
+function saveTemplate(template) {
+  return putJson('templates', template);
+}
+
 function getBuild({ id }) {
   return getJson(`builds/${id}`);
 }
@@ -75,6 +83,8 @@ export {
   getStops,
   getBuilds,
   getTemplates,
+  addTemplate,
+  saveTemplate,
   getBuild,
   addBuild,
   updateBuild,
