@@ -5,6 +5,7 @@ import { blue50 } from 'material-ui/styles/colors';
 import { computed, observable } from 'mobx';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import TemplateImage from './TemplateImage';
 
 const AreaContainer = styled.div`
   padding: 1rem;
@@ -23,57 +24,6 @@ const Area = styled.div`
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;
-`;
-
-const AreaSlot = styled.div`
-  border-radius: 1rem;
-  flex: 0 0 auto;
-  border: 3px dashed white;
-  position: relative;
-  height: 15rem;
-  overflow: hidden;
-  position: relative;
-  transform: translateZ(0);
-  transition: width ${({ resizing = false }) => (resizing ? '0.1s' : '0.25s')} ease-out,
-    left 0.1s ease-out, right 0.1s ease-out;
-  ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
-
-  svg {
-    width: 100%;
-    height: auto;
-  }
-`;
-
-const Handle = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  padding: 1rem 0.5rem;
-  height: 2rem;
-  box-sizing: content-box;
-  cursor: col-resize;
-  pointer-events: all;
-
-  &:before {
-    content: '';
-    width: 100%;
-    height: 100%;
-    display: block;
-    background: red;
-  }
-`;
-
-const HandleLeft = styled(Handle)`
-  left: calc(-0.5rem + 3px);
-`;
-
-const HandleRight = styled(Handle)`
-  right: calc(-0.5rem + 3px);
-`;
-
-const Item = styled.div`
-  color: red;
 `;
 
 function getSiblingIndex(index, direction) {
@@ -199,40 +149,15 @@ class TemplateArea extends Component {
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}
           columns={this.currentTemplateColumns}>
-          {this.visibleImages.map((image, idx, all) => {
-            if (image.size === 0) {
-              return null;
-            }
-
-            const isFirst = idx === 0;
-            const isLast = idx >= all.length - 1;
-            const { resizing = null } = image;
-
-            const resizeValue = get(resizing, 'value', 0);
-            const resizeDir = get(resizing, 'direction', 'right');
-
-            const resizeStyle = {
-              left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',
-              right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
-              width: `calc(100% + ${resizeValue}px)`,
-            };
-
-            return (
-              <AreaSlot
-                resizing={!!resizing}
-                style={resizeStyle}
-                resizeValue={resizeValue}
-                key={`template_slot_${template.id}_${idx}`}>
-                {(!isFirst || image.size > 1) && (
-                  <HandleLeft onMouseDown={this.onHandleMouseDown(image, 'left')} />
-                )}
-                {(!isLast || image.size > 1) && (
-                  <HandleRight onMouseDown={this.onHandleMouseDown(image, 'right')} />
-                )}
-                <Item dangerouslySetInnerHTML={{ __html: image.svg }} />
-              </AreaSlot>
-            );
-          })}
+          {this.visibleImages.map((image, idx, all) => (
+            <TemplateImage
+              key={`template_image_${template.id}_${idx}`}
+              image={image}
+              index={idx}
+              totalImages={all.length}
+              onMouseDown={this.onHandleMouseDown}
+            />
+          ))}
         </Area>
       </AreaContainer>
     );
