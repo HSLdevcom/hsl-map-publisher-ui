@@ -107,7 +107,7 @@ class TemplateArea extends Component {
   resetResize = () => {
     this.images.forEach(img => {
       // eslint-disable-next-line
-      img.resizing = null;
+      delete img.resizing
     });
 
     this.currentlyResizingImage = null;

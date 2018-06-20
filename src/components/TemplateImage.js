@@ -23,10 +23,12 @@ class TemplateImage extends Component {
   static propTypes = {
     svg: PropTypes.string,
     onChange: PropTypes.func.isRequired,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     svg: '',
+    className: '',
   };
 
   onDrop = files => {
@@ -44,14 +46,14 @@ class TemplateImage extends Component {
 
   onFileLoaded = fileName => e => {
     const content = get(e, 'target.result', '');
-    this.props.onChange({ svg: content, src: fileName });
+    this.props.onChange({ svg: content, name: fileName });
   };
 
   render() {
-    const { svg } = this.props;
+    const { svg, className } = this.props;
 
     return (
-      <UploadDrop onDrop={this.onDrop} name="footer_image" disablePreview>
+      <UploadDrop className={className} onDrop={this.onDrop} name="footer_image" disablePreview>
         <Item dangerouslySetInnerHTML={{ __html: svg }} />
       </UploadDrop>
     );

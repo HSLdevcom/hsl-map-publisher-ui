@@ -14,8 +14,11 @@ const AreaSlot = styled.div`
   position: relative;
   transform: translateZ(0);
   width: 100%;
-  max-height: 100%;
+  height: 250px;
   transition: all 0.1s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
 
   svg {
@@ -53,6 +56,8 @@ const HandleRight = styled(Handle)`
   right: calc(-0.5rem + 3px);
 `;
 
+const ImageComponent = styled(TemplateImage)``;
+
 @observer
 class TemplateSlot extends Component {
   static propTypes = {
@@ -63,8 +68,12 @@ class TemplateSlot extends Component {
   };
 
   onChangeImage = ({ svg, src }) => {
-    this.props.image.svg = svg;
-    this.props.image.src = src;
+    const { image } = this.props;
+
+    image.svg = svg;
+    image.src = src;
+    // Wipe the ID from the image if it is changed
+    image.id = '';
   };
 
   render() {
@@ -91,7 +100,7 @@ class TemplateSlot extends Component {
       <AreaSlot resizing={!!resizing} style={resizeStyle} resizeValue={resizeValue}>
         {(!isFirst || image.size > 1) && <HandleLeft onMouseDown={onMouseDown(image, 'left')} />}
         {(!isLast || image.size > 1) && <HandleRight onMouseDown={onMouseDown(image, 'right')} />}
-        <TemplateImage onChange={this.onChangeImage} svg={image.svg} />
+        <ImageComponent onChange={this.onChangeImage} svg={image.svg} />
       </AreaSlot>
     );
   }
