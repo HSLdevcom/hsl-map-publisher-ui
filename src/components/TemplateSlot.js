@@ -6,21 +6,22 @@ import styled from 'styled-components';
 import TemplateImage from './TemplateImage';
 
 const AreaSlot = styled.div`
-  border-radius: 1rem;
+  border-radius: 23px;
   flex: 0 0 auto;
   border: 3px dashed white;
   position: relative;
-  height: 15rem;
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
-  width: 0;
+  width: 100%;
+  max-height: 100%;
   transition: all 0.1s ease-out;
   ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
 
   svg {
     width: 100%;
     height: auto;
+    display: block;
   }
 `;
 
@@ -83,7 +84,7 @@ class TemplateSlot extends Component {
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',
       right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
-      width: `calc(100% + ${resizeValue}px)`,
+      width: !resizeValue ? '100%' : `calc(100% + ${resizeValue}px)`,
     };
 
     return (

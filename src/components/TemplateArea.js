@@ -42,6 +42,76 @@ class TemplateArea extends Component {
     template: {},
     title: 'Untitled area',
   };
+  @observable currentlyResizingImage = null;
+  areaRef = React.createRef();
+  onHandleMouseDown = (image, direction) => e => {
+    const { left } = e.target.getBoundingClientRect();
+
+    // eslint-disable-next-line
+    image.resizing = {
+      direction,
+      start: left,
+      value: 0,
+    };
+
+    this.currentlyResizingImage = image;
+  };
+  onHandleMouseMove = e => {
+    if (!this.currentlyResizingImage) {
+      return;
+    }
+
+    const image = this.currentlyResizingImage;
+    const { size = 1 } = image;
+    const { start, direction } = image.resizing;
+    const mouseX = e.clientX;
+    const delta = direction === 'left' ? start - mouseX : mouseX - start;
+
+    if (size > 1 && delta < 0) {
+      image.resizing.value = delta < -20 ? delta : 0;
+    } else {
+      image.resizing.value = delta > 20 ? delta : 0;
+    }
+  };
+  onHandleMouseUp = e => {
+    e.stopPropagation();
+
+    if (this.currentlyResizingImage) {
+      const image = this.currentlyResizingImage;
+      const { value, direction } = image.resizing;
+
+      const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
+      const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
+      const slotWidth = areaWidth / slotCount;
+      const actionAreaWidth = slotWidth / 2;
+
+      if (this.imageCount > 1 && value > actionAreaWidth) {
+        const index = this.visibleImages.indexOf(image);
+        const affectedSiblingIdx = getSiblingIndex(index, direction);
+
+        image.size = image.size + 1;
+        const siblingSize = get(this, `visibleImages[${affectedSiblingIdx}].size`, 0);
+        this.visibleImages[affectedSiblingIdx].size = siblingSize - 1;
+      } else if (value < -actionAreaWidth && image.size > 1) {
+        const absoluteIndex = get(this, 'images', []).indexOf(image);
+        const affectedSiblingIdx = getSiblingIndex(absoluteIndex, direction);
+
+        image.size = image.size - 1;
+        const siblingSize = get(this, `images[${affectedSiblingIdx}].size`, 0);
+        this.images[affectedSiblingIdx].size = siblingSize + 1;
+      }
+    }
+
+    this.resetResize();
+  };
+  resetResize = () => {
+    this.images.forEach(img => {
+      // eslint-disable-next-line
+      img.resizing = null;
+    });
+
+    this.currentlyResizingImage = null;
+  };
 
   @computed
   get images() {
@@ -64,80 +134,6 @@ class TemplateArea extends Component {
     return columns.join(' ');
   }
 
-  @observable currentlyResizingImage = null;
-
-  onHandleMouseDown = (image, direction) => e => {
-    const { left } = e.target.getBoundingClientRect();
-
-    // eslint-disable-next-line
-    image.resizing = {
-      direction,
-      start: left,
-      value: 0,
-    };
-
-    this.currentlyResizingImage = image;
-  };
-
-  onHandleMouseMove = e => {
-    if (!this.currentlyResizingImage) {
-      return;
-    }
-
-    const image = this.currentlyResizingImage;
-    const { size = 1 } = image;
-    const { start, direction } = image.resizing;
-    const mouseX = e.clientX;
-    const delta = direction === 'left' ? start - mouseX : mouseX - start;
-
-    if (size > 1 && delta < 0) {
-      image.resizing.value = delta < -20 ? delta : 0;
-    } else {
-      image.resizing.value = delta > 20 ? delta : 0;
-    }
-  };
-
-  onHandleMouseUp = e => {
-    e.stopPropagation();
-
-    if (this.currentlyResizingImage) {
-      const image = this.currentlyResizingImage;
-      const { value, direction } = image.resizing;
-
-      const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
-      // TODO: Measure slot width
-      const slotWidth = 880 / slotCount;
-      const actionAreaWidth = slotWidth / 2;
-
-      if (this.imageCount > 1 && value > actionAreaWidth) {
-        const index = this.visibleImages.indexOf(image);
-        const affectedSiblingIdx = getSiblingIndex(index, direction);
-
-        image.size = image.size + 1;
-        const siblingSize = get(this, `visibleImages[${affectedSiblingIdx}].size`, 0);
-        this.visibleImages[affectedSiblingIdx].size = siblingSize - 1;
-      } else if (value < -actionAreaWidth && image.size > 1) {
-        const absoluteIndex = get(this, 'images', []).indexOf(image);
-        const affectedSiblingIdx = getSiblingIndex(absoluteIndex, direction);
-
-        image.size = image.size - 1;
-        const siblingSize = get(this, `images[${affectedSiblingIdx}].size`, 0);
-        this.images[affectedSiblingIdx].size = siblingSize + 1;
-      }
-    }
-
-    this.resetResize();
-  };
-
-  resetResize = () => {
-    this.images.forEach(img => {
-      // eslint-disable-next-line
-      img.resizing = null;
-    });
-
-    this.currentlyResizingImage = null;
-  };
-
   render() {
     const { title, template } = this.props;
 
@@ -145,6 +141,7 @@ class TemplateArea extends Component {
       <AreaContainer>
         <h3>{title}</h3>
         <Area
+          innerRef={this.areaRef}
           resizing={!!this.currentlyResizingImage}
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}
