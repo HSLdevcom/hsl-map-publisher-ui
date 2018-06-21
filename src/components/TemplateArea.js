@@ -28,7 +28,7 @@ const Area = styled.div`
 
 function getSiblingIndex(index, direction) {
   const siblingIdx = direction === 'left' ? index - 1 : index + 1;
-  return siblingIdx < 0 || siblingIdx > 2 ? 1 : siblingIdx;
+  return siblingIdx < 0 ? 0 : siblingIdx > 2 ? 2 : siblingIdx;
 }
 
 @observer
@@ -52,6 +52,7 @@ class TemplateArea extends Component {
     // The current left position of the handle
     const { left } = e.target.getBoundingClientRect();
 
+    // Base resizing data
     // eslint-disable-next-line
     image.resizing = {
       direction,
@@ -131,13 +132,14 @@ class TemplateArea extends Component {
         let growBy = growByTotal;
         // Get the index of the current slot in the array of visible slots.
         const index = this.visibleImages.indexOf(image);
+        const collection = this.visibleImages;
 
         while (growBy > 0) {
           // Grow the current slot.
           image.size = image.size + 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(-1, index, this.visibleImages);
+          modifySibling(-1, index, collection);
 
           growBy = growBy - 1;
         }
@@ -151,13 +153,14 @@ class TemplateArea extends Component {
         let shrinkBy = shrinkByTotal;
         // Get the index of this slot from ALL the slots, not just the visible ones.
         const absoluteIndex = this.images.indexOf(image);
+        const collection = this.images;
 
         while (shrinkBy > 0) {
           // Shrink the current slot one size down
           image.size = image.size - 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(1, absoluteIndex, this.images);
+          modifySibling(1, absoluteIndex, collection);
 
           shrinkBy = shrinkBy - 1;
         }

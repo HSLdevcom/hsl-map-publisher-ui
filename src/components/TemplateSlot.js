@@ -13,7 +13,7 @@ const AreaSlot = styled.div`
   transform: translateZ(0);
   width: 100%;
   height: 250px;
-  transition: all 0.1s ease-out;
+  transition: all ${({ resizing = false }) => (resizing ? '0.1' : '0')} ease-out;
   display: flex;
   align-items: center;
   justify-content: center;
