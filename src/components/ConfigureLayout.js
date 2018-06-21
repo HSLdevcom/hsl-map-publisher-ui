@@ -17,8 +17,14 @@ const Root = styled.div`
 const TemplateControls = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   margin: 0 0 0.5rem 0;
+
+  > * {
+    flex: none;
+    margin-right: 1rem;
+  }
 `;
 
 @observer
@@ -26,6 +32,8 @@ class ConfigureLayout extends Component {
   static propTypes = {
     onAddTemplate: PropTypes.func.isRequired,
     onSaveTemplate: PropTypes.func.isRequired,
+    onRemoveTemplate: PropTypes.func.isRequired,
+    onRemoveImage: PropTypes.func.isRequired,
     selectedTemplate: PropTypes.string,
     templates: PropTypes.array,
     images: PropTypes.array,
@@ -47,7 +55,14 @@ class ConfigureLayout extends Component {
   }
 
   render() {
-    const { templates, images, onSelectTemplate, onAddTemplate, onSaveTemplate } = this.props;
+    const {
+      templates,
+      images,
+      onSelectTemplate,
+      onAddTemplate,
+      onSaveTemplate,
+      onRemoveTemplate,
+    } = this.props;
 
     return (
       <Root>
@@ -59,20 +74,18 @@ class ConfigureLayout extends Component {
             onChange={onSelectTemplate}
           />
           <FlatButton
-            onClick={() => onAddTemplate()}
-            label="Uusi sommittelu..."
-            style={{ height: 40, marginLeft: 10 }}
+            backgroundColor="#ffcccc"
+            onClick={() => onRemoveTemplate(get(this, 'currentTemplate.id'))}
+            label="Poista sommittelu"
           />
+          <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
           <RaisedButton
             primary
             onClick={() => onSaveTemplate(toJS(this.currentTemplate))}
             label="Tallenna sommittelu"
-            style={{ height: 40, marginLeft: 10 }}
           />
         </TemplateControls>
-        {images.length > 0 && (
-          <ImageLibrary images={ images } />
-        )}
+        {images.length > 0 && <ImageLibrary images={images} />}
         <TemplateArea template={this.currentTemplate} title="Footer" />
       </Root>
     );

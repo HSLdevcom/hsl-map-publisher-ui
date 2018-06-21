@@ -57,11 +57,11 @@ class ImageLibrary extends Component {
         <h4>Kirjasto</h4>
         <ImageTrack>
           <ImagesContainer>
-            {images.map(img => (
+            {images.map((img, idx) => (
               <Image
                 draggable
                 onDragStart={this.onDragStart(img)}
-                key={img.id}
+                key={`image_${img.id}_${idx}`}
                 dangerouslySetInnerHTML={{ __html: img.svg }}
               />
             ))}

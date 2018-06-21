@@ -140,6 +140,8 @@ const Generator = props => {
         <ConfigureLayout
           onAddTemplate={commonStore.addTemplate}
           onSaveTemplate={commonStore.saveTemplate}
+          onRemoveTemplate={commonStore.removeTemplate}
+          onRemoveImage={commonStore.removeImage}
           onSelectTemplate={commonStore.selectTemplate}
           selectedTemplate={commonStore.selectedTemplate}
           templates={commonStore.templates}

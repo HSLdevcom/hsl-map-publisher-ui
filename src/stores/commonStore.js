@@ -11,8 +11,11 @@ import {
   getTemplates,
   addTemplate,
   saveTemplate,
+  removeTemplate,
   getImages,
+  removeImage,
 } from '../util/api';
+import get from 'lodash/get';
 
 const store = observable({
   confirm: null,
@@ -131,6 +134,36 @@ store.removeBuild = async id => {
   store.showConfirm('Haluatko varmasti poistaa listan?', callback);
 };
 
+store.removeImage = async name => {
+  const callback = async () => {
+    try {
+      await removeImage({ name });
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Kuvan poistaminen epäonnistui: ${error.message}`);
+    }
+    store.getImages();
+  };
+  store.showConfirm('Haluatko varmasti poistaa kuvaa?', callback);
+};
+
+store.removeTemplate = async id => {
+  const callback = async () => {
+    try {
+      await removeTemplate({ id });
+
+      if (store.selectedTemplate === id) {
+        store.selectedTemplate = get(store, 'templates[0].id', null);
+      }
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Sommittelun poistaminen epäonnistui: ${error.message}`);
+    }
+    store.getTemplates();
+  };
+  store.showConfirm('Haluatko varmasti poistaa sommittelua?', callback);
+};
+
 store.getTemplates = async () => {
   try {
     store.templates = await getTemplates();
@@ -173,7 +206,7 @@ store.saveTemplate = async template => {
 store.getImages = async () => {
   try {
     store.images = await getImages();
-  } catch( error ) {
+  } catch (error) {
     store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
   }
