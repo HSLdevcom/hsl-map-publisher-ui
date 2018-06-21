@@ -10,8 +10,6 @@ const AreaSlot = styled.div`
   flex: 0 0 auto;
   border: 3px dashed white;
   position: relative;
-  overflow: hidden;
-  position: relative;
   transform: translateZ(0);
   width: 100%;
   height: 250px;
@@ -20,6 +18,11 @@ const AreaSlot = styled.div`
   align-items: center;
   justify-content: center;
   ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
+
+  > div {
+    overflow: hidden;
+    border-radius: 23px;
+  }
 
   svg {
     width: 100%;
@@ -32,9 +35,9 @@ const Handle = styled.div`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
+  width: 2px;
   padding: 1rem 0.5rem;
-  height: 2rem;
+  height: 5rem;
   box-sizing: content-box;
   cursor: col-resize;
   pointer-events: all;
@@ -44,16 +47,27 @@ const Handle = styled.div`
     width: 100%;
     height: 100%;
     display: block;
-    background: red;
+    background: #888;
   }
 `;
 
 const HandleLeft = styled(Handle)`
-  left: calc(-0.5rem + 3px);
+  left: calc(-0.5rem + 4px);
 `;
 
 const HandleRight = styled(Handle)`
-  right: calc(-0.5rem + 3px);
+  right: calc(-0.5rem + 4px);
+`;
+
+const IndexDisplay = styled.span`
+  position: absolute;
+  bottom: -3px;
+  left: -3px;
+  background: white;
+  border-top-right-radius: 23px;
+  border-bottom-left-radius: 23px;
+  color: #888;
+  padding: 0.5rem 1rem 0.6rem 0.9rem;
 `;
 
 const ImageComponent = styled(TemplateImage)``;
@@ -63,6 +77,7 @@ class TemplateSlot extends Component {
   static propTypes = {
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
+    absoluteIndex: PropTypes.number.isRequired,
     totalImages: PropTypes.number.isRequired,
     onMouseDown: PropTypes.func.isRequired,
   };
@@ -77,7 +92,7 @@ class TemplateSlot extends Component {
   };
 
   render() {
-    const { image, index, onMouseDown, totalImages } = this.props;
+    const { image, index, absoluteIndex, onMouseDown, totalImages } = this.props;
 
     if (image.size === 0) {
       return null;
@@ -101,6 +116,7 @@ class TemplateSlot extends Component {
         {(!isFirst || image.size > 1) && <HandleLeft onMouseDown={onMouseDown(image, 'left')} />}
         {(!isLast || image.size > 1) && <HandleRight onMouseDown={onMouseDown(image, 'right')} />}
         <ImageComponent onChange={this.onChangeImage} svg={image.svg} />
+        <IndexDisplay>{absoluteIndex + 1}</IndexDisplay>
       </AreaSlot>
     );
   }

@@ -103,33 +103,64 @@ class TemplateArea extends Component {
       // until the resize takes effect.
       const actionAreaWidth = slotWidth / 2;
 
+      const modifySibling = (modifyVal, currentImageIndex, collection) => {
+        const affectedSiblingIdx = getSiblingIndex(currentImageIndex, direction);
+        const siblingSize = get(collection, `[${affectedSiblingIdx}].size`, 0);
+
+        // Make sure the sibling can be modified
+        if (
+          (modifyVal > 0 && siblingSize < collection.length) ||
+          (modifyVal < 0 && siblingSize > 0)
+        ) {
+          // Modify the affected sibling.
+          // eslint-disable-next-line
+          collection[affectedSiblingIdx].size = siblingSize + modifyVal;
+        } else if (affectedSiblingIdx > 0 && affectedSiblingIdx < collection.length - 1) {
+          // If there is still one potential sibling next to this one, grow that instead.
+          modifySibling(modifyVal, affectedSiblingIdx, collection);
+        }
+      };
+
       // If there is more than one image and the resize value
       // has been dragged beyond the action area, we want to
       // GROW the current slot one size unit.
       if (this.imageCount > 1 && value > actionAreaWidth) {
+        // Get the total amount we want to grow this by
+        const growByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
+        // Loop counter
+        let growBy = growByTotal;
         // Get the index of the current slot in the array of visible slots.
         const index = this.visibleImages.indexOf(image);
-        // Get the sibling that is affected. This slot will be made smaller or invisible.
-        const affectedSiblingIdx = getSiblingIndex(index, direction);
-        // Grow the current slot one size
-        image.size = image.size + 1;
-        // Get the current size of the affected sibling slot
-        const siblingSize = get(this, `visibleImages[${affectedSiblingIdx}].size`, 0);
-        // Shrink the affected sibling one size.
-        this.visibleImages[affectedSiblingIdx].size = siblingSize - 1;
+
+        while (growBy > 0) {
+          // Grow the current slot.
+          image.size = image.size + 1;
+
+          // Get a valid sibling and shrink it.
+          modifySibling(-1, index, this.visibleImages);
+
+          growBy = growBy - 1;
+        }
 
         // If the current slot is larger than one size unit and the resize value
         // is under the action area, we want to SHRINK the current slot one unit.
       } else if (value < -actionAreaWidth && image.size > 1) {
+        // Get the total amount we want to shrink this by
+        const shrinkByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
+        // Loop counter
+        let shrinkBy = shrinkByTotal;
         // Get the index of this slot from ALL the slots, not just the visible ones.
-        const absoluteIndex = get(this, 'images', []).indexOf(image);
-        // The affected sibling
-        const affectedSiblingIdx = getSiblingIndex(absoluteIndex, direction);
-        // Shrink the current slot one size down
-        image.size = image.size - 1;
-        const siblingSize = get(this, `images[${affectedSiblingIdx}].size`, 0);
-        // Grow the affected sibling one size up.
-        this.images[affectedSiblingIdx].size = siblingSize + 1;
+        const absoluteIndex = this.images.indexOf(image);
+
+        while (shrinkBy > 0) {
+          // Shrink the current slot one size down
+          image.size = image.size - 1;
+
+          // Get a valid sibling and shrink it.
+          modifySibling(1, absoluteIndex, this.images);
+
+          shrinkBy = shrinkBy - 1;
+        }
       }
     }
 
@@ -187,6 +218,7 @@ class TemplateArea extends Component {
           columns={this.currentTemplateColumns}>
           {this.visibleImages.map((image, idx, all) => (
             <TemplateSlot
+              absoluteIndex={this.images.indexOf(image)}
               key={`template_image_${template.id}_${idx}`}
               image={image}
               index={idx}
