@@ -67,11 +67,11 @@ class TemplateSlot extends Component {
     onMouseDown: PropTypes.func.isRequired,
   };
 
-  onChangeImage = ({ svg, src }) => {
+  onChangeImage = ({ svg, name }) => {
     const { image } = this.props;
 
     image.svg = svg;
-    image.src = src;
+    image.name = name;
     // Wipe the ID from the image if it is changed
     image.id = '';
   };
@@ -93,7 +93,7 @@ class TemplateSlot extends Component {
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',
       right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
-      width: !resizeValue ? '100%' : `calc(100% + ${resizeValue}px)`,
+      width: `calc(100% + ${resizeValue}px)`,
     };
 
     return (

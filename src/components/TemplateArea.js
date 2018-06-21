@@ -42,9 +42,14 @@ class TemplateArea extends Component {
     template: {},
     title: 'Untitled area',
   };
+
   @observable currentlyResizingImage = null;
   areaRef = React.createRef();
+
+  // This method sets the initial resize values on the image
+  // object, which is observable through MobX.
   onHandleMouseDown = (image, direction) => e => {
+    // The current left position of the handle
     const { left } = e.target.getBoundingClientRect();
 
     // eslint-disable-next-line
@@ -54,6 +59,7 @@ class TemplateArea extends Component {
       value: 0,
     };
 
+    // Make sure the other drag methods can also access the data.
     this.currentlyResizingImage = image;
   };
   onHandleMouseMove = e => {
@@ -64,40 +70,65 @@ class TemplateArea extends Component {
     const image = this.currentlyResizingImage;
     const { size = 1 } = image;
     const { start, direction } = image.resizing;
+    // The current horizontal mouse position
     const mouseX = e.clientX;
+    // The resize delta. No matter the direction, if we want to grow a lot
+    // the delta must be positive, and if we want to shrink it the delta
+    // should be negative.
     const delta = direction === 'left' ? start - mouseX : mouseX - start;
 
+    // Only allow shrink if the size is more than one.
     if (size > 1 && delta < 0) {
+      // Start the action after 20 px.
       image.resizing.value = delta < -20 ? delta : 0;
     } else {
+      // Same, but in the grow direction.
       image.resizing.value = delta > 20 ? delta : 0;
     }
   };
   onHandleMouseUp = e => {
     e.stopPropagation();
 
+    // Check that we are currently resizing
     if (this.currentlyResizingImage) {
       const image = this.currentlyResizingImage;
       const { value, direction } = image.resizing;
 
       const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
+      // Measure the area that contains the slots
       const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
+      // Figure out how wide a slot is
       const slotWidth = areaWidth / slotCount;
+      // The action area is the distance the slot edge must be dragged
+      // until the resize takes effect.
       const actionAreaWidth = slotWidth / 2;
 
+      // If there is more than one image and the resize value
+      // has been dragged beyond the action area, we want to
+      // GROW the current slot one size unit.
       if (this.imageCount > 1 && value > actionAreaWidth) {
+        // Get the index of the current slot in the array of visible slots.
         const index = this.visibleImages.indexOf(image);
+        // Get the sibling that is affected. This slot will be made smaller or invisible.
         const affectedSiblingIdx = getSiblingIndex(index, direction);
-
+        // Grow the current slot one size
         image.size = image.size + 1;
+        // Get the current size of the affected sibling slot
         const siblingSize = get(this, `visibleImages[${affectedSiblingIdx}].size`, 0);
+        // Shrink the affected sibling one size.
         this.visibleImages[affectedSiblingIdx].size = siblingSize - 1;
-      } else if (value < -actionAreaWidth && image.size > 1) {
-        const absoluteIndex = get(this, 'images', []).indexOf(image);
-        const affectedSiblingIdx = getSiblingIndex(absoluteIndex, direction);
 
+        // If the current slot is larger than one size unit and the resize value
+        // is under the action area, we want to SHRINK the current slot one unit.
+      } else if (value < -actionAreaWidth && image.size > 1) {
+        // Get the index of this slot from ALL the slots, not just the visible ones.
+        const absoluteIndex = get(this, 'images', []).indexOf(image);
+        // The affected sibling
+        const affectedSiblingIdx = getSiblingIndex(absoluteIndex, direction);
+        // Shrink the current slot one size down
         image.size = image.size - 1;
         const siblingSize = get(this, `images[${affectedSiblingIdx}].size`, 0);
+        // Grow the affected sibling one size up.
         this.images[affectedSiblingIdx].size = siblingSize + 1;
       }
     }
@@ -106,28 +137,35 @@ class TemplateArea extends Component {
   };
   resetResize = () => {
     this.images.forEach(img => {
+      // Remove the resizing prop as best as we can.
+      // Do not use delete here as mobx will stop tracking it if you do that.
       // eslint-disable-next-line
-      delete img.resizing
+      img.resizing = undefined;
     });
 
+    // Reset the currently resixing image.
     this.currentlyResizingImage = null;
   };
 
+  // Shorthand for accessing the images (or an empty array) of the current template.
   @computed
   get images() {
     return get(this.props.template, 'images', []);
   }
 
+  // Get all the slots that should be visible, ie with a size of more than one.
   @computed
   get visibleImages() {
     return this.images.filter(image => image.size > 0);
   }
 
+  // The number of visible slots.
   @computed
   get imageCount() {
     return this.visibleImages.length;
   }
 
+  // Get the CSS grid template value for the slot layout.
   @computed
   get currentTemplateColumns() {
     const columns = this.visibleImages.map(image => `${image.size}fr`);
