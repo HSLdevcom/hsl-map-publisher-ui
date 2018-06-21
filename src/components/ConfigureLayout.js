@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { computed, toJS } from 'mobx';
@@ -7,6 +7,7 @@ import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
+import ImageLibrary from './ImageLibrary';
 
 const Root = styled.div`
   display: flex;
@@ -20,18 +21,20 @@ const TemplateControls = styled.div`
   margin: 0 0 0.5rem 0;
 `;
 
-@inject('commonStore')
 @observer
 class ConfigureLayout extends Component {
   static propTypes = {
-    commonStore: PropTypes.object.isRequired,
+    onAddTemplate: PropTypes.func.isRequired,
+    onSaveTemplate: PropTypes.func.isRequired,
     selectedTemplate: PropTypes.string,
     templates: PropTypes.array,
+    images: PropTypes.array,
     onSelectTemplate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     templates: [],
+    images: [],
     selectedTemplate: null,
   };
 
@@ -44,11 +47,11 @@ class ConfigureLayout extends Component {
   }
 
   render() {
-    const { templates, onSelectTemplate, commonStore } = this.props;
+    const { templates, images, onSelectTemplate, onAddTemplate, onSaveTemplate } = this.props;
 
     return (
       <Root>
-        <h2>Templates</h2>
+        <h2>Sommittelut</h2>
         <TemplateControls>
           <TemplateSelect
             templates={templates}
@@ -56,17 +59,20 @@ class ConfigureLayout extends Component {
             onChange={onSelectTemplate}
           />
           <FlatButton
-            onClick={() => commonStore.addTemplate()}
+            onClick={() => onAddTemplate()}
             label="Uusi sommittelu..."
             style={{ height: 40, marginLeft: 10 }}
           />
           <RaisedButton
             primary
-            onClick={() => commonStore.saveTemplate(toJS(this.currentTemplate))}
+            onClick={() => onSaveTemplate(toJS(this.currentTemplate))}
             label="Tallenna sommittelu"
             style={{ height: 40, marginLeft: 10 }}
           />
         </TemplateControls>
+        {images.length > 0 && (
+          <ImageLibrary images={ images } />
+        )}
         <TemplateArea template={this.currentTemplate} title="Footer" />
       </Root>
     );

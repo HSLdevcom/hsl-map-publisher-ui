@@ -16,6 +16,7 @@
     "react/jsx-closing-bracket-location": 0,
     "react/sort-comp": 0,
     "operator-assignment": 0,
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "prefer-destructuring": "off"
   }
 }

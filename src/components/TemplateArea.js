@@ -11,7 +11,7 @@ const AreaContainer = styled.div`
   padding: 1rem;
   background: ${blue50};
 
-  h3 {
+  > * {
     margin-top: 0;
   }
 `;
@@ -211,7 +211,7 @@ class TemplateArea extends Component {
 
     return (
       <AreaContainer>
-        <h3>{title}</h3>
+        <h4>{title}</h4>
         <Area
           innerRef={this.areaRef}
           resizing={!!this.currentlyResizingImage}

@@ -73,9 +73,7 @@ const Generator = props => {
                 <Checkbox
                   label="Mustavalkoisena"
                   defaultValueTrue={generatorStore.timetableAsGreyscale}
-                  onChange={value =>
-                    generatorStore.setTimetableGreyscale(value)
-                  }
+                  onChange={value => generatorStore.setTimetableGreyscale(value)}
                 />
               </div>
             )}
@@ -140,9 +138,12 @@ const Generator = props => {
           onReset={generatorStore.resetRows}
         />
         <ConfigureLayout
+          onAddTemplate={commonStore.addTemplate}
+          onSaveTemplate={commonStore.saveTemplate}
           onSelectTemplate={commonStore.selectTemplate}
           selectedTemplate={commonStore.selectedTemplate}
           templates={commonStore.templates}
+          images={commonStore.images}
         />
       </Main>
 

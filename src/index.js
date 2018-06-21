@@ -13,6 +13,7 @@ const { commonStore } = stores;
 commonStore.getStops();
 commonStore.getBuilds();
 commonStore.getTemplates();
+commonStore.getImages();
 
 setInterval(() => {
   if (

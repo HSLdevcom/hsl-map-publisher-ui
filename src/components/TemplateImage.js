@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Dropzone from 'react-dropzone';
+import Dropzone from 'react-dropzone/dist/es/index';
 import get from 'lodash/get';
 
 const Item = styled.div`
@@ -31,17 +31,24 @@ class TemplateImage extends Component {
     className: '',
   };
 
-  onDrop = files => {
-    const file = files[0];
+  onDrop = (files, _, e) => {
+    const eventData = e.dataTransfer.getData('text');
+    // Can pass stringified data through dataTransfer
+    if (eventData) {
+      const image = JSON.parse(eventData);
+      this.props.onChange(image);
+    } else {
+      const file = files[0];
 
-    if (!file) {
-      return;
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = this.onFileLoaded(file.name);
+
+      reader.readAsText(file);
     }
-
-    const reader = new FileReader();
-    reader.onload = this.onFileLoaded(file.name);
-
-    reader.readAsText(file);
   };
 
   onFileLoaded = fileName => e => {

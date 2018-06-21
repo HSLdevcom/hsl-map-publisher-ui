@@ -10,7 +10,8 @@ import {
   removePoster,
   getTemplates,
   addTemplate,
-  saveTemplate
+  saveTemplate,
+  getImages,
 } from '../util/api';
 
 const store = observable({
@@ -20,6 +21,7 @@ const store = observable({
   builds: [],
   selectedBuild: null,
   templates: [],
+  images: [],
   selectedTemplate: null,
 });
 
@@ -165,6 +167,16 @@ store.saveTemplate = async template => {
   }
 
   store.getTemplates();
+  store.getImages();
+};
+
+store.getImages = async () => {
+  try {
+    store.images = await getImages();
+  } catch( error ) {
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
 };
 
 store.addPosters = async (buildId, component, props) => {
