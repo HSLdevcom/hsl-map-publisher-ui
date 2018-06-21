@@ -9,23 +9,28 @@ const Root = styled.div`
 `;
 
 const ImagesContainer = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   padding: 1rem;
-  border: 1px solid #ccc;
-  grid-template-columns: repeat(auto-fill, 7.5rem);
-  grid-gap: 1rem;
 `;
 
 const ImageTrack = styled.div`
   overflow: hidden;
   overflow-x: scroll;
+  border: 1px solid #ccc;
 `;
 
 const Image = styled.div`
   user-select: none;
+  width: 7.5rem;
+  flex: none;
+  margin-right: 1rem;
 
   svg {
     display: block;
+    width: 100%;
+    height: auto;
   }
 `;
 

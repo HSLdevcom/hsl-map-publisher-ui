@@ -87,8 +87,6 @@ class TemplateSlot extends Component {
 
     image.svg = svg;
     image.name = name;
-    // Wipe the ID from the image if it is changed
-    image.id = '';
   };
 
   render() {
