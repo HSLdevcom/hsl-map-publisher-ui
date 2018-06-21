@@ -62,6 +62,7 @@ class ConfigureLayout extends Component {
       onAddTemplate,
       onSaveTemplate,
       onRemoveTemplate,
+      onRemoveImage,
     } = this.props;
 
     return (
@@ -85,7 +86,7 @@ class ConfigureLayout extends Component {
             label="Tallenna sommittelu"
           />
         </TemplateControls>
-        {images.length > 0 && <ImageLibrary images={images} />}
+        {images.length > 0 && <ImageLibrary removeImage={onRemoveImage} images={images} />}
         <TemplateArea template={this.currentTemplate} title="Footer" />
       </Root>
     );

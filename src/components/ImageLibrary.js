@@ -23,9 +23,6 @@ const ImageTrack = styled.div`
 
 const Image = styled.div`
   user-select: none;
-  width: 7.5rem;
-  flex: none;
-  margin-right: 1rem;
 
   svg {
     display: block;
@@ -34,10 +31,37 @@ const Image = styled.div`
   }
 `;
 
+const RemoveButton = styled.button`
+  border-radius: 50%;
+  display: none;
+  padding: 0.5rem 0.75rem;
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background: red;
+  border: 0;
+  appearance: none;
+  cursor: pointer;
+`;
+
+const ImageWrapper = styled.div`
+  width: 7.5rem;
+  flex: none;
+  margin-right: 1rem;
+  position: relative;
+
+  &:hover {
+    ${RemoveButton} {
+      display: block;
+    }
+  }
+`;
+
 @observer
 class ImageLibrary extends Component {
   static propTypes = {
     images: PropTypes.array,
+    removeImage: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -49,6 +73,11 @@ class ImageLibrary extends Component {
     e.dataTransfer.setData('text/plain', file);
   };
 
+  onRemoveImage = which => e => {
+    e.preventDefault();
+    this.props.removeImage(which);
+  };
+
   render() {
     const { images } = this.props;
 
@@ -58,12 +87,16 @@ class ImageLibrary extends Component {
         <ImageTrack>
           <ImagesContainer>
             {images.map((img, idx) => (
-              <Image
-                draggable
-                onDragStart={this.onDragStart(img)}
-                key={`image_${img.id}_${idx}`}
-                dangerouslySetInnerHTML={{ __html: img.svg }}
-              />
+              <ImageWrapper key={`image_${img.id}_${idx}`}>
+                <Image
+                  draggable
+                  onDragStart={this.onDragStart(img)}
+                  dangerouslySetInnerHTML={{ __html: img.svg }}
+                />
+                <RemoveButton type="button" onClick={this.onRemoveImage(img.name)}>
+                  X
+                </RemoveButton>
+              </ImageWrapper>
             ))}
           </ImagesContainer>
         </ImageTrack>

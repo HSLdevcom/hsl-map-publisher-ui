@@ -64,7 +64,7 @@ function getImages() {
 }
 
 function removeImage({ name }) {
-  return deleteJson(`builds/${name}`);
+  return deleteJson(`images/${name}`);
 }
 
 function getBuild({ id }) {
