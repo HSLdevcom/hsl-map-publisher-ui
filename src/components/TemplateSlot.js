@@ -110,11 +110,7 @@ class TemplateSlot extends Component {
     const isLast = index >= totalImages - 1;
     const { resizing = null } = image;
 
-    const resizeValue = get(
-      resizing,
-      'value',
-      -(siblingResizeValue),
-    );
+    const resizeValue = get(resizing, 'value', -siblingResizeValue);
     const resizeDir = get(
       resizing,
       'direction',

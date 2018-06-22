@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import { toJS } from 'mobx';
+import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 
 const Root = styled.div`
   margin-bottom: 2rem;
@@ -34,14 +36,18 @@ const Image = styled.div`
 const RemoveButton = styled.button`
   border-radius: 50%;
   display: none;
-  padding: 0.5rem 0.75rem;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  text-align: center;
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  background: red;
+  background: var(--grey);
   border: 0;
   appearance: none;
   cursor: pointer;
+  color: white;
 `;
 
 const ImageWrapper = styled.div`
@@ -55,6 +61,25 @@ const ImageWrapper = styled.div`
       display: block;
     }
   }
+
+  &:active {
+    ${RemoveButton} {
+      display: none;
+    }
+  }
+`;
+
+const RemoveImage = styled.div`
+  border: 2px dashed #ccc;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 20px;
+  margin-right: 1rem;
+  background: #efefef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 @observer
@@ -69,7 +94,17 @@ class ImageLibrary extends Component {
   };
 
   onDragStart = image => e => {
-    const file = JSON.stringify(toJS(image));
+    let dragImage = image;
+
+    if (!image) {
+      dragImage = {
+        name: '',
+        size: 1,
+        svg: '',
+      };
+    }
+
+    const file = JSON.stringify(toJS(dragImage));
     e.dataTransfer.setData('text/plain', file);
   };
 
@@ -82,12 +117,15 @@ class ImageLibrary extends Component {
     const { images } = this.props;
 
     // TODO: Add special item for removing an image from a slot.
-    
+
     return (
       <Root>
         <h4>Kirjasto</h4>
         <ImageTrack>
           <ImagesContainer>
+            <RemoveImage draggable onDragStart={this.onDragStart(false)}>
+              <RemoveIcon style={{ width: '50px', height: '50px' }} color="#ccc" />
+            </RemoveImage>
             {images.map((img, idx) => (
               <ImageWrapper key={`image_${img.id}_${idx}`}>
                 <Image
@@ -96,7 +134,7 @@ class ImageLibrary extends Component {
                   dangerouslySetInnerHTML={{ __html: img.svg }}
                 />
                 <RemoveButton type="button" onClick={this.onRemoveImage(img.name)}>
-                  X
+                  <CloseIcon color="white" />
                 </RemoveButton>
               </ImageWrapper>
             ))}
