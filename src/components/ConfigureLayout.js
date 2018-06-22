@@ -69,7 +69,7 @@ class ConfigureLayout extends Component {
           />
           <FlatButton
             backgroundColor="#ffcccc"
-            onClick={() => onRemoveTemplate(get(this, 'currentTemplate.id'))}
+            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
             label="Poista sommittelu"
           />
           <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
