@@ -80,6 +80,8 @@ class TemplateSlot extends Component {
     absoluteIndex: PropTypes.number.isRequired,
     totalImages: PropTypes.number.isRequired,
     onMouseDown: PropTypes.func.isRequired,
+    siblingResizeValue: PropTypes.number.isRequired,
+    siblingResizeDirection: PropTypes.string.isRequired,
   };
 
   onChangeImage = ({ svg, name }) => {
@@ -90,7 +92,15 @@ class TemplateSlot extends Component {
   };
 
   render() {
-    const { image, index, absoluteIndex, onMouseDown, totalImages } = this.props;
+    const {
+      image,
+      index,
+      absoluteIndex,
+      onMouseDown,
+      totalImages,
+      siblingResizeValue,
+      siblingResizeDirection,
+    } = this.props;
 
     if (image.size === 0) {
       return null;
@@ -100,8 +110,16 @@ class TemplateSlot extends Component {
     const isLast = index >= totalImages - 1;
     const { resizing = null } = image;
 
-    const resizeValue = get(resizing, 'value', 0);
-    const resizeDir = get(resizing, 'direction', 'right');
+    const resizeValue = get(
+      resizing,
+      'value',
+      -(siblingResizeValue),
+    );
+    const resizeDir = get(
+      resizing,
+      'direction',
+      siblingResizeDirection === 'left' ? 'right' : 'left',
+    );
 
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',

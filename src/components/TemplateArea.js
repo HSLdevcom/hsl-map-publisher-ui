@@ -58,6 +58,7 @@ class TemplateArea extends Component {
       direction,
       start: left,
       value: 0,
+      affectedSibling: -1,
     };
 
     // Make sure the other drag methods can also access the data.
@@ -86,6 +87,9 @@ class TemplateArea extends Component {
       // Same, but in the grow direction.
       image.resizing.value = delta > 20 ? delta : 0;
     }
+
+    const index = this.visibleImages.indexOf(image);
+    image.resizing.affectedSibling = getSiblingIndex(index, direction);
   };
   onHandleMouseUp = e => {
     e.stopPropagation();
@@ -219,16 +223,25 @@ class TemplateArea extends Component {
           onMouseMove={this.onHandleMouseMove}
           onMouseLeave={this.resetResize}
           columns={this.currentTemplateColumns}>
-          {this.visibleImages.map((image, idx, all) => (
-            <TemplateSlot
-              absoluteIndex={this.images.indexOf(image)}
-              key={`template_image_${template.id}_${idx}`}
-              image={image}
-              index={idx}
-              totalImages={all.length}
-              onMouseDown={this.onHandleMouseDown}
-            />
-          ))}
+          {this.visibleImages.map((image, idx, all) => {
+            const isAffected =
+              get(this, 'currentlyResizingImage.resizing.affectedSibling', -1) === idx;
+            const resizeValue = get(this, 'currentlyResizingImage.resizing.value', 0);
+            const resizeDir = get(this, 'currentlyResizingImage.resizing.direction', 'right');
+
+            return (
+              <TemplateSlot
+                absoluteIndex={this.images.indexOf(image)}
+                key={`template_image_${template.id}_${idx}`}
+                image={image}
+                index={idx}
+                totalImages={all.length}
+                siblingResizeValue={isAffected ? resizeValue : 0}
+                siblingResizeDirection={isAffected ? resizeDir : ''}
+                onMouseDown={this.onHandleMouseDown}
+              />
+            );
+          })}
         </Area>
       </AreaContainer>
     );
