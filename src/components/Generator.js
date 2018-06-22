@@ -143,7 +143,7 @@ const Generator = props => {
           onRemoveTemplate={commonStore.removeTemplate}
           onRemoveImage={commonStore.removeImage}
           onSelectTemplate={commonStore.selectTemplate}
-          selectedTemplate={commonStore.selectedTemplate}
+          currentTemplate={commonStore.currentTemplate}
           templates={commonStore.templates}
           images={commonStore.images}
         />

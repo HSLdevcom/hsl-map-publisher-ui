@@ -34,7 +34,7 @@ class ConfigureLayout extends Component {
     onSaveTemplate: PropTypes.func.isRequired,
     onRemoveTemplate: PropTypes.func.isRequired,
     onRemoveImage: PropTypes.func.isRequired,
-    selectedTemplate: PropTypes.string,
+    currentTemplate: PropTypes.object,
     templates: PropTypes.array,
     images: PropTypes.array,
     onSelectTemplate: PropTypes.func.isRequired,
@@ -43,16 +43,8 @@ class ConfigureLayout extends Component {
   static defaultProps = {
     templates: [],
     images: [],
-    selectedTemplate: null,
+    currentTemplate: null,
   };
-
-  @computed
-  get currentTemplate() {
-    const { selectedTemplate, templates } = this.props;
-    const currentTemplate = templates.find(template => template.id === selectedTemplate);
-
-    return currentTemplate || templates[0];
-  }
 
   render() {
     const {
@@ -63,6 +55,7 @@ class ConfigureLayout extends Component {
       onSaveTemplate,
       onRemoveTemplate,
       onRemoveImage,
+      currentTemplate,
     } = this.props;
 
     return (
@@ -71,7 +64,7 @@ class ConfigureLayout extends Component {
         <TemplateControls>
           <TemplateSelect
             templates={templates}
-            selectedTemplate={get(this, 'currentTemplate.id', null)}
+            selectedTemplate={get(currentTemplate, 'id', null)}
             onChange={onSelectTemplate}
           />
           <FlatButton
@@ -82,12 +75,12 @@ class ConfigureLayout extends Component {
           <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
           <RaisedButton
             primary
-            onClick={() => onSaveTemplate(toJS(this.currentTemplate))}
+            onClick={() => onSaveTemplate(toJS(currentTemplate))}
             label="Tallenna sommittelu"
           />
         </TemplateControls>
-        {images.length > 0 && <ImageLibrary removeImage={onRemoveImage} images={images} />}
-        <TemplateArea template={this.currentTemplate} title="Footer" />
+        <ImageLibrary removeImage={onRemoveImage} images={images} />
+        <TemplateArea template={currentTemplate} title="Footer" />
       </Root>
     );
   }

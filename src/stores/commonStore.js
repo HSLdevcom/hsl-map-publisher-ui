@@ -26,6 +26,12 @@ const store = observable({
   templates: [],
   images: [],
   selectedTemplate: null,
+  get currentTemplate() {
+    const { selectedTemplate, templates } = store;
+    const currentTemplate = templates.find(template => template.id === selectedTemplate);
+
+    return currentTemplate || templates[0];
+  },
 });
 
 store.showConfirm = (message, callback = null) => {
@@ -214,7 +220,12 @@ store.getImages = async () => {
 
 store.addPosters = async (buildId, component, props) => {
   try {
-    await addPosters({ buildId, component, props });
+    await addPosters({
+      buildId,
+      component,
+      props,
+      template: get(store, 'currentTemplate.id', 'default_footer'),
+    });
   } catch (error) {
     store.showConfirm(`Julisteen lisääminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
