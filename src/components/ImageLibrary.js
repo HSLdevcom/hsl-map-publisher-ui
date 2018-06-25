@@ -77,6 +77,7 @@ const RemoveImage = styled.div`
   border: 2px dashed #ccc;
   width: 7.5rem;
   height: 7.5rem;
+  flex: none;
   border-radius: 20px;
   margin-right: 1rem;
   background: #efefef;
