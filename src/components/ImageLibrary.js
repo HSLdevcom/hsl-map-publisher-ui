@@ -48,7 +48,7 @@ const RemoveButton = styled.button`
   appearance: none;
   cursor: pointer;
   color: white;
-  
+
   &:hover {
     display: block !important;
   }

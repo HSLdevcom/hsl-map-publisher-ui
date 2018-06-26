@@ -42,7 +42,11 @@ const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 30px 0;
+`;
+
+const Heading = styled.h2`
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const Generator = props => {
@@ -149,6 +153,7 @@ const Generator = props => {
         />
       </Main>
 
+      <Heading>Generointi</Heading>
       <Footer>
         <BuildSelect
           builds={commonStore.builds.toJS()}

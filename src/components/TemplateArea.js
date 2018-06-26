@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import get from 'lodash/get';
-import { blue50 } from 'material-ui/styles/colors';
 import { computed, observable } from 'mobx';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import TemplateSlot from './TemplateSlot';
 
 const AreaContainer = styled.div`
-  padding: 1rem;
-  background: ${blue50};
+  padding: 2rem;
+  background: hsl(204, 100%, 39%);
 
   > * {
     margin-top: 0;
@@ -17,7 +16,6 @@ const AreaContainer = styled.div`
 `;
 
 const Area = styled.div`
-  margin-top: 1rem;
   display: grid;
   grid-gap: 2rem;
   grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
@@ -215,7 +213,6 @@ class TemplateArea extends Component {
 
     return (
       <AreaContainer>
-        <h4>{title}</h4>
         <Area
           innerRef={this.areaRef}
           resizing={!!this.currentlyResizingImage}

@@ -1,30 +1,52 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { computed, toJS } from 'mobx';
+import styled, { css } from 'styled-components';
+import { toJS, observable } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
+import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ImageLibrary from './ImageLibrary';
+import SvgInstructions from './SvgInstructions';
+import { Collapse } from 'react-collapse';
 
 const Root = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
 `;
 
 const TemplateControls = styled.div`
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0 0 0.5rem 0;
+  padding: 0 0 0.5rem 0;
 
   > * {
     flex: none;
-    margin-right: 1rem;
   }
+`;
+
+const Select = styled(TemplateSelect)`
+  width: 100%;
+`;
+
+const CollapseButton = css`
+  cursor: pointer;
+
+  & > svg {
+    vertical-align: middle;
+    width: 30px;
+    heigth: 30px;
+  }
+`;
+
+const LayoutHeading = styled.h2`
+  ${CollapseButton};
+`;
+
+const InstructionsHeading = styled.h4`
+  ${CollapseButton};
 `;
 
 @observer
@@ -46,6 +68,19 @@ class ConfigureLayout extends Component {
     currentTemplate: null,
   };
 
+  @observable
+  sections = {
+    layout: false,
+    instructions: false,
+  };
+
+  toggle = which => e => {
+    e.preventDefault();
+
+    const current = this.sections[which];
+    this.sections[which] = !current;
+  };
+
   render() {
     const {
       templates,
@@ -60,27 +95,39 @@ class ConfigureLayout extends Component {
 
     return (
       <Root>
-        <h2>Sommittelut</h2>
+        <LayoutHeading onClick={this.toggle('layout')}>
+          Sommittelu <ArrowDown style={{ width: '30px', height: '30px' }} />
+        </LayoutHeading>
         <TemplateControls>
-          <TemplateSelect
+          <Select
             templates={templates}
             selectedTemplate={get(currentTemplate, 'id', null)}
             onChange={onSelectTemplate}
           />
-          <FlatButton
-            backgroundColor="#ffcccc"
-            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-            label="Poista sommittelu"
-          />
-          <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
-          <RaisedButton
-            primary
-            onClick={() => onSaveTemplate(toJS(currentTemplate))}
-            label="Tallenna sommittelu"
-          />
         </TemplateControls>
-        <ImageLibrary removeImage={onRemoveImage} images={images} />
-        <TemplateArea template={currentTemplate} title="Footer" />
+        <Collapse isOpened={this.sections.layout} hasNestedCollapse>
+          <TemplateControls>
+            <RaisedButton
+              primary
+              onClick={() => onSaveTemplate(toJS(currentTemplate))}
+              label="Tallenna sommittelu"
+            />
+            <FlatButton secondary onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
+            <FlatButton
+              backgroundColor="#ffcccc"
+              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
+              label="Poista sommittelu"
+            />
+          </TemplateControls>
+          <InstructionsHeading onClick={ this.toggle('instructions') }>
+            Ohjeet <ArrowDown style={ { width: '30px', height: '30px' } } />
+          </InstructionsHeading>
+          <Collapse isOpened={ this.sections.instructions }>
+            <SvgInstructions open={ this.sections.instructions } />
+          </Collapse>
+          <ImageLibrary removeImage={onRemoveImage} images={images} />
+          <TemplateArea template={currentTemplate} title="Footer" />
+        </Collapse>
       </Root>
     );
   }
