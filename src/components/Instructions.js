@@ -8,8 +8,8 @@ const Instructions = styled.div`
 
 const Paragraph = styled.p`
   font-size: 12px;
-  padding: 0.25rem 0;
-  margin: 0:
+  padding: 0 0 0.5rem 0;
+  margin: 0;
 `;
 
 const Value = styled.span`
@@ -19,7 +19,7 @@ const Value = styled.span`
 `;
 
 const list = css`
-  padding: 0.25rem 0 0.25rem 1.25rem;
+  padding: 0 0 0.5rem 1.25rem;
   margin: 0;
   font-size: 12px;
 
@@ -36,22 +36,47 @@ const Ul = styled.ul`
   ${list};
 `;
 
+const Heading = styled.h5`
+  margin: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.25rem;
+`;
+
 export default () => {
   return (
     <Instructions>
       <Paragraph>
         Tipauta haluamasi SVG tiedosto haluamallesi paikalle. Voit myös pienentää tai suurentaa
-        aluetta vetämällä kahvoista, mutta varmista että grafiikka sopii uuteen kokoon.
+        aluetta vetämällä kahvoista, mutta varmista että grafiikka sopii uuteen kokoon. Jos
+        suurennat yhtä kuvaa vetämällä sen oikea-puolisesta kahvasta, kuvan oikea-puolinen naapuri
+        pienentyy. Jos pienennät kuvaa oikea-puolisesta kahvasta, sen oikea-puolinen naapuri
+        suurentuu. Kuvan pienin koko on 1, jonka jälkeen kuvapaikka ei ilmesty julisteeseen. Kuvan
+        suurin koko on 3, jolloin se on ainoa kuva julisteessa. Sommittelun kuvapaikat pysyy aina
+        järjestyksessä, eli kuva 2:n koko muuttuu aina vetämällä kuva 3:n vasen-puolisesta kahvasta
+        vaikka kuva 2 olisi sillä hetkellä näkymätön.
       </Paragraph>
       <Paragraph>
         Jotta sommittelusi näkyisi julisteessa, varmista että se on tallennettu painamalla sinistä
-        "Tallenna"-nappia. Juliste joka on valittuna sillä hetkellä kun painat "Generoi"-nappia
-        ilmestyy julisteeseen.
+        "Tallenna"-nappia jolloin sommittelun sen hetkinen tilanne tallentuu. Sommittelu joka on
+        valittuna sillä hetkellä kun painat "Generoi"-nappia ilmestyy julisteeseen.
       </Paragraph>
       <Paragraph>
         Voit tehdä uusi sommittelu painamalla "Uusi sommittelu"-nappia. Poista valittu sommittelu
         painamalla "Poista sommittelu"-nappia.
       </Paragraph>
+      <Heading>Kirjasto</Heading>
+      <Paragraph>
+        Kun tallennat sommittelua, siihen lisäämäsi kuvat ilmestyy kirjastoon. Jos kirjastosta
+        löytyy saman nimisen kuva ennestään, vanhempi kuva korvataan uudella kaikissa
+        sommitteluissa. Nimeä siis tiedostot huolellisesti ennen kun käytät niitä täällä!
+        Kirjastokuvia voi myös poistaa klikkaamalla niiden yläkulmaan ilmestyvää ruksinappia. Huomaa
+        että kuva ei voida poistaa jos se on käytössä jossakin sommittelussa.
+      </Paragraph>
+      <Paragraph>
+        Voit poistaa kuvia sommittelusta vetämällä kirjaston ensimmäistä harmaa laatikkoa
+        sommitteluun kuvan tilalle.
+      </Paragraph>
+      <Heading>Dynaamiset alueet</Heading>
       <Paragraph>
         Jos grafiikkaan tulee dynaamisia tietoja kuten verkko-osoitteet tai QR koodit, toimi näin:
       </Paragraph>

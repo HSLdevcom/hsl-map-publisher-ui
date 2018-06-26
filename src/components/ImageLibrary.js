@@ -13,18 +13,20 @@ const Root = styled.div`
 const ImagesContainer = styled.div`
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding: 1rem;
 `;
 
 const ImageTrack = styled.div`
   overflow: hidden;
-  overflow-x: scroll;
+  overflow-y: scroll;
   border: 1px solid #ccc;
+  max-height: 20rem;
 `;
 
 const Image = styled.div`
   user-select: none;
+  margin-bottom: 0.5rem;
 
   svg {
     display: block;
@@ -55,10 +57,11 @@ const RemoveButton = styled.button`
 `;
 
 const ImageWrapper = styled.div`
-  width: 7.5rem;
+  width: 7.75rem;
   flex: none;
   margin-right: 1rem;
   position: relative;
+  margin-bottom: 1rem;
 
   &:hover {
     ${RemoveButton} {
@@ -75,8 +78,8 @@ const ImageWrapper = styled.div`
 
 const RemoveImage = styled.div`
   border: 2px dashed #ccc;
-  width: 7.5rem;
-  height: 7.5rem;
+  width: 7.75rem;
+  height: 7.75rem;
   flex: none;
   border-radius: 20px;
   margin-right: 1rem;
@@ -85,6 +88,11 @@ const RemoveImage = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+`;
+
+const ImageLabel = styled.div`
+  font-size: 12px;
+  text-align: center;
 `;
 
 @observer
@@ -132,12 +140,13 @@ class ImageLibrary extends Component {
               <RemoveIcon style={{ width: '50px', height: '50px' }} color="#ccc" />
             </RemoveImage>
             {images.map((img, idx) => (
-              <ImageWrapper key={`image_${img.id}_${idx}`}>
+              <ImageWrapper key={`image_${img.name}_${idx}`}>
                 <Image
                   draggable
                   onDragStart={this.onDragStart(img)}
                   dangerouslySetInnerHTML={{ __html: img.svg }}
                 />
+                <ImageLabel>{img.name}</ImageLabel>
                 <RemoveButton type="button" onClick={this.onRemoveImage(img.name)}>
                   <CloseIcon color="white" />
                 </RemoveButton>

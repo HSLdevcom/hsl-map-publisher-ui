@@ -9,7 +9,7 @@ import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ImageLibrary from './ImageLibrary';
-import SvgInstructions from './SvgInstructions';
+import SvgInstructions from './Instructions';
 import { Collapse } from 'react-collapse';
 
 const Root = styled.div`
@@ -47,6 +47,7 @@ const LayoutHeading = styled.h2`
 
 const InstructionsHeading = styled.h4`
   ${CollapseButton};
+  margin-bottom: 0;
 `;
 
 @observer
@@ -70,8 +71,8 @@ class ConfigureLayout extends Component {
 
   @observable
   sections = {
-    layout: false,
-    instructions: false,
+    layout: true,
+    instructions: true,
   };
 
   toggle = which => e => {
@@ -112,18 +113,18 @@ class ConfigureLayout extends Component {
               onClick={() => onSaveTemplate(toJS(currentTemplate))}
               label="Tallenna sommittelu"
             />
-            <FlatButton secondary onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
+            <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
             <FlatButton
               backgroundColor="#ffcccc"
               onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
               label="Poista sommittelu"
             />
           </TemplateControls>
-          <InstructionsHeading onClick={ this.toggle('instructions') }>
-            Ohjeet <ArrowDown style={ { width: '30px', height: '30px' } } />
+          <InstructionsHeading onClick={this.toggle('instructions')}>
+            Ohjeet <ArrowDown style={{ width: '30px', height: '30px' }} />
           </InstructionsHeading>
-          <Collapse isOpened={ this.sections.instructions }>
-            <SvgInstructions open={ this.sections.instructions } />
+          <Collapse isOpened={this.sections.instructions}>
+            <SvgInstructions open={this.sections.instructions} />
           </Collapse>
           <ImageLibrary removeImage={onRemoveImage} images={images} />
           <TemplateArea template={currentTemplate} title="Footer" />
