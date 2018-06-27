@@ -9,13 +9,23 @@ const Item = styled.div`
   width: 100%;
   height: 100%;
   pointer-events: none;
+  overflow: hidden;
+  border-radius: 25px;
+
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
 `;
 
 const UploadDrop = styled(Dropzone)`
   border: 0;
   width: 100%;
   height: 100%;
+  background: transparent;
   pointer-events: all;
+  position: static;
 `;
 
 @observer

@@ -6,28 +6,21 @@ import styled from 'styled-components';
 import TemplateImage from './TemplateImage';
 
 const AreaSlot = styled.div`
-  border-radius: 23px;
+  border-radius: 25px;
   flex: 0 0 auto;
   border: 3px dashed white;
   position: relative;
   transform: translateZ(0);
   width: 100%;
-  height: 250px;
-  transition: all ${({ resizing = false }) => (resizing ? '0.1' : '0')} ease-out;
+  height: 228px;
+  transition: opacity 0.1s ease-out;
   display: flex;
   align-items: center;
   justify-content: center;
   ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
 
-  > div {
-    overflow: hidden;
-    border-radius: 23px;
-  }
-
   svg {
-    width: 100%;
-    height: auto;
-    display: block;
+    transition: opacity 0.1s ease-out;
   }
 `;
 
@@ -41,6 +34,7 @@ const Handle = styled.div`
   box-sizing: content-box;
   cursor: col-resize;
   pointer-events: all;
+  z-index: 10;
 
   &:before {
     content: '';
@@ -70,8 +64,6 @@ const IndexDisplay = styled.span`
   padding: 0.5rem 1rem 0.6rem 0.9rem;
 `;
 
-const ImageComponent = styled(TemplateImage)``;
-
 @observer
 class TemplateSlot extends Component {
   static propTypes = {
@@ -82,6 +74,7 @@ class TemplateSlot extends Component {
     onMouseDown: PropTypes.func.isRequired,
     siblingResizeValue: PropTypes.number.isRequired,
     siblingResizeDirection: PropTypes.string.isRequired,
+    slotWidth: PropTypes.number.isRequired,
   };
 
   onChangeImage = ({ svg, name }) => {
@@ -100,6 +93,7 @@ class TemplateSlot extends Component {
       totalImages,
       siblingResizeValue,
       siblingResizeDirection,
+      slotWidth,
     } = this.props;
 
     if (image.size === 0) {
@@ -120,6 +114,7 @@ class TemplateSlot extends Component {
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',
       right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
+      opacity: Math.abs(siblingResizeValue) > slotWidth / 2 ? 0 : 1,
       width: `calc(100% + ${resizeValue}px)`,
     };
 
@@ -127,7 +122,7 @@ class TemplateSlot extends Component {
       <AreaSlot resizing={!!resizing} style={resizeStyle} resizeValue={resizeValue}>
         {(!isFirst || image.size > 1) && <HandleLeft onMouseDown={onMouseDown(image, 'left')} />}
         {(!isLast || image.size > 1) && <HandleRight onMouseDown={onMouseDown(image, 'right')} />}
-        <ImageComponent onChange={this.onChangeImage} svg={image.svg} />
+        <TemplateImage onChange={this.onChangeImage} svg={image.svg} />
         <IndexDisplay>{absoluteIndex + 1}</IndexDisplay>
       </AreaSlot>
     );

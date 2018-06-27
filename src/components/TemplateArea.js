@@ -22,6 +22,15 @@ const Area = styled.div`
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;
+
+  ${({ resizing = false }) =>
+    resizing
+      ? `
+    svg {
+      opacity: 0;
+    }
+  `
+      : ''};
 `;
 
 function getSiblingIndex(index, direction) {
@@ -87,8 +96,10 @@ class TemplateArea extends Component {
     }
 
     const index = this.visibleImages.indexOf(image);
-    image.resizing.affectedSibling = getSiblingIndex(index, direction);
+    const affectedSibling = getSiblingIndex(index, direction);
+    image.resizing.affectedSibling = affectedSibling;
   };
+
   onHandleMouseUp = e => {
     e.stopPropagation();
 
@@ -97,13 +108,7 @@ class TemplateArea extends Component {
       const image = this.currentlyResizingImage;
       const { value, direction } = image.resizing;
 
-      const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
-      // Measure the area that contains the slots
-      const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
-      // Figure out how wide a slot is
-      const slotWidth = areaWidth / slotCount;
-      // The action area is the distance the slot edge must be dragged
-      // until the resize takes effect.
+      const slotWidth = this.getSlotWidth();
       const actionAreaWidth = slotWidth / 2;
 
       const modifySibling = (modifyVal, currentImageIndex, collection) => {
@@ -171,6 +176,15 @@ class TemplateArea extends Component {
 
     this.resetResize();
   };
+
+  getSlotWidth = () => {
+    const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
+    // Measure the area that contains the slots
+    const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
+    // Figure out how wide a slot is
+    return areaWidth / slotCount;
+  };
+
   resetResize = () => {
     this.images.forEach(img => {
       // Remove the resizing prop as best as we can.
@@ -209,7 +223,7 @@ class TemplateArea extends Component {
   }
 
   render() {
-    const { title, template } = this.props;
+    const { template } = this.props;
 
     return (
       <AreaContainer>
@@ -228,6 +242,7 @@ class TemplateArea extends Component {
 
             return (
               <TemplateSlot
+                slotWidth={this.getSlotWidth()}
                 absoluteIndex={this.images.indexOf(image)}
                 key={`template_image_${template.id}_${idx}`}
                 image={image}
