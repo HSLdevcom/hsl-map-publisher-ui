@@ -97,7 +97,7 @@ class TemplateArea extends Component {
 
     const index = this.visibleImages.indexOf(image);
     const affectedSibling = getSiblingIndex(index, direction);
-
+    
     image.resizing.affectedSibling = affectedSibling;
   };
 
