@@ -104,18 +104,24 @@ class TemplateSlot extends Component {
     const isLast = index >= totalImages - 1;
     const { resizing = null } = image;
 
-    const resizeValue = get(resizing, 'value', -siblingResizeValue);
+    let resizeValue = get(resizing, 'value', -siblingResizeValue);
+    const minOrMaxValue = slotWidth * image.size - 100;
+
+    resizeValue = resizeValue !== 0 ? Math.max(-minOrMaxValue, resizeValue) : 0;
+
     const resizeDir = get(
       resizing,
       'direction',
       siblingResizeDirection === 'left' ? 'right' : 'left',
     );
 
+    const widthValue = Math.min(resizeValue, minOrMaxValue + slotWidth);
+
     const resizeStyle = {
-      left: resizeDir === 'left' && resizeValue > 0 ? `-${resizeValue}px` : 'auto',
-      right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
-      opacity: Math.abs(siblingResizeValue) > slotWidth / 2 ? 0 : 1,
-      width: `calc(100% + ${resizeValue}px)`,
+      left: resizeDir === 'left' && resizeValue > 0 ? `-${widthValue}px` : 'auto',
+      right: resizeDir === 'left' && resizeValue < 0 ? `${widthValue}px` : 'auto',
+      opacity: siblingResizeValue > slotWidth / 2 ? (image.size - 1) * 0.5 : 1,
+      width: `calc(100% + ${widthValue}px)`,
     };
 
     return (

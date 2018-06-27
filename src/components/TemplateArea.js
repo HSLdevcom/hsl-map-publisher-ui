@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import TemplateSlot from './TemplateSlot';
 
 const AreaContainer = styled.div`
-  padding: 2rem;
   background: hsl(204, 100%, 39%);
 
   > * {
@@ -16,6 +15,7 @@ const AreaContainer = styled.div`
 `;
 
 const Area = styled.div`
+  padding: 2rem;
   display: grid;
   grid-gap: 2rem;
   grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
@@ -97,6 +97,7 @@ class TemplateArea extends Component {
 
     const index = this.visibleImages.indexOf(image);
     const affectedSibling = getSiblingIndex(index, direction);
+
     image.resizing.affectedSibling = affectedSibling;
   };
 
@@ -178,11 +179,12 @@ class TemplateArea extends Component {
   };
 
   getSlotWidth = () => {
-    const slotCount = this.visibleImages.reduce((count, img) => count + img.size, 0);
+    const slotCount = this.images.reduce((count, img) => count + img.size, 0);
     // Measure the area that contains the slots
     const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
-    // Figure out how wide a slot is
-    return areaWidth / slotCount;
+    // Figure out how wide a slot is. Subtract horizontal padding
+    // to get a more accurate value.
+    return (areaWidth - 64) / slotCount;
   };
 
   resetResize = () => {
