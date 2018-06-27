@@ -72,7 +72,7 @@ class ConfigureLayout extends Component {
   @observable
   sections = {
     layout: true,
-    instructions: true,
+    instructions: false,
   };
 
   toggle = which => e => {
