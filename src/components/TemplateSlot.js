@@ -69,12 +69,11 @@ class TemplateSlot extends Component {
   static propTypes = {
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    absoluteIndex: PropTypes.number.isRequired,
+    order: PropTypes.number.isRequired,
     totalImages: PropTypes.number.isRequired,
     onMouseDown: PropTypes.func.isRequired,
-    siblingResizeValue: PropTypes.number.isRequired,
-    siblingResizeDirection: PropTypes.string.isRequired,
     slotWidth: PropTypes.number.isRequired,
+    resize: PropTypes.any.isRequired,
   };
 
   onChangeImage = ({ svg, name }) => {
@@ -85,34 +84,22 @@ class TemplateSlot extends Component {
   };
 
   render() {
-    const {
-      image,
-      index,
-      absoluteIndex,
-      onMouseDown,
-      totalImages,
-      siblingResizeValue,
-      siblingResizeDirection,
-      slotWidth,
-    } = this.props;
-
-    if (image.size === 0) {
-      return null;
-    }
+    const { image, index, order, onMouseDown, totalImages, slotWidth, resize } = this.props;
 
     const isFirst = index === 0;
     const isLast = index >= totalImages - 1;
-    const { resizing = null } = image;
 
-    let resizeValue = get(resizing, 'value', -siblingResizeValue);
+    const isResizing = resize.index === index;
+
+    let resizeValue = isResizing ? get(resize, 'value', 0) : 0;
     const minOrMaxValue = slotWidth * image.size - 100;
 
     resizeValue = resizeValue !== 0 ? Math.max(-minOrMaxValue, resizeValue) : 0;
 
     const resizeDir = get(
-      resizing,
+      resize,
       'direction',
-      siblingResizeDirection === 'left' ? 'right' : 'left',
+      'left' // siblingResizeDirection === 'left' ? 'right' : 'left',
     );
 
     const widthValue = Math.min(resizeValue, minOrMaxValue + slotWidth);
@@ -120,16 +107,16 @@ class TemplateSlot extends Component {
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `-${widthValue}px` : 'auto',
       right: resizeDir === 'left' && resizeValue < 0 ? `${widthValue}px` : 'auto',
-      opacity: siblingResizeValue > slotWidth / 2 ? (image.size - 1) * 0.5 : 1,
+      opacity: 1, // siblingResizeValue > slotWidth / 2 ? (image.size - 1) * 0.5 : 1,
       width: `calc(100% + ${widthValue}px)`,
     };
 
     return (
-      <AreaSlot resizing={!!resizing} style={resizeStyle} resizeValue={resizeValue}>
-        {(!isFirst || image.size > 1) && <HandleLeft onMouseDown={onMouseDown(image, 'left')} />}
-        {(!isLast || image.size > 1) && <HandleRight onMouseDown={onMouseDown(image, 'right')} />}
+      <AreaSlot resizing={resize.index !== -1} style={resizeStyle}>
+        {(!isFirst || image.size > 1) && <HandleLeft onMouseDown={onMouseDown(index, 'left')} />}
+        {(!isLast || image.size > 1) && <HandleRight onMouseDown={onMouseDown(index, 'right')} />}
         <TemplateImage onChange={this.onChangeImage} svg={image.svg} />
-        <IndexDisplay>{absoluteIndex + 1}</IndexDisplay>
+        <IndexDisplay>{order}</IndexDisplay>
       </AreaSlot>
     );
   }

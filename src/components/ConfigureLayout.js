@@ -120,33 +120,31 @@ class ConfigureLayout extends Component {
             onChange={onSelectTemplate}
           />
         </TemplateControls>
-        <Collapse isOpened={this.sections.layout} hasNestedCollapse>
-          <TemplateControls>
-            <RaisedButton
-              primary
-              onClick={() => onSaveTemplate(toJS(currentTemplate))}
-              label="Tallenna sommittelu"
-            />
-            <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
-            <FlatButton
-              backgroundColor="#ffcccc"
-              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-              label="Poista sommittelu"
-            />
-          </TemplateControls>
-          <InstructionsHeading onClick={this.toggle('instructions')}>
-            Ohjeet{' '}
-            <CollapseButtonArrow
-              open={this.sections.instructions}
-              style={{ width: '30px', height: '30px' }}
-            />
-          </InstructionsHeading>
-          <Collapse isOpened={this.sections.instructions}>
-            <SvgInstructions open={this.sections.instructions} />
-          </Collapse>
-          <ImageLibrary removeImage={onRemoveImage} images={images} />
-          <TemplateArea template={currentTemplate} title="Footer" />
+        <TemplateControls>
+          <RaisedButton
+            primary
+            onClick={() => onSaveTemplate(toJS(currentTemplate))}
+            label="Tallenna sommittelu"
+          />
+          <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
+          <FlatButton
+            backgroundColor="#ffcccc"
+            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
+            label="Poista sommittelu"
+          />
+        </TemplateControls>
+        <InstructionsHeading onClick={this.toggle('instructions')}>
+          Ohjeet{' '}
+          <CollapseButtonArrow
+            open={this.sections.instructions}
+            style={{ width: '30px', height: '30px' }}
+          />
+        </InstructionsHeading>
+        <Collapse isOpened={this.sections.instructions}>
+          <SvgInstructions open={this.sections.instructions} />
         </Collapse>
+        <ImageLibrary removeImage={onRemoveImage} images={images} />
+        <TemplateArea template={currentTemplate} title="Footer" />
       </Root>
     );
   }

@@ -50,35 +50,35 @@ class TemplateArea extends Component {
     title: 'Untitled area',
   };
 
-  @observable currentlyResizingImage = null;
+  @observable
+  resizing = {
+    direction: '',
+    start: 0,
+    value: 0,
+    index: -1,
+  };
+
   areaRef = React.createRef();
 
   // This method sets the initial resize values on the image
   // object, which is observable through MobX.
-  onHandleMouseDown = (image, direction) => e => {
+  onHandleMouseDown = (index, direction) => e => {
     // The current left position of the handle
     const { left } = e.target.getBoundingClientRect();
-
     // Base resizing data
     // eslint-disable-next-line
-    image.resizing = {
-      direction,
-      start: left,
-      value: 0,
-      affectedSibling: -1,
-    };
-
-    // Make sure the other drag methods can also access the data.
-    this.currentlyResizingImage = image;
+    this.resizing.direction = direction;
+    this.resizing.start = left;
+    this.resizing.value = 0;
+    this.resizing.index = index;
   };
   onHandleMouseMove = e => {
-    if (!this.currentlyResizingImage) {
+    if (this.resizing.index === -1) {
       return;
     }
 
-    const image = this.currentlyResizingImage;
-    const { size = 1 } = image;
-    const { start, direction } = image.resizing;
+    const { index, direction, start } = this.resizing;
+    const { size = 1 } = this.visibleImages[index];
     // The current horizontal mouse position
     const mouseX = e.clientX;
     // The resize delta. No matter the direction, if we want to grow a lot
@@ -89,25 +89,20 @@ class TemplateArea extends Component {
     // Only allow shrink if the size is more than one.
     if (size > 1 && delta < 0) {
       // Start the action after 20 px.
-      image.resizing.value = delta < -20 ? delta : 0;
+      this.resizing.value = delta < -20 ? delta : 0;
     } else {
       // Same, but in the grow direction.
-      image.resizing.value = delta > 20 ? delta : 0;
+      this.resizing.value = delta > 20 ? delta : 0;
     }
-
-    const index = this.visibleImages.indexOf(image);
-    const affectedSibling = getSiblingIndex(index, direction);
-    
-    image.resizing.affectedSibling = affectedSibling;
   };
 
   onHandleMouseUp = e => {
     e.stopPropagation();
 
     // Check that we are currently resizing
-    if (this.currentlyResizingImage) {
-      const image = this.currentlyResizingImage;
-      const { value, direction } = image.resizing;
+    if (this.resizing.index !== -1) {
+      const { value, direction, index } = this.resizing;
+      const image = this.visibleImages[index];
 
       const slotWidth = this.getSlotWidth();
       const actionAreaWidth = slotWidth / 2;
@@ -139,7 +134,7 @@ class TemplateArea extends Component {
         // Loop counter
         let growBy = growByTotal;
         // Get the index of the current slot in the array of visible slots.
-        const index = this.visibleImages.indexOf(image);
+        const visibleIndex = this.visibleImages.indexOf(image);
         const collection = this.visibleImages;
 
         while (growBy > 0) {
@@ -147,7 +142,7 @@ class TemplateArea extends Component {
           image.size = image.size + 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(-1, index, collection);
+          modifySibling(-1, visibleIndex, collection);
 
           growBy = growBy - 1;
         }
@@ -159,8 +154,6 @@ class TemplateArea extends Component {
         const shrinkByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
         // Loop counter
         let shrinkBy = shrinkByTotal;
-        // Get the index of this slot from ALL the slots, not just the visible ones.
-        const absoluteIndex = this.images.indexOf(image);
         const collection = this.images;
 
         while (shrinkBy > 0) {
@@ -168,7 +161,7 @@ class TemplateArea extends Component {
           image.size = image.size - 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(1, absoluteIndex, collection);
+          modifySibling(1, index, collection);
 
           shrinkBy = shrinkBy - 1;
         }
@@ -188,15 +181,11 @@ class TemplateArea extends Component {
   };
 
   resetResize = () => {
-    this.images.forEach(img => {
-      // Remove the resizing prop as best as we can.
-      // Do not use delete here as mobx will stop tracking it if you do that.
-      // eslint-disable-next-line
-      img.resizing = undefined;
-    });
-
-    // Reset the currently resixing image.
-    this.currentlyResizingImage = null;
+    // Reset the currently resizing image.
+    this.resizing.index = -1;
+    this.resizing.value = 0;
+    this.resizing.start = 0;
+    this.resizing.direction = '';
   };
 
   // Shorthand for accessing the images (or an empty array) of the current template.
@@ -231,27 +220,23 @@ class TemplateArea extends Component {
       <AreaContainer>
         <Area
           innerRef={this.areaRef}
-          resizing={!!this.currentlyResizingImage}
+          resizing={this.resizing.index !== -1}
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}
           onMouseLeave={this.resetResize}
           columns={this.currentTemplateColumns}>
-          {this.visibleImages.map((image, idx, all) => {
-            const isAffected =
-              get(this, 'currentlyResizingImage.resizing.affectedSibling', -1) === idx;
-            const resizeValue = get(this, 'currentlyResizingImage.resizing.value', 0);
-            const resizeDir = get(this, 'currentlyResizingImage.resizing.direction', 'right');
+          {this.images.map((image, idx) => {
+            const visibleIndex = this.visibleImages.indexOf(image);
 
             return (
               <TemplateSlot
+                resize={this.resizing}
                 slotWidth={this.getSlotWidth()}
-                absoluteIndex={this.images.indexOf(image)}
+                order={idx + 1}
                 key={`template_image_${template.id}_${idx}`}
                 image={image}
-                index={idx}
-                totalImages={all.length}
-                siblingResizeValue={isAffected ? resizeValue : 0}
-                siblingResizeDirection={isAffected ? resizeDir : ''}
+                index={visibleIndex}
+                totalImages={this.visibleImages.length}
                 onMouseDown={this.onHandleMouseDown}
               />
             );
