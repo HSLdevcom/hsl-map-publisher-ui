@@ -50,6 +50,16 @@ const InstructionsHeading = styled.h4`
   margin-bottom: 0;
 `;
 
+const CollapseButtonArrow = styled(ArrowDown)`
+  transition: transform 0.1s ease-out;
+  ${({ open = false }) =>
+    open
+      ? `
+    transform: rotate(180deg);
+  `
+      : ''};
+`;
+
 @observer
 class ConfigureLayout extends Component {
   static propTypes = {
@@ -97,7 +107,11 @@ class ConfigureLayout extends Component {
     return (
       <Root>
         <LayoutHeading onClick={this.toggle('layout')}>
-          Sommittelu <ArrowDown style={{ width: '30px', height: '30px' }} />
+          Sommittelu{' '}
+          <CollapseButtonArrow
+            open={this.sections.layout}
+            style={{ width: '30px', height: '30px' }}
+          />
         </LayoutHeading>
         <TemplateControls>
           <Select
@@ -106,27 +120,33 @@ class ConfigureLayout extends Component {
             onChange={onSelectTemplate}
           />
         </TemplateControls>
-        <TemplateControls>
-          <RaisedButton
-            primary
-            onClick={() => onSaveTemplate(toJS(currentTemplate))}
-            label="Tallenna sommittelu"
-          />
-          <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
-          <FlatButton
-            backgroundColor="#ffcccc"
-            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-            label="Poista sommittelu"
-          />
-        </TemplateControls>
-        <InstructionsHeading onClick={this.toggle('instructions')}>
-          Ohjeet <ArrowDown style={{ width: '30px', height: '30px' }} />
-        </InstructionsHeading>
-        <Collapse isOpened={this.sections.instructions}>
-          <SvgInstructions open={this.sections.instructions} />
+        <Collapse isOpened={this.sections.layout} hasNestedCollapse>
+          <TemplateControls>
+            <RaisedButton
+              primary
+              onClick={() => onSaveTemplate(toJS(currentTemplate))}
+              label="Tallenna sommittelu"
+            />
+            <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
+            <FlatButton
+              backgroundColor="#ffcccc"
+              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
+              label="Poista sommittelu"
+            />
+          </TemplateControls>
+          <InstructionsHeading onClick={this.toggle('instructions')}>
+            Ohjeet{' '}
+            <CollapseButtonArrow
+              open={this.sections.instructions}
+              style={{ width: '30px', height: '30px' }}
+            />
+          </InstructionsHeading>
+          <Collapse isOpened={this.sections.instructions}>
+            <SvgInstructions open={this.sections.instructions} />
+          </Collapse>
+          <ImageLibrary removeImage={onRemoveImage} images={images} />
+          <TemplateArea template={currentTemplate} title="Footer" />
         </Collapse>
-        <ImageLibrary removeImage={onRemoveImage} images={images} />
-        <TemplateArea template={currentTemplate} title="Footer" />
       </Root>
     );
   }
