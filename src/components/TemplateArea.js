@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import get from 'lodash/get';
-import { computed, observable } from 'mobx';
+import { computed, observable, toJS } from 'mobx'; // eslint-disable-line no-unused-vars
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import TemplateSlot from './TemplateSlot';
@@ -16,9 +16,10 @@ const AreaContainer = styled.div`
 
 const Area = styled.div`
   padding: 2rem;
-  display: grid;
-  grid-gap: 2rem;
-  grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;
@@ -65,12 +66,12 @@ class TemplateArea extends Component {
   onHandleMouseDown = (index, direction) => e => {
     // The current left position of the handle
     const { left } = e.target.getBoundingClientRect();
+
     // Base resizing data
-    // eslint-disable-next-line
-    this.resizing.direction = direction;
-    this.resizing.start = left;
-    this.resizing.value = 0;
-    this.resizing.index = index;
+    this.resizing.direction = direction; // The side of the handle that is being dragged
+    this.resizing.start = left; // The starting position
+    this.resizing.value = 0; // The value of how much has been dragged
+    this.resizing.index = index; // The index among visible images that the current image has.
   };
   onHandleMouseMove = e => {
     if (this.resizing.index === -1) {
@@ -120,7 +121,7 @@ class TemplateArea extends Component {
           // eslint-disable-next-line
           collection[affectedSiblingIdx].size = siblingSize + modifyVal;
         } else if (affectedSiblingIdx > 0 && affectedSiblingIdx < collection.length - 1) {
-          // If there is still one potential sibling next to this one, grow that instead.
+          // If there is still one potential sibling next to this one, modify that instead.
           modifySibling(modifyVal, affectedSiblingIdx, collection);
         }
       };
@@ -133,8 +134,6 @@ class TemplateArea extends Component {
         const growByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
         // Loop counter
         let growBy = growByTotal;
-        // Get the index of the current slot in the array of visible slots.
-        const visibleIndex = this.visibleImages.indexOf(image);
         const collection = this.visibleImages;
 
         while (growBy > 0) {
@@ -142,7 +141,7 @@ class TemplateArea extends Component {
           image.size = image.size + 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(-1, visibleIndex, collection);
+          modifySibling(-1, index, collection);
 
           growBy = growBy - 1;
         }
@@ -155,13 +154,14 @@ class TemplateArea extends Component {
         // Loop counter
         let shrinkBy = shrinkByTotal;
         const collection = this.images;
+        const absoluteIndex = this.images.indexOf(image);
 
         while (shrinkBy > 0) {
           // Shrink the current slot one size down
           image.size = image.size - 1;
 
           // Get a valid sibling and shrink it.
-          modifySibling(1, index, collection);
+          modifySibling(1, absoluteIndex, collection);
 
           shrinkBy = shrinkBy - 1;
         }
@@ -173,11 +173,12 @@ class TemplateArea extends Component {
 
   getSlotWidth = () => {
     const slotCount = this.images.reduce((count, img) => count + img.size, 0);
+    const visibleSlotCount = this.visibleImages.length;
     // Measure the area that contains the slots
     const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
     // Figure out how wide a slot is. Subtract horizontal padding
-    // to get a more accurate value.
-    return (areaWidth - 64) / slotCount;
+    // on parent and slots to get a more accurate value.
+    return (areaWidth - (64 + 32 * (visibleSlotCount - 1))) / slotCount;
   };
 
   resetResize = () => {
