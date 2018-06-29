@@ -9,13 +9,13 @@ const AreaSlot = styled.div`
   border-radius: 25px;
   flex: none;
   border: 3px dashed white;
-  position: absolute;
   transform: translateZ(0);
+  position: relative;
   height: 228px;
-  background: green;
-  transition: all ${({ resizing = false }) => (resizing ? '0.1s' : '0.1s')} ease-out;
+  transition: opacity 0.1s ease-out;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
   justify-content: center;
   overflow: hidden;
   ${({ resizing = false }) => (resizing ? 'z-index: 10' : '')};
@@ -65,11 +65,6 @@ const IndexDisplay = styled.span`
   padding: 0.5rem 1rem 0.6rem 0.9rem;
 `;
 
-function getSiblingIndex(index, direction) {
-  const siblingIdx = direction === 'left' ? index - 1 : index + 1;
-  return siblingIdx < 0 ? 0 : siblingIdx > 2 ? 2 : siblingIdx;
-}
-
 @observer
 class TemplateSlot extends Component {
   static propTypes = {
@@ -101,35 +96,50 @@ class TemplateSlot extends Component {
     const distanceFromResizing = Math.abs(resizeIndex - index);
     let isAffected = direction === 'left' ? resizeIndex > index : resizeIndex < index;
     let resizeValue = get(resize, 'value', 0);
+    const distantResizeValueModifier = slotWidth * (distanceFromResizing - 1);
 
-    isAffected =
-      isAffected &&
-      Math.abs(resizeValue) > distanceFromResizing * 20 + slotWidth * (distanceFromResizing - 1);
+    isAffected = isAffected && Math.abs(resizeValue) > distantResizeValueModifier;
 
-    if (isResizing) {
-      resizeValue = resizeValue;
-    } else if (isAffected) {
-      resizeValue = -resizeValue;
-    } else {
+    if (isAffected) {
+      resizeValue = -(resizeValue - distantResizeValueModifier);
+    } else if (!isResizing) {
       resizeValue = 0;
     }
 
-    const minOrMaxValue = slotWidth * size - 80;
-    resizeValue = resizeValue !== 0 ? Math.max(-minOrMaxValue, resizeValue) : 0;
-
     // Reverse direction if affected
     const resizeDir = !isAffected ? direction : direction === 'left' ? 'right' : 'left';
-    const actualWidth = slotWidth * size + resizeValue;
-    const nextWidth = actualWidth / slotWidth;
-    const isVisible = nextWidth > 0.5;
+
+    // Calculate the actual width that the slot is including the resize value.
+    const absoluteWidth = size * slotWidth;
+    const actualWidth = absoluteWidth + resizeValue;
+
+    // TODO make limits work
+    
+    if (isResizing) {
+      resizeValue = resizeValue > 0 ? Math.min(resizeValue, slotWidth * 2) : resizeValue;
+      resizeValue =
+        resizeValue < 0
+          ? Math.max(resizeValue, -(absoluteWidth - slotWidth * (size - 2)))
+          : resizeValue;
+    }
+
+    // Figure out what the next size will be for this element.
+    // If it's under 0.5 it will be hidden (size 0) at drag end.
+    const nextSize = actualWidth / slotWidth;
+    const isVisible = nextSize > 0.5;
+
+    // If the element will not be visible, don't bother rendering it.
+    // This will stop it from occupying a column in the grid.
+    if (!isVisible) {
+      return null;
+    }
 
     const resizeStyle = {
-      left: resizeDir === 'left' && resizeValue > 0 ? `${resizeValue}px` : 'auto',
-      right: resizeDir === 'left' && resizeValue < 0 ? `-${resizeValue}px` : 'auto',
-      opacity: isVisible ? nextWidth * 1 : 0,
+      left: resizeDir === 'left' && resizeValue > 0 ? `${-resizeValue}px` : 'auto',
+      right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
+      opacity: isVisible ? nextSize * 1 : 0,
       borderWidth: isVisible ? 3 : 0,
-      marginRight: !isVisible || index === totalImages - 1 ? 0 : '32px', // 2rem margin if not the last one and visible.
-      width: !isVisible ? 0 : `${actualWidth}px`,
+      width: !isVisible ? 0 : isResizing || isAffected ? `calc(100% + ${resizeValue}px)` : '100%',
     };
 
     return (

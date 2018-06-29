@@ -15,9 +15,11 @@ const AreaContainer = styled.div`
 `;
 
 const Area = styled.div`
-  margin: 2rem;
+  padding: 2rem;
   position: relative;
-  height: 228px;
+  display: grid;
+  grid-gap: 32px; // 2rem
+  grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;
@@ -176,7 +178,7 @@ class TemplateArea extends Component {
     const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
     // Figure out how wide a slot is. Subtract horizontal padding
     // on parent and slots to get a more accurate value.
-    return (areaWidth - (64 + 32 * (visibleSlotCount - 1))) / slotCount;
+    return (areaWidth - 32 * (visibleSlotCount - 1)) / slotCount;
   };
 
   resetResize = () => {
@@ -209,6 +211,7 @@ class TemplateArea extends Component {
   @computed
   get currentTemplateColumns() {
     const columns = this.visibleImages.map(image => `${image.size}fr`);
+    console.log(columns);
     return columns.join(' ');
   }
 
