@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import styled, { css } from 'styled-components';
-import { toJS, observable } from 'mobx';
+import { toJS, observable, computed } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
+import pick from 'lodash/pick';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -85,11 +86,50 @@ class ConfigureLayout extends Component {
     instructions: false,
   };
 
+  @observable prevSavedTemplate = this.serializeCurrentTemplate();
+
+  @computed
+  get templateIsDirty() {
+    const { currentTemplate } = this.props;
+    const serializedTemplate = this.serializeCurrentTemplate(currentTemplate);
+    const isDirty = serializedTemplate !== this.prevSavedTemplate;
+    return isDirty;
+  }
+
+  componentDidUpdate() {
+    const prevSaved = JSON.parse(this.prevSavedTemplate);
+
+    if (!prevSaved) {
+      return;
+    }
+
+    const currentTemplate = this.props.currentTemplate;
+
+    if (get(prevSaved, 'id', 'different') !== get(currentTemplate, 'id', 'ids')) {
+      this.prevSavedTemplate = this.serializeCurrentTemplate();
+    }
+  }
+
   toggle = which => e => {
     e.preventDefault();
 
     const current = this.sections[which];
     this.sections[which] = !current;
+  };
+
+  onSaveClick = e => {
+    e.preventDefault();
+    const { onSaveTemplate, currentTemplate } = this.props;
+    const currentTemplatePlain = toJS(currentTemplate);
+
+    onSaveTemplate(currentTemplatePlain).then(() => {
+      this.prevSavedTemplate = this.serializeCurrentTemplate();
+    });
+  };
+
+  serializeCurrentTemplate = (template = this.props.currentTemplate) => {
+    const currentTemplatePlain = pick(toJS(template), ['id', 'label', 'images']);
+    return JSON.stringify(currentTemplatePlain);
   };
 
   render() {
@@ -98,7 +138,6 @@ class ConfigureLayout extends Component {
       images,
       onSelectTemplate,
       onAddTemplate,
-      onSaveTemplate,
       onRemoveTemplate,
       onRemoveImage,
       currentTemplate,
@@ -123,7 +162,8 @@ class ConfigureLayout extends Component {
         <TemplateControls>
           <RaisedButton
             primary
-            onClick={() => onSaveTemplate(toJS(currentTemplate))}
+            disabled={!this.templateIsDirty}
+            onClick={this.onSaveClick}
             label="Tallenna sommittelu"
           />
           <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />

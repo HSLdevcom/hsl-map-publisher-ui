@@ -34,6 +34,8 @@ const store = observable({
   },
 });
 
+
+
 store.showConfirm = (message, callback = null) => {
   const confirmCallback = ({ isCancelled }) => {
     store.confirm = null;
