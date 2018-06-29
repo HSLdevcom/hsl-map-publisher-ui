@@ -92,6 +92,12 @@ class TemplateSlot extends Component {
     const { size, svg } = image;
     const { index: resizeIndex, direction } = resize;
 
+    // If the element will not be visible, don't bother rendering it.
+    // This will stop it from occupying a column in the grid.
+    if (!size) {
+      return null;
+    }
+
     const isResizing = resizeIndex === index;
     const distanceFromResizing = Math.abs(resizeIndex - index);
     let isAffected = direction === 'left' ? resizeIndex > index : resizeIndex < index;
@@ -114,13 +120,16 @@ class TemplateSlot extends Component {
     const actualWidth = absoluteWidth + resizeValue;
 
     // TODO make limits work
-    
+
+    const max = slotWidth * 2 + 26 - (slotWidth * (size - 1) + 26);
+    const min = absoluteWidth - slotWidth;
+
     if (isResizing) {
-      resizeValue = resizeValue > 0 ? Math.min(resizeValue, slotWidth * 2) : resizeValue;
-      resizeValue =
-        resizeValue < 0
-          ? Math.max(resizeValue, -(absoluteWidth - slotWidth * (size - 2)))
-          : resizeValue;
+      resizeValue = Math.min(Math.max(resizeValue, -min), max);
+    }
+
+    if (isAffected) {
+      resizeValue = Math.min(resizeValue, slotWidth);
     }
 
     // Figure out what the next size will be for this element.
@@ -128,24 +137,23 @@ class TemplateSlot extends Component {
     const nextSize = actualWidth / slotWidth;
     const isVisible = nextSize > 0.5;
 
-    // If the element will not be visible, don't bother rendering it.
-    // This will stop it from occupying a column in the grid.
-    if (!isVisible) {
-      return null;
-    }
-
     const resizeStyle = {
       left: resizeDir === 'left' && resizeValue > 0 ? `${-resizeValue}px` : 'auto',
       right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
-      opacity: isVisible ? nextSize * 1 : 0,
-      borderWidth: isVisible ? 3 : 0,
-      width: !isVisible ? 0 : isResizing || isAffected ? `calc(100% + ${resizeValue}px)` : '100%',
+      opacity: isResizing ? 1 : isVisible ? nextSize * 1 : 0,
+      borderWidth: isVisible || isResizing ? 3 : 0,
+      width:
+        !isVisible && !isResizing
+          ? 0
+          : isResizing || isAffected
+            ? `calc(100% + ${resizeValue}px)`
+            : '100%',
     };
 
     return (
       <AreaSlot resizing={isResizing} style={resizeStyle}>
-        {(!isFirst || size > 1) && <HandleLeft onMouseDown={onMouseDown(index, 'left')} />}
-        {(!isLast || size > 1) && <HandleRight onMouseDown={onMouseDown(index, 'right')} />}
+        {order !== 1 && <HandleLeft onMouseDown={onMouseDown(index, 'left')} />}
+        {order !== 3 && <HandleRight onMouseDown={onMouseDown(index, 'right')} />}
         <TemplateImage onChange={this.onChangeImage} svg={svg} />
         <IndexDisplay>{order}</IndexDisplay>
       </AreaSlot>

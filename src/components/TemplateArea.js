@@ -23,6 +23,8 @@ const Area = styled.div`
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
 
   ${({ resizing = false }) =>
     resizing
@@ -211,7 +213,6 @@ class TemplateArea extends Component {
   @computed
   get currentTemplateColumns() {
     const columns = this.visibleImages.map(image => `${image.size}fr`);
-    console.log(columns);
     return columns.join(' ');
   }
 
