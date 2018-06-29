@@ -9,9 +9,10 @@ const AreaSlot = styled.div`
   border-radius: 25px;
   flex: none;
   border: 3px dashed white;
-  position: relative;
+  position: absolute;
   transform: translateZ(0);
   height: 228px;
+  background: green;
   transition: all ${({ resizing = false }) => (resizing ? '0.1s' : '0.1s')} ease-out;
   display: flex;
   align-items: center;

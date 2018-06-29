@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import styled, { css } from 'styled-components';
 import { toJS, observable } from 'mobx';
 import TemplateSelect from './TemplateSelect';
@@ -68,8 +68,8 @@ class ConfigureLayout extends Component {
     onRemoveTemplate: PropTypes.func.isRequired,
     onRemoveImage: PropTypes.func.isRequired,
     currentTemplate: PropTypes.object,
-    templates: PropTypes.array,
-    images: PropTypes.array,
+    templates: mobxPropTypes.arrayOrObservableArray,
+    images: mobxPropTypes.arrayOrObservableArray,
     onSelectTemplate: PropTypes.func.isRequired,
   };
 

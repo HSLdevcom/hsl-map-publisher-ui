@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
-
 import App from './components/App';
-import registerServiceWorker from './registerServiceWorker';
 import './styles/base.css';
-
 import stores from './stores/stores';
+import { AppContainer, setConfig } from 'react-hot-loader';
+
+setConfig({ logLevel: 'debug' });
 
 const { commonStore } = stores;
 
@@ -26,24 +26,23 @@ setInterval(() => {
 
 const root = document.getElementById('root');
 
-ReactDOM.render(
-  <Provider {...stores}>
-    <App />
-  </Provider>,
-  root,
-);
+const render = Component => {
+  ReactDOM.render(
+    <Provider {...stores}>
+      <AppContainer>
+        <Component />
+      </AppContainer>
+    </Provider>,
+    root,
+  );
+};
 
-registerServiceWorker();
+render(App);
 
 if (module.hot) {
   module.hot.accept('./components/App', () => {
     // eslint-disable-next-line global-require
     const NextApp = require('./components/App').default;
-    ReactDOM.render(
-      <Provider {...stores}>
-        <NextApp />
-      </Provider>,
-      root,
-    );
+    render(NextApp);
   });
 }

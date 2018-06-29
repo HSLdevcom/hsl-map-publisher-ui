@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
+import PropTypes from 'prop-types'
+import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import styled from 'styled-components';
 import { toJS } from 'mobx';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
@@ -98,7 +98,7 @@ const ImageLabel = styled.div`
 @observer
 class ImageLibrary extends Component {
   static propTypes = {
-    images: PropTypes.array,
+    images: mobxPropTypes.arrayOrObservableArray,
     removeImage: PropTypes.func.isRequired,
   };
 

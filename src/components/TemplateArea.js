@@ -15,11 +15,9 @@ const AreaContainer = styled.div`
 `;
 
 const Area = styled.div`
-  padding: 2rem;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  margin: 2rem;
+  position: relative;
+  height: 228px;
   cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
   pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
   user-select: none;

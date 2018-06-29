@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
+import PropTypes from 'prop-types'
+import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-const TemplateSelect = props => (
+const TemplateSelect = observer(props => (
   <SelectField
     className={props.className}
     value={props.selectedTemplate}
@@ -18,7 +18,7 @@ const TemplateSelect = props => (
       />
     ))}
   </SelectField>
-);
+));
 
 TemplateSelect.defaultProps = {
   selectedTemplate: null,
@@ -28,7 +28,7 @@ TemplateSelect.defaultProps = {
 
 TemplateSelect.propTypes = {
   selectedTemplate: PropTypes.string,
-  templates: PropTypes.array,
+  templates: mobxPropTypes.arrayOrObservableArray,
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
 };
