@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import {
   getStops,
   getBuilds,
@@ -16,6 +16,7 @@ import {
   removeImage,
 } from '../util/api';
 import get from 'lodash/get';
+import reduce from 'lodash/reduce';
 
 const store = observable({
   confirm: null,
@@ -26,15 +27,46 @@ const store = observable({
   templates: [],
   images: [],
   selectedTemplate: null,
+  prevSavedTemplate: null,
   get currentTemplate() {
     const { selectedTemplate, templates } = store;
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
-
     return currentTemplate || templates[0];
+  },
+  get templateIsDirty() {
+    const { currentTemplate } = store;
+    const serializedTemplate = store.serializeCurrentTemplate(currentTemplate);
+    const isDirty = serializedTemplate !== store.prevSavedTemplate;
+    return isDirty;
   },
 });
 
+store.serializeCurrentTemplate = (template = store.currentTemplate) => {
+  const pickProps = ['id', 'label', 'images']; // We only want these props from
+  // the template.
 
+  const currentTemplatePlain = reduce(
+    toJS(template),
+    (picked, value, key) => {
+      // Pick the prop if whitelisted above
+      if (pickProps.includes(key)) {
+        // eslint-disable-next-line no-param-reassign
+        picked[key] = value;
+      }
+
+      // Also pick name and size props from images.
+      if (key === 'images') {
+        // eslint-disable-next-line no-param-reassign
+        picked.images = picked.images.map(({ name, size }) => ({ name, size }));
+      }
+
+      return picked;
+    },
+    {},
+  );
+
+  return JSON.stringify(currentTemplatePlain);
+};
 
 store.showConfirm = (message, callback = null) => {
   const confirmCallback = ({ isCancelled }) => {
@@ -199,6 +231,10 @@ store.selectTemplate = id => {
   store.selectedTemplate = id;
 };
 
+store.setSavedTemplate = (serializedTemplate = store.serializeCurrentTemplate()) => {
+  store.prevSavedTemplate = serializedTemplate;
+};
+
 store.saveTemplate = async template => {
   try {
     await saveTemplate(template);
@@ -207,8 +243,10 @@ store.saveTemplate = async template => {
     store.showConfirm(`Sommittelun tallennus epäonnistui: ${error.message}`);
   }
 
-  store.getTemplates();
-  store.getImages();
+  await store.getTemplates();
+  await store.getImages();
+
+  store.setSavedTemplate(store.serializeCurrentTemplate());
 };
 
 store.getImages = async () => {

@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import styled, { css } from 'styled-components';
-import { toJS, observable, computed } from 'mobx';
+import { toJS, observable } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
-import reduce from 'lodash/reduce';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -72,11 +71,15 @@ class ConfigureLayout extends Component {
     templates: mobxPropTypes.arrayOrObservableArray,
     images: mobxPropTypes.arrayOrObservableArray,
     onSelectTemplate: PropTypes.func.isRequired,
+    setSavedTemplate: PropTypes.func.isRequired,
+    prevSavedTemplate: PropTypes.any,
+    templateIsDirty: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     templates: [],
     images: [],
+    prevSavedTemplate: null,
     currentTemplate: null,
   };
 
@@ -86,28 +89,14 @@ class ConfigureLayout extends Component {
     instructions: false,
   };
 
-  @observable prevSavedTemplate = this.serializeCurrentTemplate();
-
-  @computed
-  get templateIsDirty() {
-    const { currentTemplate } = this.props;
-    const serializedTemplate = this.serializeCurrentTemplate(currentTemplate);
-
-    const isDirty = serializedTemplate !== this.prevSavedTemplate;
-    return isDirty;
-  }
-
   componentDidUpdate() {
-    const prevSaved = JSON.parse(this.prevSavedTemplate);
-
-    if (!prevSaved) {
-      return;
-    }
-
-    const currentTemplate = this.props.currentTemplate;
-
-    if (get(prevSaved, 'id', 'different') !== get(currentTemplate, 'id', 'ids')) {
-      this.prevSavedTemplate = this.serializeCurrentTemplate();
+    const { setSavedTemplate, prevSavedTemplate, currentTemplate } = this.props;
+    const prevSaved = JSON.parse(prevSavedTemplate);
+    // Check if the template changed. If the ID is not found on the object,
+    // it means that the value was null and we always want to replace it.
+    if (get(prevSaved, 'id', '123') !== get(currentTemplate, 'id', 'abc')) {
+      // Replace the prev saved template with the currently chosen one.
+      setSavedTemplate();
     }
   }
 
@@ -118,49 +107,17 @@ class ConfigureLayout extends Component {
     this.sections[which] = !current;
   };
 
-  onSaveClick = e => {
-    e.preventDefault();
-    const { onSaveTemplate, currentTemplate } = this.props;
-    const currentTemplatePlain = toJS(currentTemplate);
-
-    onSaveTemplate(currentTemplatePlain).then(() => {
-      this.prevSavedTemplate = this.serializeCurrentTemplate();
-    });
-  };
-
-  serializeCurrentTemplate = (template = this.props.currentTemplate) => {
-    const pickProps = ['id', 'label', 'images'];
-
-    const currentTemplatePlain = reduce(
-      toJS(template),
-      (picked, value, key) => {
-        if (pickProps.includes(key)) {
-          // eslint-disable-next-line no-param-reassign
-          picked[key] = value;
-        }
-
-        if (key === 'images') {
-          // eslint-disable-next-line no-param-reassign
-          picked.images = picked.images.map(({ name, size }) => ({ name, size }));
-        }
-
-        return picked;
-      },
-      {},
-    );
-
-    return JSON.stringify(currentTemplatePlain);
-  };
-
   render() {
     const {
       templates,
       images,
       onSelectTemplate,
+      onSaveTemplate,
       onAddTemplate,
       onRemoveTemplate,
       onRemoveImage,
       currentTemplate,
+      templateIsDirty,
     } = this.props;
 
     return (
@@ -182,8 +139,8 @@ class ConfigureLayout extends Component {
         <TemplateControls>
           <RaisedButton
             primary
-            disabled={!this.templateIsDirty}
-            onClick={this.onSaveClick}
+            disabled={!templateIsDirty}
+            onClick={() => onSaveTemplate(toJS(currentTemplate))}
             label="Tallenna sommittelu"
           />
           <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
