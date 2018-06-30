@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import { toJS, observable, computed } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
-import pick from 'lodash/pick';
+import reduce from 'lodash/reduce';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -92,6 +92,7 @@ class ConfigureLayout extends Component {
   get templateIsDirty() {
     const { currentTemplate } = this.props;
     const serializedTemplate = this.serializeCurrentTemplate(currentTemplate);
+
     const isDirty = serializedTemplate !== this.prevSavedTemplate;
     return isDirty;
   }
@@ -128,7 +129,26 @@ class ConfigureLayout extends Component {
   };
 
   serializeCurrentTemplate = (template = this.props.currentTemplate) => {
-    const currentTemplatePlain = pick(toJS(template), ['id', 'label', 'images']);
+    const pickProps = ['id', 'label', 'images'];
+
+    const currentTemplatePlain = reduce(
+      toJS(template),
+      (picked, value, key) => {
+        if (pickProps.includes(key)) {
+          // eslint-disable-next-line no-param-reassign
+          picked[key] = value;
+        }
+
+        if (key === 'images') {
+          // eslint-disable-next-line no-param-reassign
+          picked.images = picked.images.map(({ name, size }) => ({ name, size }));
+        }
+
+        return picked;
+      },
+      {},
+    );
+
     return JSON.stringify(currentTemplatePlain);
   };
 
