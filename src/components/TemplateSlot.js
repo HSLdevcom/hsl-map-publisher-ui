@@ -118,7 +118,7 @@ class TemplateSlot extends Component {
     // TODO make limits work
 
     const max = slotWidth * 2 + 37 - (slotWidth * (size - 1) + 26);
-    const min = absoluteWidth - slotWidth + 32;
+    const min = absoluteWidth - (slotWidth - 3);
 
     if (isResizing) {
       resizeValue = Math.min(Math.max(resizeValue, -min), max);
