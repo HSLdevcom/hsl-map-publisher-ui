@@ -71,7 +71,6 @@ class TemplateSlot extends Component {
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
     order: PropTypes.number.isRequired,
-    totalImages: PropTypes.number.isRequired,
     onMouseDown: PropTypes.func.isRequired,
     slotWidth: PropTypes.number.isRequired,
     resize: PropTypes.any.isRequired,
@@ -85,10 +84,7 @@ class TemplateSlot extends Component {
   };
 
   render() {
-    const { image, index, order, onMouseDown, totalImages, slotWidth, resize } = this.props;
-
-    const isFirst = index === 0;
-    const isLast = index >= totalImages - 1;
+    const { image, index, order, onMouseDown, slotWidth, resize } = this.props;
     const { size, svg } = image;
     const { index: resizeIndex, direction } = resize;
 
@@ -121,8 +117,8 @@ class TemplateSlot extends Component {
 
     // TODO make limits work
 
-    const max = slotWidth * 2 + 26 - (slotWidth * (size - 1) + 26);
-    const min = absoluteWidth - slotWidth;
+    const max = slotWidth * 2 + 37 - (slotWidth * (size - 1) + 26);
+    const min = absoluteWidth - slotWidth + 32;
 
     if (isResizing) {
       resizeValue = Math.min(Math.max(resizeValue, -min), max);

@@ -239,7 +239,6 @@ class TemplateArea extends Component {
                 key={`template_image_${template.id}_${idx}`}
                 image={image}
                 index={visibleIndex}
-                totalImages={this.visibleImages.length}
                 onMouseDown={this.onHandleMouseDown}
               />
             );
