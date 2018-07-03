@@ -42,7 +42,7 @@ const store = observable({
 });
 
 store.serializeCurrentTemplate = (template = store.currentTemplate) => {
-  const pickProps = ['id', 'label', 'images']; // We only want these props from
+  const pickProps = ['id', 'label', 'areas']; // We only want these props from
   // the template.
 
   const currentTemplatePlain = reduce(
@@ -54,10 +54,12 @@ store.serializeCurrentTemplate = (template = store.currentTemplate) => {
         picked[key] = value;
       }
 
-      // Also pick name and size props from images.
-      if (key === 'images') {
+      // Also pick name and size props from slots.
+      if (key === 'areas') {
         // eslint-disable-next-line no-param-reassign
-        picked.images = picked.images.map(({ name, size }) => ({ name, size }));
+        picked.areas = picked.areas.map(area =>
+          area.slots.map(({ image, size }) => ({ image: get(image, 'name', null), size })),
+        );
       }
 
       return picked;

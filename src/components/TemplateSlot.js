@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import styled from 'styled-components';
@@ -68,7 +69,13 @@ const IndexDisplay = styled.span`
 @observer
 class TemplateSlot extends Component {
   static propTypes = {
-    image: PropTypes.object.isRequired,
+    slot: PropTypes.shape({
+      size: PropTypes.number,
+      image: PropTypes.shape({
+        name: PropTypes.string,
+        svg: PropTypes.string,
+      }),
+    }).isRequired,
     index: PropTypes.number.isRequired,
     order: PropTypes.number.isRequired,
     onMouseDown: PropTypes.func.isRequired,
@@ -77,16 +84,25 @@ class TemplateSlot extends Component {
   };
 
   onChangeImage = ({ svg, name }) => {
-    const { image } = this.props;
+    const { slot } = this.props;
 
-    image.svg = svg;
-    image.name = name;
+    if (!slot.image) {
+      slot.image = observable({
+        svg,
+        name,
+      });
+    } else {
+      slot.image.svg = svg;
+      slot.image.name = name;
+    }
   };
 
   render() {
-    const { image, index, order, onMouseDown, slotWidth, resize } = this.props;
-    const { size, svg } = image;
+    const { slot, index, order, onMouseDown, slotWidth, resize } = this.props;
+    const { size, image } = slot;
     const { index: resizeIndex, direction } = resize;
+
+    const svg = get(image, 'svg', '');
 
     // If the element will not be visible, don't bother rendering it.
     // This will stop it from occupying a column in the grid.
@@ -115,8 +131,6 @@ class TemplateSlot extends Component {
     const absoluteWidth = size * slotWidth;
     const actualWidth = absoluteWidth + resizeValue;
 
-    // TODO make limits work
-
     const max = slotWidth * 2 + 37 - (slotWidth * (size - 1) + 26);
     const min = absoluteWidth - (slotWidth - 3);
 
@@ -138,12 +152,7 @@ class TemplateSlot extends Component {
       right: resizeDir === 'left' && resizeValue < 0 ? `${resizeValue}px` : 'auto',
       opacity: isResizing ? 1 : isVisible ? nextSize * 1 : 0,
       borderWidth: isVisible || isResizing ? 3 : 0,
-      width:
-        !isVisible && !isResizing
-          ? 0
-          : isResizing || isAffected
-            ? `calc(100% + ${resizeValue}px)`
-            : '100%',
+      width: isResizing || isAffected ? `calc(100% + ${resizeValue}px)` : '100%',
     };
 
     return (

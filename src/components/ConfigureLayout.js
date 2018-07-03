@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import { toJS, observable } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
+import map from 'lodash/map';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -161,7 +162,10 @@ class ConfigureLayout extends Component {
           <SvgInstructions open={this.sections.instructions} />
         </Collapse>
         <ImageLibrary removeImage={onRemoveImage} images={images} />
-        <TemplateArea template={currentTemplate} title="Footer" />
+        {currentTemplate &&
+          currentTemplate.areas.map((area, key) => (
+            <TemplateArea area={area} key={`template_area_${key}`} />
+          ))}
       </Root>
     );
   }

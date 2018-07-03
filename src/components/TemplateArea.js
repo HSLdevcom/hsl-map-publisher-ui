@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import get from 'lodash/get';
 import { computed, observable, toJS } from 'mobx'; // eslint-disable-line no-unused-vars
 import styled from 'styled-components';
@@ -7,10 +7,17 @@ import PropTypes from 'prop-types';
 import TemplateSlot from './TemplateSlot';
 
 const AreaContainer = styled.div`
-  background: hsl(204, 100%, 39%);
+  background-color: ${({ background = '#ccc' }) => background};
 
   > * {
     margin-top: 0;
+  }
+
+  h3 {
+    padding-top: 1.5rem;
+    padding-left: 2rem;
+    margin-bottom: 0;
+    color: white;
   }
 `;
 
@@ -44,13 +51,25 @@ function getSiblingIndex(index, direction) {
 @observer
 class TemplateArea extends Component {
   static propTypes = {
-    template: PropTypes.object,
-    title: PropTypes.string,
+    area: PropTypes.shape({
+      resizeable: PropTypes.bool,
+      key: PropTypes.string,
+      orientation: PropTypes.string,
+      background: PropTypes.string,
+      slots: mobxPropTypes.observableArrayOf(
+        PropTypes.shape({
+          size: PropTypes.number,
+          image: PropTypes.shape({
+            name: PropTypes.string,
+            svg: PropTypes.string,
+          }),
+        }),
+      ),
+    }),
   };
 
   static defaultProps = {
-    template: {},
-    title: 'Untitled area',
+    area: {},
   };
 
   @observable
@@ -60,6 +79,8 @@ class TemplateArea extends Component {
     value: 0,
     index: -1,
   };
+
+  @observable slotWidth = 0;
 
   areaRef = React.createRef();
 
@@ -73,7 +94,7 @@ class TemplateArea extends Component {
     this.resizing.direction = direction; // The side of the handle that is being dragged
     this.resizing.start = left; // The starting position
     this.resizing.value = 0; // The value of how much has been dragged
-    this.resizing.index = index; // The index among visible images that the current image has.
+    this.resizing.index = index; // The index among visible slots that the current image has.
   };
   onHandleMouseMove = e => {
     if (this.resizing.index === -1) {
@@ -81,7 +102,7 @@ class TemplateArea extends Component {
     }
 
     const { index, direction, start } = this.resizing;
-    const { size = 1 } = this.visibleImages[index];
+    const { size = 1 } = this.visibleSlots[index];
     // The current horizontal mouse position
     const mouseX = e.clientX;
     // The resize delta. No matter the direction, if we want to grow a lot
@@ -105,7 +126,7 @@ class TemplateArea extends Component {
     // Check that we are currently resizing
     if (this.resizing.index !== -1) {
       const { value, direction, index } = this.resizing;
-      const image = this.visibleImages[index];
+      const image = this.visibleSlots[index];
 
       const slotWidth = this.getSlotWidth();
       const actionAreaWidth = slotWidth / 2;
@@ -131,12 +152,12 @@ class TemplateArea extends Component {
       // If there is more than one image and the resize value
       // has been dragged beyond the action area, we want to
       // GROW the current slot one size unit.
-      if (this.imageCount > 1 && value > actionAreaWidth) {
+      if (this.slotCount > 1 && value > actionAreaWidth) {
         // Get the total amount we want to grow this by
         const growByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
         // Loop counter
         let growBy = growByTotal;
-        const collection = this.visibleImages;
+        const collection = this.visibleSlots;
 
         while (growBy > 0) {
           // Grow the current slot.
@@ -155,8 +176,8 @@ class TemplateArea extends Component {
         const shrinkByTotal = Math.min(Math.round(Math.abs(value) / slotWidth), 2);
         // Loop counter
         let shrinkBy = shrinkByTotal;
-        const collection = this.images;
-        const absoluteIndex = this.images.indexOf(image);
+        const collection = this.slots;
+        const absoluteIndex = this.slots.indexOf(image);
 
         while (shrinkBy > 0) {
           // Shrink the current slot one size down
@@ -174,8 +195,8 @@ class TemplateArea extends Component {
   };
 
   getSlotWidth = () => {
-    const slotCount = this.images.reduce((count, img) => count + img.size, 0);
-    const visibleSlotCount = this.visibleImages.length;
+    const slotCount = this.slots.reduce((count, slot) => count + slot.size, 0);
+    const visibleSlotCount = this.visibleSlots.length;
     // Measure the area that contains the slots
     const { width: areaWidth } = this.areaRef.current.getBoundingClientRect();
     // Figure out how wide a slot is. Subtract horizontal padding
@@ -191,53 +212,58 @@ class TemplateArea extends Component {
     this.resizing.direction = '';
   };
 
-  // Shorthand for accessing the images (or an empty array) of the current template.
+  // Shorthand for accessing the slots (or an empty array) of the current template.
   @computed
-  get images() {
-    return get(this.props.template, 'images', []);
+  get slots() {
+    return get(this.props.area, 'slots', []);
   }
 
   // Get all the slots that should be visible, ie with a size of more than one.
   @computed
-  get visibleImages() {
-    return this.images.filter(image => image.size > 0);
+  get visibleSlots() {
+    return this.slots.filter(slot => slot.size > 0);
   }
 
   // The number of visible slots.
   @computed
-  get imageCount() {
-    return this.visibleImages.length;
+  get slotCount() {
+    return this.visibleSlots.length;
   }
 
   // Get the CSS grid template value for the slot layout.
   @computed
-  get currentTemplateColumns() {
-    const columns = this.visibleImages.map(image => `${image.size}fr`);
+  get currentAreaColumns() {
+    const columns = this.visibleSlots.map(slot => `${slot.size}fr`);
     return columns.join(' ');
   }
 
+  componentDidMount() {
+    this.slotWidth = this.getSlotWidth();
+  }
+
   render() {
-    const { template } = this.props;
+    const { area } = this.props;
 
     return (
-      <AreaContainer>
+      <AreaContainer background={area.background}>
+        <h3>{area.key}</h3>
         <Area
           innerRef={this.areaRef}
-          resizing={this.resizing.index !== -1}
+          resizing={area.resizeable && this.resizing.index !== -1}
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}
           onMouseLeave={this.resetResize}
-          columns={this.currentTemplateColumns}>
-          {this.images.map((image, idx) => {
-            const visibleIndex = this.visibleImages.indexOf(image);
+          columns={this.currentAreaColumns}>
+          {this.slots.map((slot, idx) => {
+            const visibleIndex = this.visibleSlots.indexOf(slot);
 
             return (
               <TemplateSlot
+                slot={slot}
                 resize={this.resizing}
-                slotWidth={this.getSlotWidth()}
+                slotWidth={this.slotWidth}
                 order={idx + 1}
-                key={`template_image_${template.id}_${idx}`}
-                image={image}
+                key={`template_image_${area.key}_${idx}`}
                 index={visibleIndex}
                 onMouseDown={this.onHandleMouseDown}
               />
