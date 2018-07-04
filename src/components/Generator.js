@@ -170,7 +170,16 @@ const Generator = props => {
         />
         <RaisedButton
           disabled={stopCount < 1 || !generatorStore.buildId}
-          onClick={() => generatorStore.generate()}
+          onClick={() => {
+            if (commonStore.templateIsDirty) {
+              commonStore.showConfirm(
+                'Sommittelussa on tallentamattomia muutoksia. Julisteet generoidaan tallennetulla versiolla. Haluatko jatkaa?',
+                generatorStore.generate,
+              );
+            } else {
+              generatorStore.generate();
+            }
+          }}
           label={`Generoi (${stopCount})`}
           style={{ height: 40, marginLeft: 10 }}
           primary
