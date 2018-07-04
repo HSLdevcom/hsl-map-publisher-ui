@@ -6,9 +6,7 @@ import { toJS } from 'mobx';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 
-const Root = styled.div`
-  margin-bottom: 2rem;
-`;
+const Root = styled.div``;
 
 const ImagesContainer = styled.div`
   display: flex;
@@ -133,7 +131,6 @@ class ImageLibrary extends Component {
 
     return (
       <Root>
-        <h4>Kirjasto</h4>
         <ImageTrack>
           <ImagesContainer>
             <RemoveImage draggable onDragStart={this.onDragStart(false)}>

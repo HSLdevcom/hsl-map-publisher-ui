@@ -8,6 +8,7 @@ import get from 'lodash/get';
 const Item = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 100px;
   pointer-events: none;
   overflow: hidden;
   border-radius: 25px;

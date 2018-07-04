@@ -10,13 +10,15 @@ import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import { observer } from 'mobx-react';
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 
 const Root = styled.div`
   flex-grow: 1;
   display: flex;
   flex-flow: column;
   min-height: 300px;
+  height: 70vh;
+  margin-bottom: 1rem;
 `;
 
 const Row = styled.div`
@@ -80,20 +82,17 @@ class StopList extends Component {
     onReset: PropTypes.func.isRequired,
   };
 
-  state = { visibleRows: this.props.rows, filterValue: '' };
+  @observable filterValue = '';
 
   onFilterValueChange(value) {
     const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
     const filterValue = value.replace(shortIdRegexp, '$1$2, ');
-
-    this.setState({
-      filterValue,
-    });
+    this.filterValue = filterValue;
   }
 
   @computed
   get visibleRows() {
-    const { filterValue } = this.state;
+    const { filterValue } = this;
     const { rows } = this.props;
 
     const keywords = filterValue
@@ -105,17 +104,15 @@ class StopList extends Component {
       return rows;
     }
     return rows.filter(({ title, subtitle }) =>
-      keywords.some(keyword =>
-        `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
-      ),
+      keywords.some(keyword => `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase())),
     );
   }
 
   render() {
-    const { filterValue } = this.state;
+    const { filterValue } = this;
     const { onCheck, rows, onReset } = this.props;
 
-    const renderer = rowRenderer(this.visibleRows, this.props.onCheck);
+    const renderer = rowRenderer(this.visibleRows, onCheck);
 
     return (
       <Root>
@@ -130,8 +127,7 @@ class StopList extends Component {
             {filterValue && (
               <IconButton
                 onClick={() => this.onFilterValueChange('')}
-                style={{ position: 'absolute', right: 0 }}
-              >
+                style={{ position: 'absolute', right: 0 }}>
                 <ClearIcon />
               </IconButton>
             )}
@@ -145,7 +141,7 @@ class StopList extends Component {
           <Spacer />
           <FlatButton
             disabled={!filterValue.length}
-            onClick={() => onCheck(this.state.visibleRows, true)}
+            onClick={() => onCheck(this.visibleRows, true)}
             label="Valitse kaikki"
           />
         </Row>

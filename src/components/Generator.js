@@ -141,6 +141,8 @@ const Generator = props => {
           onCheck={generatorStore.setChecked}
           onReset={generatorStore.resetRows}
         />
+      </Main>
+      <Main>
         <ConfigureLayout
           onAddTemplate={commonStore.addTemplate}
           onSaveTemplate={commonStore.saveTemplate}

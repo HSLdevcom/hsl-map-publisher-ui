@@ -24,11 +24,24 @@ const AreaContainer = styled.div`
 const Area = styled.div`
   padding: 2rem;
   position: relative;
-  display: grid;
-  grid-gap: 32px; // 2rem
-  grid-template-columns: ${({ columns = '1fr 1fr 1fr' }) => columns};
-  cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
-  pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
+  ${({ orientation = 'horizontal', resizeable = true, columns = '1fr 1fr 1fr' }) => resizeable ? `
+    display: grid;
+    grid-gap: 32px; // 2rem
+    justify-items: start;
+    align-items: start;
+    align-content: start;
+    grid-template-columns: ${columns};
+    cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
+    pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
+  ` : `
+    display: flex;
+    flex-direction: ${orientation === 'horizontal' ? 'row' : 'column'};
+    flex-wrap: nowrap;
+    
+    > *:not(:last-child) {
+      margin-bottom: 32px;
+    }
+  `};
   user-select: none;
   overflow: hidden;
   white-space: nowrap;
@@ -248,6 +261,8 @@ class TemplateArea extends Component {
       <AreaContainer background={area.background}>
         <h3>{area.key}</h3>
         <Area
+          resizeable={area.resizeable}
+          orientation={area.orientation}
           innerRef={this.areaRef}
           resizing={area.resizeable && this.resizing.index !== -1}
           onMouseUp={this.onHandleMouseUp}
@@ -260,6 +275,7 @@ class TemplateArea extends Component {
             return (
               <TemplateSlot
                 slot={slot}
+                isResizeable={area.resizeable}
                 resize={this.resizing}
                 slotWidth={this.slotWidth}
                 order={idx + 1}

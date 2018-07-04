@@ -12,9 +12,9 @@ const AreaSlot = styled.div`
   border: 3px dashed white;
   transform: translateZ(0);
   position: relative;
-  height: 228px;
   transition: opacity 0.1s ease-out;
   display: flex;
+  max-height: 300px;
   align-items: center;
   box-sizing: border-box;
   justify-content: center;
@@ -81,6 +81,7 @@ class TemplateSlot extends Component {
     onMouseDown: PropTypes.func.isRequired,
     slotWidth: PropTypes.number.isRequired,
     resize: PropTypes.any.isRequired,
+    isResizeable: PropTypes.bool.isRequired,
   };
 
   onChangeImage = ({ svg, name }) => {
@@ -98,7 +99,7 @@ class TemplateSlot extends Component {
   };
 
   render() {
-    const { slot, index, order, onMouseDown, slotWidth, resize } = this.props;
+    const { isResizeable, slot, index, order, onMouseDown, slotWidth, resize } = this.props;
     const { size, image } = slot;
     const { index: resizeIndex, direction } = resize;
 
@@ -110,9 +111,10 @@ class TemplateSlot extends Component {
       return null;
     }
 
-    const isResizing = resizeIndex === index;
+    const isResizing = isResizeable && resizeIndex === index;
     const distanceFromResizing = Math.abs(resizeIndex - index);
-    let isAffected = direction === 'left' ? resizeIndex > index : resizeIndex < index;
+    let isAffected =
+      isResizeable && (direction === 'left' ? resizeIndex > index : resizeIndex < index);
     let resizeValue = get(resize, 'value', 0);
     const distantResizeValueModifier = slotWidth * (distanceFromResizing - 1);
 
@@ -157,8 +159,8 @@ class TemplateSlot extends Component {
 
     return (
       <AreaSlot resizing={isResizing} style={resizeStyle}>
-        {order !== 1 && <HandleLeft onMouseDown={onMouseDown(index, 'left')} />}
-        {order !== 3 && <HandleRight onMouseDown={onMouseDown(index, 'right')} />}
+        {isResizeable && order !== 1 && <HandleLeft onMouseDown={onMouseDown(index, 'left')} />}
+        {isResizeable && order !== 3 && <HandleRight onMouseDown={onMouseDown(index, 'right')} />}
         <TemplateImage onChange={this.onChangeImage} svg={svg} />
         <IndexDisplay>{order}</IndexDisplay>
       </AreaSlot>

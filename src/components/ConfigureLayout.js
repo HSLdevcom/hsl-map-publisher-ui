@@ -5,13 +5,13 @@ import styled, { css } from 'styled-components';
 import { toJS, observable } from 'mobx';
 import TemplateSelect from './TemplateSelect';
 import get from 'lodash/get';
-import map from 'lodash/map';
 import TemplateArea from './TemplateArea';
 import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ImageLibrary from './ImageLibrary';
-import SvgInstructions from './Instructions';
-import { Collapse } from 'react-collapse';
+import Instructions from './Instructions';
+import { SlideDown } from 'react-slidedown';
+import 'react-slidedown/lib/slidedown.css';
 
 const Root = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const Select = styled(TemplateSelect)`
   width: 100%;
 `;
 
-const CollapseButton = css`
+const SlideDownButton = css`
   cursor: pointer;
 
   & > svg {
@@ -42,12 +42,8 @@ const CollapseButton = css`
   }
 `;
 
-const LayoutHeading = styled.h2`
-  ${CollapseButton};
-`;
-
-const InstructionsHeading = styled.h4`
-  ${CollapseButton};
+const SectionHeading = styled.h4`
+  ${SlideDownButton};
   margin-bottom: 0;
 `;
 
@@ -86,8 +82,10 @@ class ConfigureLayout extends Component {
 
   @observable
   sections = {
-    layout: true,
+    templateSelect: true,
+    library: false,
     instructions: false,
+    areas: true,
   };
 
   componentDidUpdate() {
@@ -123,49 +121,73 @@ class ConfigureLayout extends Component {
 
     return (
       <Root>
-        <LayoutHeading onClick={this.toggle('layout')}>
-          Sommittelu{' '}
+        <h2>Sommittelu</h2>
+        <SectionHeading onClick={this.toggle('templateSelect')}>
+          Valitse sommittelu{' '}
           <CollapseButtonArrow
-            open={this.sections.layout}
+            open={this.sections.templateSelect}
             style={{ width: '30px', height: '30px' }}
           />
-        </LayoutHeading>
-        <TemplateControls>
-          <Select
-            templates={templates}
-            selectedTemplate={get(currentTemplate, 'id', null)}
-            onChange={onSelectTemplate}
-          />
-        </TemplateControls>
-        <TemplateControls>
-          <RaisedButton
-            primary
-            disabled={!templateIsDirty}
-            onClick={() => onSaveTemplate(toJS(currentTemplate))}
-            label="Tallenna sommittelu"
-          />
-          <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
-          <FlatButton
-            backgroundColor="#ffcccc"
-            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-            label="Poista sommittelu"
-          />
-        </TemplateControls>
-        <InstructionsHeading onClick={this.toggle('instructions')}>
+        </SectionHeading>
+        <SlideDown closed={!this.sections.templateSelect}>
+          <TemplateControls>
+            <Select
+              templates={templates}
+              selectedTemplate={get(currentTemplate, 'id', null)}
+              onChange={onSelectTemplate}
+            />
+          </TemplateControls>
+          <TemplateControls>
+            <RaisedButton
+              primary
+              disabled={!templateIsDirty}
+              onClick={() => onSaveTemplate(toJS(currentTemplate))}
+              label="Tallenna sommittelu"
+            />
+            <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
+            <FlatButton
+              backgroundColor="#ffcccc"
+              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
+              label="Poista sommittelu"
+            />
+          </TemplateControls>
+        </SlideDown>
+        <SectionHeading onClick={this.toggle('instructions')}>
           Ohjeet{' '}
           <CollapseButtonArrow
             open={this.sections.instructions}
             style={{ width: '30px', height: '30px' }}
           />
-        </InstructionsHeading>
-        <Collapse isOpened={this.sections.instructions}>
-          <SvgInstructions open={this.sections.instructions} />
-        </Collapse>
-        <ImageLibrary removeImage={onRemoveImage} images={images} />
-        {currentTemplate &&
-          currentTemplate.areas.map((area, key) => (
-            <TemplateArea area={area} key={`template_area_${key}`} />
-          ))}
+        </SectionHeading>
+        <SlideDown closed={!this.sections.instructions}>
+          <Instructions />
+        </SlideDown>
+        <SectionHeading onClick={this.toggle('library')}>
+          Kirjasto{' '}
+          <CollapseButtonArrow
+            open={this.sections.library}
+            style={{ width: '30px', height: '30px' }}
+          />
+        </SectionHeading>
+        <SlideDown closed={!this.sections.library}>
+          <ImageLibrary removeImage={onRemoveImage} images={images} />
+        </SlideDown>
+        {currentTemplate && (
+          <React.Fragment>
+            <SectionHeading onClick={this.toggle('areas')}>
+              Alueet{' '}
+              <CollapseButtonArrow
+                open={this.sections.areas}
+                style={{ width: '30px', height: '30px' }}
+              />
+            </SectionHeading>
+            <SlideDown closed={!this.sections.areas}>
+              {currentTemplate.areas.map((area, key) => (
+                <TemplateArea area={area} key={`template_area_${key}`} />
+              ))}
+            </SlideDown>
+          </React.Fragment>
+        )}
       </Root>
     );
   }
