@@ -49,12 +49,7 @@ const SectionHeading = styled.h4`
 
 const CollapseButtonArrow = styled(ArrowDown)`
   transition: transform 0.1s ease-out;
-  ${({ open = false }) =>
-    open
-      ? `
-    transform: rotate(180deg);
-  `
-      : ''};
+  ${({ open = false }) => (open ? 'transform: rotate(180deg);' : '')};
 `;
 
 @observer
