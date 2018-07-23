@@ -22,9 +22,7 @@ const BuildList = props => (
       <Build
         key={build.id}
         {...build}
-        onStatusChange={value =>
-          props.commonStore.updateBuild({ id: build.id, status: value })
-        }
+        onStatusChange={value => props.commonStore.updateBuild({ id: build.id, status: value })}
         onSelect={() => props.commonStore.showBuild(build.id)}
         onRemoveBuild={() => props.commonStore.removeBuild(build.id)}
         onRemovePoster={id => props.commonStore.removePoster(id)}

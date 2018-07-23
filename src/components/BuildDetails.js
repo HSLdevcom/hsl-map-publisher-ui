@@ -63,17 +63,14 @@ const Poster = props => (
     </p>
 
     <p>
-      {props.events
-        .filter(({ message }) => !!message)
-        .map(({ createdAt, type, message }) => (
-          <span
-            key={`${createdAt}${type}${message}`}
-            style={type === 'ERROR' ? { color: 'red' } : null}
-          >
-            {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
-            <br />
-          </span>
-        ))}
+      {props.events.filter(({ message }) => !!message).map(({ createdAt, type, message }) => (
+        <span
+          key={`${createdAt}${type}${message}`}
+          style={type === 'ERROR' ? { color: 'red' } : null}>
+          {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
+          <br />
+        </span>
+      ))}
     </p>
 
     <Buttons>
@@ -116,8 +113,7 @@ const BuildDetails = props => (
     actions={[<FlatButton onClick={props.onClose} label="Sulje" />]}
     style={{ height: '90vh', width: '90vw' }}
     autoScrollBodyContent
-    open
-  >
+    open>
     <Root>
       <h2>{props.title}</h2>
       <PosterList>
@@ -139,9 +135,7 @@ BuildDetails.propTypes = {
   title: PropTypes.string.isRequired,
   status: PropTypes.oneOf(['OPEN', 'CLOSED', 'PRODUCTION']).isRequired,
   posters: ObservablePropTypes.observableArrayOf(
-    PropTypes.shape(
-      omit(Poster.propTypes, ['index', 'disableEdit', 'onRemove']),
-    ),
+    PropTypes.shape(omit(Poster.propTypes, ['index', 'disableEdit', 'onRemove'])),
   ).isRequired,
   onRemovePoster: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
   onClose: PropTypes.func.isRequired,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 import styled from 'styled-components';
 import { toJS } from 'mobx';

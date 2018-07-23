@@ -21,10 +21,7 @@ class PromptDialog extends Component {
         open={!!this.props.message}
         onRequestClose={() => this.props.callback({ isCancelled: true })}
         actions={[
-          <FlatButton
-            onClick={() => this.props.callback({ isCancelled: true })}
-            label="Peruuta"
-          />,
+          <FlatButton onClick={() => this.props.callback({ isCancelled: true })} label="Peruuta" />,
           <FlatButton
             onClick={() =>
               this.props.callback({
@@ -35,8 +32,7 @@ class PromptDialog extends Component {
             label="OK"
             primary
           />,
-        ]}
-      >
+        ]}>
         <p>{this.props.message}</p>
         <TextField
           name={this.props.message}

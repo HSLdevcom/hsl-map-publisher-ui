@@ -24,7 +24,9 @@ const AreaContainer = styled.div`
 const Area = styled.div`
   padding: 2rem;
   position: relative;
-  ${({ orientation = 'horizontal', resizeable = true, columns = '1fr 1fr 1fr' }) => resizeable ? `
+  ${({ orientation = 'horizontal', resizeable = true, columns = '1fr 1fr 1fr' }) =>
+    resizeable
+      ? `
     display: grid;
     grid-gap: 32px; // 2rem
     justify-items: start;
@@ -33,7 +35,8 @@ const Area = styled.div`
     grid-template-columns: ${columns};
     cursor: ${({ resizing = false }) => (resizing ? 'col-resize' : 'default')};
     pointer-events: ${({ resizing = false }) => (resizing ? 'auto' : 'none')};
-  ` : `
+  `
+      : `
     display: flex;
     flex-direction: ${orientation === 'horizontal' ? 'row' : 'column'};
     flex-wrap: nowrap;

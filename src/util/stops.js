@@ -13,8 +13,7 @@ function stopsText(stops) {
 }
 
 function groupKey(shortId) {
-  const keyLength =
-    shortId.charAt(0) === 'V' || shortId.charAt(0) === 'E' ? 3 : 2;
+  const keyLength = shortId.charAt(0) === 'V' || shortId.charAt(0) === 'E' ? 3 : 2;
   return shortId.substring(0, keyLength);
 }
 
