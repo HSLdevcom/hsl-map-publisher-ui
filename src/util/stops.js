@@ -70,12 +70,6 @@ function groupStops(stops) {
 }
 
 function stopsToRows(stops) {
-  stops.forEach(stop => {
-    if (stop.stopType === '08') {
-      console.log(stop);
-    }
-  });
-
   return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
     isChecked: false,
     title: `${shortId} ${nameFi}`,
