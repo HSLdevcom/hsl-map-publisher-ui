@@ -52,12 +52,17 @@ function groupStops(stops) {
 }
 
 function stopsToRows(stops) {
-  return stops.map(({ shortId, nameFi, stopId, hasShelter }) => ({
-    isChecked: false,
-    title: `${shortId} ${nameFi}`,
-    subtitle: `(${stopId}) - ${shelterText(hasShelter)}`,
-    stopIds: [stopId],
-  }));
+  return stops.map(({ shortId, nameFi, stopId, stopType }) => {
+    console.log(stopType);
+    const hasShelter = stopType === '01';
+
+    return {
+      isChecked: false,
+      title: `${shortId} ${nameFi}`,
+      subtitle: `(${stopId}) - ${shelterText(hasShelter)}`,
+      stopIds: [stopId],
+    };
+  });
 }
 
 function stopsToGroupRows(stops) {

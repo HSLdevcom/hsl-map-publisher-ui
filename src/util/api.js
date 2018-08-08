@@ -1,3 +1,8 @@
+import { execute, makePromise } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import gql from 'graphql-tag';
+import get from 'lodash/get';
+
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 async function getJson(path) {
@@ -27,8 +32,40 @@ async function deleteJson(path) {
   return response.json();
 }
 
-function getStops() {
-  return getJson('stops');
+async function getStops() {
+  const joreGraphqlUrl = 'http://0.0.0.0:5000/jore/graphql'; // 'http://0.0.0.0:5000/jore/graphql';
+  const link = new HttpLink({ uri: joreGraphqlUrl });
+
+  const operation = {
+    query: gql`
+      {
+        allStops {
+          nodes {
+            stopId
+            shortId
+            posterCount
+            drivebyTimetable
+            stopType
+            distributionArea
+            distributionOrder
+            stopZone
+            stopTariff
+          }
+        }
+      }
+    `,
+  };
+
+  let stopData;
+
+  try {
+    stopData = await makePromise(execute(link, operation));
+  } catch (err) {
+    console.log(err);
+    stopData = [];
+  }
+
+  return get(stopData, 'data.allStops.nodes', []);
 }
 
 function getBuilds() {

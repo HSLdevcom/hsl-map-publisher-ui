@@ -20,4 +20,4 @@ RUN yarn build
 
 EXPOSE 5000
 
-CMD yarn serve
+CMD yarn run serve
