@@ -53,7 +53,6 @@ function groupStops(stops) {
 
 function stopsToRows(stops) {
   return stops.map(({ shortId, nameFi, stopId, stopType }) => {
-    console.log(stopType);
     const hasShelter = stopType === '01';
 
     return {

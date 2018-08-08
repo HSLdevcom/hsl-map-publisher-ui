@@ -33,6 +33,7 @@ async function deleteJson(path) {
 }
 
 async function getStops() {
+  // This is so far the only place that uses graphql.
   const joreGraphqlUrl = 'http://0.0.0.0:5000/jore/graphql'; // 'http://0.0.0.0:5000/jore/graphql';
   const link = new HttpLink({ uri: joreGraphqlUrl });
 
@@ -43,6 +44,7 @@ async function getStops() {
           nodes {
             stopId
             shortId
+            nameFi
             posterCount
             drivebyTimetable
             stopType
@@ -61,8 +63,7 @@ async function getStops() {
   try {
     stopData = await makePromise(execute(link, operation));
   } catch (err) {
-    console.log(err);
-    stopData = [];
+    throw new Error(err.message);
   }
 
   return get(stopData, 'data.allStops.nodes', []);
