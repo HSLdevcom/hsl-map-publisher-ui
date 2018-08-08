@@ -4,6 +4,8 @@ import gql from 'graphql-tag';
 import get from 'lodash/get';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const JORE_API_URL =
+  process.env.REACT_APP_JORE_API_URL || 'http://0.0.0.0:5000/jore/graphql';
 
 async function getJson(path) {
   const response = await fetch(`${API_URL}/${path}`);
@@ -34,8 +36,7 @@ async function deleteJson(path) {
 
 async function getStops() {
   // This is so far the only place that uses graphql.
-  const joreGraphqlUrl = 'http://0.0.0.0:5000/jore/graphql'; // 'http://0.0.0.0:5000/jore/graphql';
-  const link = new HttpLink({ uri: joreGraphqlUrl });
+  const link = new HttpLink({ uri: JORE_API_URL });
 
   const operation = {
     query: gql`

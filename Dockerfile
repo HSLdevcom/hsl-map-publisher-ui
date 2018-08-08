@@ -3,6 +3,9 @@ FROM node:8-alpine
 ARG API_URL
 ENV REACT_APP_API_URL ${API_URL}
 
+ARG JORE_API_URL
+ENV REACT_APP_JORE_API_URL ${JORE_API_URL}
+
 ENV WORK /opt/publisher
 
 # Create app directory

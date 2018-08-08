@@ -1,8 +1,26 @@
 import groupBy from 'lodash/groupBy';
 import flatMap from 'lodash/flatMap';
 
-function shelterText(hasShelter) {
-  return `Varustelutieto: ${hasShelter ? 'katos' : 'tolppa'}`;
+function shelterText(stopType) {
+  switch (stopType) {
+    case '01':
+    case '08':
+      return 'Lasikatos';
+    case '02':
+      return 'Teräskatos';
+    case '03':
+      return 'Terminaali';
+    case '04':
+      return 'Tolppa';
+    case '05':
+      return 'Urbankatos';
+    case '06':
+      return 'Betonikatos';
+    case '07':
+      return 'Puukatos';
+    default:
+      return 'Varustelutieto puuttuu';
+  }
 }
 
 function stopsText(stops) {
@@ -52,16 +70,20 @@ function groupStops(stops) {
 }
 
 function stopsToRows(stops) {
-  return stops.map(({ shortId, nameFi, stopId, stopType }) => {
-    const hasShelter = stopType === '01';
-
-    return {
-      isChecked: false,
-      title: `${shortId} ${nameFi}`,
-      subtitle: `(${stopId}) - ${shelterText(hasShelter)}`,
-      stopIds: [stopId],
-    };
+  stops.forEach(stop => {
+    if (stop.stopType === '08') {
+      console.log(stop);
+    }
   });
+
+  return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
+    isChecked: false,
+    title: `${shortId} ${nameFi}`,
+    subtitle: `(${stopId}) - ${shelterText(stopType)}, ${
+      posterCount
+    } julistepaikka${posterCount !== 1 ? 'a' : ''}`,
+    stopIds: [stopId],
+  }));
 }
 
 function stopsToGroupRows(stops) {
