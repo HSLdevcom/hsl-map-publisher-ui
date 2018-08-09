@@ -48,7 +48,7 @@ const Footer = styled.div`
 const Generator = props => {
   const { commonStore, generatorStore } = props;
   const stopCount = generatorStore.rows
-    .filter(({ isChecked }) => isChecked)
+    .filter(({ rowId }) => generatorStore.checkedRows.includes(rowId))
     .map(({ stopIds }) => stopIds.length)
     .reduce((prev, cur) => prev + cur, 0);
 
@@ -134,11 +134,7 @@ const Generator = props => {
       </Row>
 
       <Main>
-        <StopList
-          rows={generatorStore.rows.toJS()}
-          onCheck={generatorStore.setChecked}
-          onReset={generatorStore.resetRows}
-        />
+        <StopList onCheck={generatorStore.setChecked} onReset={generatorStore.resetChecked} />
       </Main>
 
       <Footer>

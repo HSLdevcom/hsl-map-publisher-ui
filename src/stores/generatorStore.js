@@ -1,7 +1,7 @@
-import { observable, observe } from 'mobx';
+import { observable } from 'mobx';
 import moment from 'moment';
 
-import { stopsToRows, stopsToGroupRows } from '../util/stops';
+import { stopsToRows, stopsToGroupRows, getVisibleRows } from '../util/stops';
 
 import commonStore from './commonStore';
 
@@ -16,7 +16,6 @@ const rowTypesByLabel = {
 };
 
 const store = observable({
-  rows: [],
   componentsByLabel,
   rowTypesByLabel,
   component: 'StopPoster',
@@ -28,6 +27,18 @@ const store = observable({
   buildId: null,
   timetableAsA4Format: true,
   timetableAsGreyscale: false,
+  checkedRows: [],
+  get rows() {
+    let rows = [];
+
+    if (store.rowType === 'stop') {
+      rows = stopsToRows(commonStore.stops);
+    } else {
+      rows = stopsToGroupRows(commonStore.stops);
+    }
+
+    return getVisibleRows(rows, commonStore.stopFilter);
+  },
 });
 
 store.setComponent = value => {
@@ -62,21 +73,22 @@ store.setIsSummerTimetable = value => {
   store.isSummerTimetable = !!value;
 };
 
-store.setChecked = (rows, isChecked) => {
-  rows.forEach(row => {
-    if (store.rows.includes(row)) {
-      row.isChecked = isChecked; // eslint-disable-line no-param-reassign
-    }
-  });
-};
-
-store.resetRows = () => {
-  if (store.rowType === 'stop') {
-    store.rows = stopsToRows(commonStore.stops);
+store.setChecked = (rows = [], isChecked) => {
+  if (isChecked) {
+    store.checkedRows = [
+      ...store.checkedRows.slice(),
+      ...rows.map(row => row.rowId),
+    ];
   } else {
-    store.rows = stopsToGroupRows(commonStore.stops);
+    store.checkedRows = [
+      ...store.checkedRows.filter(rowId => !rows.includes(rowId)),
+    ];
   }
 };
+
+store.resetChecked = () => {
+  store.checkedRows = []
+}
 
 store.setBuildId = id => {
   store.buildId = id;
@@ -85,7 +97,7 @@ store.setBuildId = id => {
 store.generate = () => {
   const format = date => moment(date).format('YYYY-MM-DD');
   const props = store.rows
-    .filter(({ isChecked }) => isChecked)
+    .filter(({ rowId }) => store.checkedRows.includes(rowId))
     .reduce((prev, { stopIds }) => [...prev, ...stopIds], [])
     .map(stopId => ({
       stopId,
@@ -100,11 +112,8 @@ store.generate = () => {
         store.timetableAsGreyscale &&
         store.component === componentsByLabel.Aikataulu,
     }));
-  store.resetRows();
+
   commonStore.addPosters(store.buildId, store.component, props);
 };
-
-observe(commonStore, 'stops', () => store.resetRows());
-observe(store, 'rowType', () => store.resetRows());
 
 export default store;

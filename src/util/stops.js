@@ -97,7 +97,7 @@ function groupStops(stops) {
 
 function stopsToRows(stops) {
   return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
-    isChecked: false,
+    rowId: stopId,
     title: `${shortId} ${nameFi}`,
     subtitle: `(${stopId}) - ${shelterText(stopType)}, ${posterCountText(
       posterCount,
@@ -110,13 +110,42 @@ function stopsToGroupRows(stops) {
   const stopsByGroup = groupStops(stops);
   return flatMap(Object.keys(stopsByGroup), groupName => {
     const stopsByPosterCount = groupBy(stopsByGroup[groupName], 'posterCount');
-    return Object.values(stopsByPosterCount).map(stopsInGroup => ({
-      isChecked: false,
-      title: groupName,
-      subtitle: stopsText(stopsInGroup),
-      stopIds: stopsInGroup.map(({ stopId }) => stopId),
-    }));
+    return Object.values(stopsByPosterCount).map(stopsInGroup => {
+      const stopIds = stopsInGroup.map(({ stopId }) => stopId)
+      
+      return {
+        rowId: groupName + stopIds[0],
+        title: groupName,
+        subtitle: stopsText(stopsInGroup),
+        stopIds,
+      }
+    });
   });
 }
 
-export { stopsToRows, stopsToGroupRows };
+function getFilterKeywords(filterValue = '') {
+  return filterValue
+    .split(',')
+    .map(keyword => keyword.trim())
+    .filter(keyword => keyword.length > 0);
+}
+
+function getVisibleRows(rows, filterValue) {
+  const keywords = getFilterKeywords(filterValue);
+
+  if (keywords.length < 1) {
+    return rows;
+  }
+
+  return keywords.reduce(
+    (acc, keyword) =>
+      acc.concat(
+        rows.filter(({ title, subtitle }) =>
+          `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
+        ),
+      ),
+    [],
+  );
+}
+
+export { stopsToRows, stopsToGroupRows, getVisibleRows, getFilterKeywords };

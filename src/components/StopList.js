@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import compose from 'lodash/flow';
 
 import { AutoSizer, List } from 'react-virtualized';
 import { ListItem } from 'material-ui/List';
@@ -9,6 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
+import { observer, inject } from 'mobx-react';
 
 const Root = styled.div`
   flex-grow: 1;
@@ -45,11 +47,13 @@ PrimaryText.propTypes = {
   subtitle: PropTypes.string.isRequired,
 };
 
-function rowRenderer(rows, onCheck) {
+function rowRenderer(rows, checkedRows, onCheck) {
   // eslint-disable-next-line react/prop-types
   return ({ key, index, style }) => {
-    const { isChecked, title, subtitle } = rows[index];
+    const { rowId, title, subtitle } = rows[index];
     const callback = (event, value) => onCheck([rows[index]], value, index);
+
+    const isChecked = checkedRows.includes(rowId);
 
     return (
       <div key={key} style={style}>
@@ -63,113 +67,69 @@ function rowRenderer(rows, onCheck) {
   };
 }
 
-class StopList extends Component {
-  static getVisibleRows(rows, filterValue) {
-    const keywords = filterValue
-      .split(',')
-      .map(keyword => keyword.trim())
-      .filter(keyword => keyword.length > 0);
-    if (keywords.length < 1) {
-      return rows;
-    }
-    return keywords.reduce(
-      (acc, keyword) =>
-        acc.concat(
-          rows.filter(({ title, subtitle }) =>
-            `${title}${subtitle}`.toLowerCase().includes(keyword.toLowerCase()),
-          ),
-        ),
-      [],
-    );
-  }
+const enhance = compose(observer, inject('commonStore', 'generatorStore'));
 
-  constructor(props) {
-    super(props);
-    this.state = { visibleRows: props.rows, filterValue: '' };
-  }
+function StopList(props) {
+  const { generatorStore, commonStore } = props;
+  const { rows, checkedRows } = generatorStore;
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      visibleRows: StopList.getVisibleRows(
-        nextProps.rows,
-        this.state.filterValue,
-      ),
-    });
-  }
+  const renderer = rowRenderer(rows, checkedRows, props.onCheck);
 
-  onFilterValueChange(value) {
-    const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
-    const filterValue = value.replace(shortIdRegexp, '$1$2, ');
-    this.setState({
-      visibleRows: StopList.getVisibleRows(this.props.rows, filterValue),
-      filterValue,
-    });
-  }
-
-  render() {
-    const renderer = rowRenderer(this.state.visibleRows, this.props.onCheck);
-
-    return (
-      <Root>
-        <Row>
-          <TextFieldContainer>
-            <TextField
-              onChange={(event, value) => this.onFilterValueChange(value)}
-              value={this.state.filterValue}
-              hintText="Suodata..."
-              fullWidth
+  return (
+    <Root>
+      <Row>
+        <TextFieldContainer>
+          <TextField
+            onChange={(event, value) => commonStore.setStopFilter(value)}
+            value={commonStore.stopFilter}
+            hintText="Suodata..."
+            fullWidth
+          />
+          {commonStore.stopFilter && (
+            <IconButton
+              onClick={() => commonStore.setStopFilter('')}
+              style={{ position: 'absolute', right: 0 }}
+            >
+              <ClearIcon />
+            </IconButton>
+          )}
+        </TextFieldContainer>
+        <Spacer />
+        <FlatButton
+          disabled={checkedRows.length === 0}
+          onClick={() => props.onReset()}
+          label="Tyhjennä valinnat"
+        />
+        <Spacer />
+        <FlatButton
+          disabled={!commonStore.stopFilter.length}
+          onClick={() => props.onCheck(rows, true)}
+          label="Valitse kaikki"
+        />
+      </Row>
+      <ListContainer>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              width={width}
+              height={height}
+              rowCount={rows.length}
+              rowHeight={35}
+              rowRenderer={renderer}
+              style={{ outlineWidth: 0 }}
             />
-            {this.state.filterValue && (
-              <IconButton
-                onClick={() => this.onFilterValueChange('')}
-                style={{ position: 'absolute', right: 0 }}
-              >
-                <ClearIcon />
-              </IconButton>
-            )}
-          </TextFieldContainer>
-          <Spacer />
-          <FlatButton
-            disabled={!this.props.rows.some(({ isChecked }) => isChecked)}
-            onClick={() => this.props.onReset()}
-            label="Tyhjennä valinnat"
-          />
-          <Spacer />
-          <FlatButton
-            disabled={!this.state.filterValue.length}
-            onClick={() => this.props.onCheck(this.state.visibleRows, true)}
-            label="Valitse kaikki"
-          />
-        </Row>
-        <ListContainer>
-          <AutoSizer>
-            {({ height, width }) => (
-              <List
-                width={width}
-                height={height}
-                rowCount={this.state.visibleRows.length}
-                rowHeight={35}
-                rowRenderer={renderer}
-                style={{ outlineWidth: 0 }}
-              />
-            )}
-          </AutoSizer>
-        </ListContainer>
-      </Root>
-    );
-  }
+          )}
+        </AutoSizer>
+      </ListContainer>
+    </Root>
+  );
 }
 
 StopList.propTypes = {
-  rows: PropTypes.arrayOf(
-    PropTypes.shape({
-      isChecked: PropTypes.bool.isRequired,
-      title: PropTypes.string.isRequired,
-      subtitle: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  generatorStore: PropTypes.object.isRequired,
+  commonStore: PropTypes.object.isRequired,
   onCheck: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
 };
 
-export default StopList;
+export default enhance(StopList);

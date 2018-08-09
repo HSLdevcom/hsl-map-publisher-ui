@@ -9,7 +9,8 @@ module.exports = {
     "react/jsx-filename-extension": ["error", {
       "extensions": [".js"]
     }],
-    "prettier/prettier": ["error", {
+    "react/forbid-prop-types": 0,
+    "prettier/prettier": ["warn", {
       singleQuote: true,
       trailingComma: "all",
       bracketSpacing: true,
