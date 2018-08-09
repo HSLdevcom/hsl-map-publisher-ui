@@ -1,14 +1,36 @@
 import groupBy from 'lodash/groupBy';
 import flatMap from 'lodash/flatMap';
 
-function shelterText(hasShelter) {
-  return `Varustelutieto: ${hasShelter ? 'katos' : 'tolppa'}`;
+function shelterText(stopType) {
+  switch (stopType) {
+    case '01':
+    case '08':
+      return 'Lasikatos';
+    case '02':
+      return 'Teräskatos';
+    case '03':
+      return 'Terminaali';
+    case '04':
+      return 'Tolppa';
+    case '05':
+      return 'Urbankatos';
+    case '06':
+      return 'Betonikatos';
+    case '07':
+      return 'Puukatos';
+    default:
+      return 'Varustelutieto puuttuu';
+  }
+}
+
+function posterCountText(posterCount) {
+  return `${posterCount} julistepaikka${posterCount !== 1 ? 'a' : ''}`;
 }
 
 function stopsText(stops) {
   const shortIds = stops.map(({ shortId }) => shortId).sort();
   const shortIdDesc = `${shortIds[0]} - ${shortIds[shortIds.length - 1]}`;
-  const shelterDesc = shelterText(stops[0].hasShelter);
+  const shelterDesc = posterCountText(stops[0].posterCount);
   return `${shortIdDesc} (${stops.length} pysäkkiä) - ${shelterDesc}`;
 }
 
@@ -21,14 +43,26 @@ function groupKey(shortId) {
 function removeDuplicates(stops) {
   const filteredStops = Object.values(
     groupBy(
-      stops.filter(stop => stop.shortId.length > 0 && stop.group.length > 0),
-      ({ shortId, group }) => `${shortId}_${group}`,
+      stops.filter(
+        stop =>
+          stop.shortId.length > 0 &&
+          stop.distributionArea &&
+          stop.distributionArea.length > 0,
+      ),
+      ({ shortId, distributionArea }) => `${shortId}_${distributionArea}`,
     ),
   ).map(s => s[0]);
 
   // Adding stops missing shortId or group
   return filteredStops.concat(
-    stops.filter(stop => !(stop.shortId.length > 0 && stop.group.length > 0)),
+    stops.filter(
+      stop =>
+        !(
+          stop.shortId.length > 0 &&
+          stop.distributionArea &&
+          stop.distributionArea.length > 0
+        ),
+    ),
   );
 }
 
@@ -38,13 +72,23 @@ function groupStops(stops) {
   return {
     ...groupBy(
       filteredStops
-        .filter(({ group }) => group.length > 0 && group !== ' ')
-        .sort((a, b) => a.index - b.index),
-      'group',
+        .filter(
+          ({ distributionArea }) =>
+            distributionArea &&
+            distributionArea.length > 0 &&
+            distributionArea !== ' ',
+        )
+        .sort((a, b) => a.distributionOrder - b.distributionOrder),
+      'distributionArea',
     ),
     ...groupBy(
       filteredStops
-        .filter(({ group }) => !group.length || group === ' ')
+        .filter(
+          ({ distributionArea }) =>
+            !distributionArea ||
+            !distributionArea.length ||
+            distributionArea === ' ',
+        )
         .sort((a, b) => a.shortId.localeCompare(b.shortId)),
       ({ shortId }) => groupKey(shortId),
     ),
@@ -52,10 +96,12 @@ function groupStops(stops) {
 }
 
 function stopsToRows(stops) {
-  return stops.map(({ shortId, nameFi, stopId, hasShelter }) => ({
+  return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
     isChecked: false,
     title: `${shortId} ${nameFi}`,
-    subtitle: `(${stopId}) - ${shelterText(hasShelter)}`,
+    subtitle: `(${stopId}) - ${shelterText(stopType)}, ${posterCountText(
+      posterCount,
+    )}`,
     stopIds: [stopId],
   }));
 }
@@ -63,8 +109,8 @@ function stopsToRows(stops) {
 function stopsToGroupRows(stops) {
   const stopsByGroup = groupStops(stops);
   return flatMap(Object.keys(stopsByGroup), groupName => {
-    const stopsByShelterStatus = groupBy(stopsByGroup[groupName], 'hasShelter');
-    return Object.values(stopsByShelterStatus).map(stopsInGroup => ({
+    const stopsByPosterCount = groupBy(stopsByGroup[groupName], 'posterCount');
+    return Object.values(stopsByPosterCount).map(stopsInGroup => ({
       isChecked: false,
       title: groupName,
       subtitle: stopsText(stopsInGroup),
