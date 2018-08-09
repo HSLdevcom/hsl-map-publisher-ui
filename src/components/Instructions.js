@@ -120,12 +120,13 @@ export default () => (
       </li>
       <li>
         QR-koodi tai verkko-osoite asetetaan SVG-kuvan päälle. Jos alueena käytetään{' '}
-        <Value>rect</Value>-elementtiä, alueen koko ja sijainti luetaan elementin <Value>x</Value>,{' '}
-        <Value>y</Value>, <Value>width</Value> ja <Value>height</Value> attribuuteista. Jos alueena
-        toimii <Value>line</Value>-elementti, alueen koko ja sijainti luetaan elementin{' '}
-        <Value>x1</Value>, <Value>x2</Value>, <Value>y1</Value>, <Value>y2</Value> ja{' '}
-        <Value>stroke-width</Value> attribuuteista. Varmista siis että alueen elementti on oikean
-        tyyppinen ja että siitä löytyy tarvittavat attribuutit.
+        <Value>rect</Value>
+        -elementtiä, alueen koko ja sijainti luetaan elementin <Value>x</Value>, <Value>y</Value>,{' '}
+        <Value>width</Value> ja <Value>height</Value> attribuuteista. Jos alueena toimii{' '}
+        <Value>line</Value>
+        -elementti, alueen koko ja sijainti luetaan elementin <Value>x1</Value>, <Value>x2</Value>,{' '}
+        <Value>y1</Value>, <Value>y2</Value> ja <Value>stroke-width</Value> attribuuteista. Varmista
+        siis että alueen elementti on oikean tyyppinen ja että siitä löytyy tarvittavat attribuutit.
       </li>
       <li>
         Toista ylläolevat toimeet jokaiselle dynaamiselle alueelle. Pudota tämän jälkeen valmistetut

@@ -44,9 +44,7 @@ function removeDuplicates(stops) {
     groupBy(
       stops.filter(
         stop =>
-          stop.shortId.length > 0 &&
-          stop.distributionArea &&
-          stop.distributionArea.length > 0,
+          stop.shortId.length > 0 && stop.distributionArea && stop.distributionArea.length > 0,
       ),
       ({ shortId, distributionArea }) => `${shortId}_${distributionArea}`,
     ),
@@ -56,11 +54,7 @@ function removeDuplicates(stops) {
   return filteredStops.concat(
     stops.filter(
       stop =>
-        !(
-          stop.shortId.length > 0 &&
-          stop.distributionArea &&
-          stop.distributionArea.length > 0
-        ),
+        !(stop.shortId.length > 0 && stop.distributionArea && stop.distributionArea.length > 0),
     ),
   );
 }
@@ -73,9 +67,7 @@ function groupStops(stops) {
       filteredStops
         .filter(
           ({ distributionArea }) =>
-            distributionArea &&
-            distributionArea.length > 0 &&
-            distributionArea !== ' ',
+            distributionArea && distributionArea.length > 0 && distributionArea !== ' ',
         )
         .sort((a, b) => a.distributionOrder - b.distributionOrder),
       'distributionArea',
@@ -84,9 +76,7 @@ function groupStops(stops) {
       filteredStops
         .filter(
           ({ distributionArea }) =>
-            !distributionArea ||
-            !distributionArea.length ||
-            distributionArea === ' ',
+            !distributionArea || !distributionArea.length || distributionArea === ' ',
         )
         .sort((a, b) => a.shortId.localeCompare(b.shortId)),
       ({ shortId }) => groupKey(shortId),
@@ -98,9 +88,7 @@ function stopsToRows(stops) {
   return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
     isChecked: false,
     title: `${shortId} ${nameFi}`,
-    subtitle: `(${stopId}) - ${shelterText(stopType)}, ${posterCountText(
-      posterCount,
-    )}`,
+    subtitle: `(${stopId}) - ${shelterText(stopType)}, ${posterCountText(posterCount)}`,
     stopIds: [stopId],
   }));
 }

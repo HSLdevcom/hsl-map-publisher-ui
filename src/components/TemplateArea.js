@@ -96,7 +96,8 @@ class TemplateArea extends Component {
     index: -1,
   };
 
-  @observable slotWidth = 0;
+  @observable
+  slotWidth = 0;
 
   areaRef = React.createRef();
 

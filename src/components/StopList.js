@@ -82,7 +82,8 @@ class StopList extends Component {
     onReset: PropTypes.func.isRequired,
   };
 
-  @observable filterValue = '';
+  @observable
+  filterValue = '';
 
   onFilterValueChange(value) {
     const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
