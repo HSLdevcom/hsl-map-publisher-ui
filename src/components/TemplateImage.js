@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Dropzone from 'react-dropzone/dist/es/index';
+import Dropzone from 'react-dropzone';
 import get from 'lodash/get';
 import invoke from 'lodash/invoke';
 
@@ -44,6 +44,9 @@ class TemplateImage extends Component {
   };
 
   onDrop = (files, dataTransferItems) => {
+    // The second argument to this method is actually "rejected files", but the
+    // dataTransfer item that we're interested in also gets put here. The third
+    // arg is the event, but React won't let me use the dataTransfer prop on it.
     if (dataTransferItems[0] instanceof DataTransferItem && files.length === 0) {
       invoke(dataTransferItems, '[0].getAsString', data => {
         try {
