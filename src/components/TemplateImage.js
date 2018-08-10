@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone/dist/es/index';
 import get from 'lodash/get';
+import invoke from 'lodash/invoke';
 
 const Item = styled.div`
   width: 100%;
@@ -42,12 +43,16 @@ class TemplateImage extends Component {
     className: '',
   };
 
-  onDrop = (files, _, e) => {
-    const eventData = e.dataTransfer.getData('text');
-    // Can pass stringified data through dataTransfer
-    if (eventData) {
-      const image = JSON.parse(eventData);
-      this.props.onChange(image);
+  onDrop = (files, dataTransferItems) => {
+    if (dataTransferItems[0] instanceof DataTransferItem && files.length === 0) {
+      invoke(dataTransferItems, '[0].getAsString', data => {
+        try {
+          const image = JSON.parse(data);
+          this.props.onChange(image);
+        } catch (e) {
+          console.warn('No valid data found in dragged item.');
+        }
+      });
     } else {
       const file = files[0];
 

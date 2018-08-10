@@ -105,6 +105,7 @@ class ImageLibrary extends Component {
   };
 
   onDragStart = image => e => {
+    e.persist();
     let dragImage = image;
 
     if (!image) {
@@ -126,8 +127,6 @@ class ImageLibrary extends Component {
 
   render() {
     const { images } = this.props;
-
-    // TODO: Add special item for removing an image from a slot.
 
     return (
       <Root>
