@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import {
   getStops,
   getBuilds,
@@ -8,7 +8,15 @@ import {
   removeBuild,
   addPosters,
   removePoster,
+  getTemplates,
+  addTemplate,
+  saveTemplate,
+  removeTemplate,
+  getImages,
+  removeImage,
 } from '../util/api';
+import get from 'lodash/get';
+import reduce from 'lodash/reduce';
 
 const store = observable({
   confirm: null,
@@ -16,7 +24,51 @@ const store = observable({
   stops: [],
   builds: [],
   selectedBuild: null,
+  templates: [],
+  images: [],
+  selectedTemplate: null,
+  prevSavedTemplate: null,
+  get currentTemplate() {
+    const { selectedTemplate, templates } = store;
+    const currentTemplate = templates.find(template => template.id === selectedTemplate);
+    return currentTemplate || templates[0];
+  },
+  get templateIsDirty() {
+    const { currentTemplate } = store;
+    const serializedTemplate = store.serializeCurrentTemplate(currentTemplate);
+    const isDirty = serializedTemplate !== store.prevSavedTemplate;
+    return isDirty;
+  },
 });
+
+store.serializeCurrentTemplate = (template = store.currentTemplate) => {
+  const pickProps = ['id', 'label', 'areas']; // We only want these props from
+  // the template.
+
+  const currentTemplatePlain = reduce(
+    toJS(template),
+    (picked, value, key) => {
+      // Pick the prop if whitelisted above
+      if (pickProps.includes(key)) {
+        // eslint-disable-next-line no-param-reassign
+        picked[key] = value;
+      }
+
+      // Also pick name and size props from slots.
+      if (key === 'areas') {
+        // eslint-disable-next-line no-param-reassign
+        picked.areas = picked.areas.map(area =>
+          area.slots.map(({ image, size }) => ({ image: get(image, 'name', null), size })),
+        );
+      }
+
+      return picked;
+    },
+    {},
+  );
+
+  return JSON.stringify(currentTemplatePlain);
+};
 
 store.showConfirm = (message, callback = null) => {
   const confirmCallback = ({ isCancelled }) => {
@@ -124,9 +176,98 @@ store.removeBuild = async id => {
   store.showConfirm('Haluatko varmasti poistaa listan?', callback);
 };
 
+store.removeImage = async name => {
+  const callback = async () => {
+    try {
+      await removeImage({ name });
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Kuvan poistaminen epäonnistui: ${error.message}`);
+    }
+    store.getImages();
+  };
+  store.showConfirm('Haluatko varmasti poistaa kuvaa?', callback);
+};
+
+store.removeTemplate = async id => {
+  const callback = async () => {
+    try {
+      await removeTemplate({ id });
+
+      if (store.selectedTemplate === id) {
+        store.selectedTemplate = get(store, 'templates[0].id', null);
+      }
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Sommittelun poistaminen epäonnistui: ${error.message}`);
+    }
+    store.getTemplates();
+  };
+  store.showConfirm('Haluatko varmasti poistaa sommittelua?', callback);
+};
+
+store.getTemplates = async () => {
+  try {
+    store.templates = await getTemplates();
+  } catch (error) {
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
+store.addTemplate = async () => {
+  const callback = async label => {
+    try {
+      const { id } = await addTemplate({ label });
+      store.selectedTemplate = id;
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
+      store.showConfirm(`Sommittelun lisääminen epäonnistui: ${error.message}`);
+    }
+    store.getTemplates();
+  };
+  store.showPrompt('Anna nimi sommittelulle', callback);
+};
+
+store.selectTemplate = id => {
+  store.selectedTemplate = id;
+};
+
+store.setSavedTemplate = (serializedTemplate = store.serializeCurrentTemplate()) => {
+  store.prevSavedTemplate = serializedTemplate;
+};
+
+store.saveTemplate = async template => {
+  try {
+    await saveTemplate(template);
+  } catch (error) {
+    console.error(error); // eslint-disable-line no-console
+    store.showConfirm(`Sommittelun tallennus epäonnistui: ${error.message}`);
+  }
+
+  await store.getTemplates();
+  await store.getImages();
+
+  store.setSavedTemplate(store.serializeCurrentTemplate());
+};
+
+store.getImages = async () => {
+  try {
+    store.images = await getImages();
+  } catch (error) {
+    store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
 store.addPosters = async (buildId, component, props) => {
   try {
-    await addPosters({ buildId, component, props });
+    await addPosters({
+      buildId,
+      component,
+      props,
+      template: get(store, 'currentTemplate.id', 'default_footer'),
+    });
   } catch (error) {
     store.showConfirm(`Julisteen lisääminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console

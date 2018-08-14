@@ -10,11 +10,11 @@ import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
+import ConfigureLayout from './ConfigureLayout';
 
 const Root = styled.div`
   display: flex;
   flex-flow: column;
-  height: 100%;
   padding: 10px 30px;
   margin: auto;
   box-sizing: border-box;
@@ -35,14 +35,18 @@ const Column = styled.div`
 const Main = styled.div`
   flex: 1;
   display: flex;
-  min-height: 300px;
+  flex-direction: column;
 `;
 
 const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 30px 0;
+`;
+
+const Heading = styled.h2`
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const Generator = props => {
@@ -73,9 +77,7 @@ const Generator = props => {
                 <Checkbox
                   label="Mustavalkoisena"
                   defaultValueTrue={generatorStore.timetableAsGreyscale}
-                  onChange={value =>
-                    generatorStore.setTimetableGreyscale(value)
-                  }
+                  onChange={value => generatorStore.setTimetableGreyscale(value)}
                 />
               </div>
             )}
@@ -140,7 +142,23 @@ const Generator = props => {
           onReset={generatorStore.resetRows}
         />
       </Main>
+      <Main>
+        <ConfigureLayout
+          onAddTemplate={commonStore.addTemplate}
+          onSaveTemplate={commonStore.saveTemplate}
+          onRemoveTemplate={commonStore.removeTemplate}
+          onRemoveImage={commonStore.removeImage}
+          onSelectTemplate={commonStore.selectTemplate}
+          currentTemplate={commonStore.currentTemplate}
+          prevSavedTemplate={commonStore.prevSavedTemplate}
+          setSavedTemplate={commonStore.setSavedTemplate}
+          templateIsDirty={commonStore.templateIsDirty}
+          templates={commonStore.templates}
+          images={commonStore.images}
+        />
+      </Main>
 
+      <Heading>Generointi</Heading>
       <Footer>
         <BuildSelect
           builds={commonStore.builds.toJS()}
@@ -154,7 +172,16 @@ const Generator = props => {
         />
         <RaisedButton
           disabled={stopCount < 1 || !generatorStore.buildId}
-          onClick={() => generatorStore.generate()}
+          onClick={() => {
+            if (commonStore.templateIsDirty) {
+              commonStore.showConfirm(
+                'Sommittelussa on tallentamattomia muutoksia. Julisteet generoidaan tallennetulla versiolla. Haluatko jatkaa?',
+                generatorStore.generate,
+              );
+            } else {
+              generatorStore.generate();
+            }
+          }}
           label={`Generoi (${stopCount})`}
           style={{ height: 40, marginLeft: 10 }}
           primary

@@ -4,34 +4,41 @@ import gql from 'graphql-tag';
 import get from 'lodash/get';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
-const JORE_API_URL =
-  process.env.REACT_APP_JORE_API_URL || 'http://0.0.0.0:5000/jore/graphql';
+const JORE_API_URL = process.env.REACT_APP_JORE_API_URL || 'http://0.0.0.0:5000/jore/graphql';
+
+async function createRequest(path, method = 'GET', body) {
+  const options =
+    method === 'GET'
+      ? {}
+      : {
+          method,
+          body: JSON.stringify(body),
+        };
+
+  const response = await fetch(`${API_URL}/${path}`, options);
+
+  if (!response.ok) {
+    const { message } = await response.json();
+    throw new Error(message);
+  }
+
+  return response.json();
+}
 
 async function getJson(path) {
-  const response = await fetch(`${API_URL}/${path}`);
-  if (!response.ok) throw new Error(response.statusText);
-  return response.json();
+  return createRequest(path);
 }
 
 async function postJson(path, body) {
-  const options = { method: 'POST', body: JSON.stringify(body) };
-  const response = await fetch(`${API_URL}/${path}`, options);
-  if (!response.ok) throw new Error(response.statusText);
-  return response.json();
+  return createRequest(path, 'POST', body);
 }
 
 async function putJson(path, body) {
-  const options = { method: 'PUT', body: JSON.stringify(body) };
-  const response = await fetch(`${API_URL}/${path}`, options);
-  if (!response.ok) throw new Error(response.statusText);
-  return response.json();
+  return createRequest(path, 'PUT', body);
 }
 
 async function deleteJson(path) {
-  const options = { method: 'DELETE' };
-  const response = await fetch(`${API_URL}/${path}`, options);
-  if (!response.ok) throw new Error(response.statusText);
-  return response.json();
+  return createRequest(path, 'DELETE');
 }
 
 async function getStops() {
@@ -74,6 +81,30 @@ function getBuilds() {
   return getJson('builds');
 }
 
+function getTemplates() {
+  return getJson('templates');
+}
+
+function addTemplate({ label }) {
+  return postJson('templates', { label });
+}
+
+function saveTemplate(template) {
+  return putJson('templates', template);
+}
+
+function removeTemplate({ id }) {
+  return deleteJson(`templates/${id}`);
+}
+
+function getImages() {
+  return getJson('images');
+}
+
+function removeImage({ name }) {
+  return deleteJson(`images/${name}`);
+}
+
 function getBuild({ id }) {
   return getJson(`builds/${id}`);
 }
@@ -90,8 +121,8 @@ function removeBuild({ id }) {
   return deleteJson(`builds/${id}`);
 }
 
-function addPosters({ buildId, component, props }) {
-  return postJson('posters', { buildId, props, component });
+function addPosters({ buildId, component, template, props }) {
+  return postJson('posters', { buildId, props, template, component });
 }
 
 function removePoster({ id }) {
@@ -109,6 +140,12 @@ function downloadBuild({ id }) {
 export {
   getStops,
   getBuilds,
+  getImages,
+  removeImage,
+  getTemplates,
+  addTemplate,
+  saveTemplate,
+  removeTemplate,
   getBuild,
   addBuild,
   updateBuild,

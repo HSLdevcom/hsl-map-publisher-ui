@@ -77,8 +77,7 @@ const Build = props => {
           floatingLabelText="Tila"
           value={props.status}
           onChange={(event, key, value) => props.onStatusChange(value)}
-          style={{ marginBottom: 15 }}
-        >
+          style={{ marginBottom: 15 }}>
           <MenuItem value="OPEN" primaryText="Sisältö muokattavissa" />
           <MenuItem value="CLOSED" primaryText="Sisältö lukittu" />
           <MenuItem value="PRODUCTION" primaryText="Lähetetty painoon" />
@@ -104,9 +103,7 @@ const Build = props => {
               primary
             />
           )}
-        {props.pending > 0 && (
-          <CircularProgress size={30} style={{ margin: '0 15px' }} />
-        )}
+        {props.pending > 0 && <CircularProgress size={30} style={{ margin: '0 15px' }} />}
       </Buttons>
       <Divider />
     </Root>
