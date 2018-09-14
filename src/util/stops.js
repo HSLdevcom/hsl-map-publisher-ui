@@ -98,14 +98,14 @@ function stopsToGroupRows(stops) {
   return flatMap(Object.keys(stopsByGroup), groupName => {
     const stopsByPosterCount = groupBy(stopsByGroup[groupName], 'posterCount');
     return Object.values(stopsByPosterCount).map(stopsInGroup => {
-      const stopIds = stopsInGroup.map(({ stopId }) => stopId)
-      
+      const stopIds = stopsInGroup.map(({ stopId }) => stopId);
+
       return {
         rowId: groupName + stopIds[0],
         title: groupName,
         subtitle: stopsText(stopsInGroup),
         stopIds,
-      }
+      };
     });
   });
 }

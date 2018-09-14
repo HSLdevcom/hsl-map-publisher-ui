@@ -75,20 +75,15 @@ store.setIsSummerTimetable = value => {
 
 store.setChecked = (rows = [], isChecked) => {
   if (isChecked) {
-    store.checkedRows = [
-      ...store.checkedRows.slice(),
-      ...rows.map(row => row.rowId),
-    ];
+    store.checkedRows = [...store.checkedRows.slice(), ...rows.map(row => row.rowId)];
   } else {
-    store.checkedRows = [
-      ...store.checkedRows.filter(rowId => !rows.includes(rowId)),
-    ];
+    store.checkedRows = [...store.checkedRows.filter(rowId => !rows.includes(rowId))];
   }
 };
 
 store.resetChecked = () => {
-  store.checkedRows = []
-}
+  store.checkedRows = [];
+};
 
 store.setBuildId = id => {
   store.buildId = id;
