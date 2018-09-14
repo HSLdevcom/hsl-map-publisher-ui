@@ -1,5 +1,14 @@
+:root {
+  --blue: #0077c7;
+  --grey: #999;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 body {
-    margin: 0;
-    font-family: "Gotham Rounded SSm A", "Gotham Rounded SSm B", sans-serif;
+  margin: 0;
+  font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B', sans-serif;
+  overflow-y: scroll;
 }

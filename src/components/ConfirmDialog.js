@@ -10,18 +10,10 @@ const ConfirmDialog = props => (
     onRequestClose={() => props.callback({ isCancelled: true })}
     actions={[
       props.allowCancel && (
-        <FlatButton
-          onClick={() => props.callback({ isCancelled: true })}
-          label="Peruuta"
-        />
+        <FlatButton onClick={() => props.callback({ isCancelled: true })} label="Peruuta" />
       ),
-      <FlatButton
-        onClick={() => props.callback({ isCancelled: false })}
-        label="OK"
-        primary
-      />,
-    ]}
-  >
+      <FlatButton onClick={() => props.callback({ isCancelled: false })} label="OK" primary />,
+    ]}>
     <p>{props.message}</p>
   </Dialog>
 );

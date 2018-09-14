@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import compose from 'lodash/flow';
-
 import { AutoSizer, List } from 'react-virtualized';
 import { ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
@@ -16,6 +15,9 @@ const Root = styled.div`
   flex-grow: 1;
   display: flex;
   flex-flow: column;
+  min-height: 300px;
+  height: 70vh;
+  margin-bottom: 1rem;
 `;
 
 const Row = styled.div`
@@ -67,7 +69,10 @@ function rowRenderer(rows, checkedRows, onCheck) {
   };
 }
 
-const enhance = compose(observer, inject('commonStore', 'generatorStore'));
+const enhance = compose(
+  observer,
+  inject('commonStore', 'generatorStore'),
+);
 
 function StopList(props) {
   const { generatorStore, commonStore } = props;
@@ -88,8 +93,7 @@ function StopList(props) {
           {commonStore.stopFilter && (
             <IconButton
               onClick={() => commonStore.setStopFilter('')}
-              style={{ position: 'absolute', right: 0 }}
-            >
+              style={{ position: 'absolute', right: 0 }}>
               <ClearIcon />
             </IconButton>
           )}

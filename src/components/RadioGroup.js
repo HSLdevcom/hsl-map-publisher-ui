@@ -6,8 +6,7 @@ const RadioGroup = props => (
   <RadioButtonGroup
     name="component"
     valueSelected={props.valueSelected}
-    onChange={(event, value) => props.onChange(value)}
-  >
+    onChange={(event, value) => props.onChange(value)}>
     {Object.keys(props.valuesByLabel).map(label => (
       <RadioButton
         key={label}

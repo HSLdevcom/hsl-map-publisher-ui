@@ -106,11 +106,9 @@ store.generate = () => {
       dateBegin: store.dateBegin ? format(store.dateBegin) : null,
       dateEnd: store.dateEnd ? format(store.dateEnd) : null,
       printTimetablesAsA4:
-        store.timetableAsA4Format &&
-        store.component === componentsByLabel.Aikataulu,
+        store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
       printTimetablesAsGreyscale:
-        store.timetableAsGreyscale &&
-        store.component === componentsByLabel.Aikataulu,
+        store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
     }));
 
   commonStore.addPosters(store.buildId, store.component, props);
