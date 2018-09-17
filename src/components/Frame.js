@@ -8,6 +8,7 @@ import PromptDialog from './PromptDialog';
 import BuildDetails from './BuildDetails';
 import Generator from './Generator';
 import BuildList from './BuildList';
+import ConfigureLayout from './ConfigureLayout';
 
 const Root = styled.div`
   display: flex;
@@ -47,6 +48,11 @@ class Frame extends Component {
           <Tab label="Generointi">
             <TabPane>
               <Generator />
+            </TabPane>
+          </Tab>
+          <Tab label="Sommittelu">
+            <TabPane>
+              <ConfigureLayout />
             </TabPane>
           </Tab>
           <Tab label="Tulosteet">

@@ -1,35 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import styled, { css } from 'styled-components';
-import { toJS, observable } from 'mobx';
-import TemplateSelect from './TemplateSelect';
+import { observable } from 'mobx';
 import get from 'lodash/get';
 import TemplateArea from './TemplateArea';
-import { FlatButton, RaisedButton } from 'material-ui';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ImageLibrary from './ImageLibrary';
 import Instructions from './Instructions';
 import { SlideDown } from 'react-slidedown';
 import 'react-slidedown/lib/slidedown.css';
+import SelectTemplate from './SelectTemplate';
 
 const Root = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-`;
-
-const TemplateControls = styled.div`
-  display: flex;
-  padding: 0 0 0.5rem 0;
-
-  > * {
-    flex: none;
-  }
-`;
-
-const Select = styled(TemplateSelect)`
-  width: 100%;
 `;
 
 const SlideDownButton = css`
@@ -52,27 +38,15 @@ const CollapseButtonArrow = styled(ArrowDown)`
   ${({ open = false }) => (open ? 'transform: rotate(180deg);' : '')};
 `;
 
+@inject('commonStore', 'generatorStore')
 @observer
 class ConfigureLayout extends Component {
   static propTypes = {
-    onAddTemplate: PropTypes.func.isRequired,
-    onSaveTemplate: PropTypes.func.isRequired,
-    onRemoveTemplate: PropTypes.func.isRequired,
-    onRemoveImage: PropTypes.func.isRequired,
-    currentTemplate: PropTypes.object,
-    templates: mobxPropTypes.arrayOrObservableArray,
-    images: mobxPropTypes.arrayOrObservableArray,
-    onSelectTemplate: PropTypes.func.isRequired,
-    setSavedTemplate: PropTypes.func.isRequired,
-    prevSavedTemplate: PropTypes.any,
-    templateIsDirty: PropTypes.bool.isRequired,
+    commonStore: PropTypes.object,
   };
 
   static defaultProps = {
-    templates: [],
-    images: [],
-    prevSavedTemplate: null,
-    currentTemplate: null,
+    commonStore: {},
   };
 
   @observable
@@ -84,7 +58,9 @@ class ConfigureLayout extends Component {
   };
 
   componentDidUpdate() {
-    const { setSavedTemplate, prevSavedTemplate, currentTemplate } = this.props;
+    const { commonStore } = this.props;
+    const { setSavedTemplate, prevSavedTemplate, currentTemplate } = commonStore;
+
     const prevSaved = JSON.parse(prevSavedTemplate);
     // Check if the template changed. If the ID is not found on the object,
     // it means that the value was null and we always want to replace it.
@@ -102,51 +78,31 @@ class ConfigureLayout extends Component {
   };
 
   render() {
+    const { commonStore } = this.props;
+
     const {
       templates,
       images,
-      onSelectTemplate,
-      onSaveTemplate,
-      onAddTemplate,
-      onRemoveTemplate,
-      onRemoveImage,
+      selectTemplate,
+      saveTemplate,
+      addTemplate,
+      removeTemplate,
+      removeImage,
       currentTemplate,
       templateIsDirty,
-    } = this.props;
+    } = commonStore;
 
     return (
       <Root>
-        <h2>Sommittelu</h2>
-        <SectionHeading onClick={this.toggle('templateSelect')}>
-          Valitse sommittelu{' '}
-          <CollapseButtonArrow
-            open={this.sections.templateSelect}
-            style={{ width: '30px', height: '30px' }}
-          />
-        </SectionHeading>
-        <SlideDown closed={!this.sections.templateSelect}>
-          <TemplateControls>
-            <Select
-              templates={templates}
-              selectedTemplate={get(currentTemplate, 'id', null)}
-              onChange={onSelectTemplate}
-            />
-          </TemplateControls>
-          <TemplateControls>
-            <RaisedButton
-              primary
-              disabled={!templateIsDirty}
-              onClick={() => onSaveTemplate(toJS(currentTemplate))}
-              label="Tallenna sommittelu"
-            />
-            <FlatButton onClick={() => onAddTemplate()} label="Uusi sommittelu..." />
-            <FlatButton
-              backgroundColor="#ffcccc"
-              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-              label="Poista sommittelu"
-            />
-          </TemplateControls>
-        </SlideDown>
+        <SelectTemplate
+          onSaveTemplate={saveTemplate}
+          onAddTemplate={addTemplate}
+          onRemoveTemplate={removeTemplate}
+          templateIsDirty={templateIsDirty}
+          currentTemplate={currentTemplate}
+          templates={templates}
+          onSelectTemplate={selectTemplate}
+        />
         <SectionHeading onClick={this.toggle('instructions')}>
           Ohjeet{' '}
           <CollapseButtonArrow
@@ -165,7 +121,7 @@ class ConfigureLayout extends Component {
           />
         </SectionHeading>
         <SlideDown closed={!this.sections.library}>
-          <ImageLibrary removeImage={onRemoveImage} images={images} />
+          <ImageLibrary removeImage={removeImage} images={images} />
         </SlideDown>
         {currentTemplate && (
           <React.Fragment>
