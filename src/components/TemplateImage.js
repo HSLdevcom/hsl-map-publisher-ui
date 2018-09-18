@@ -53,6 +53,7 @@ class TemplateImage extends Component {
           const image = JSON.parse(data);
           this.props.onChange(image);
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.warn('No valid data found in dragged item.');
         }
       });

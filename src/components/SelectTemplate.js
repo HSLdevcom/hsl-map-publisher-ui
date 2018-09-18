@@ -33,34 +33,32 @@ export default observer(
     onAddTemplate,
     onRemoveTemplate,
     showControls = true,
-  }) => {
-    return (
-      <div>
-        <SectionHeading>Valitse sommittelu</SectionHeading>
+  }) => (
+    <div>
+      <SectionHeading>Valitse sommittelu</SectionHeading>
+      <TemplateControls>
+        <Select
+          templates={templates}
+          selectedTemplate={get(currentTemplate, 'id', null)}
+          onChange={onSelectTemplate}
+        />
+      </TemplateControls>
+      {showControls && (
         <TemplateControls>
-          <Select
-            templates={templates}
-            selectedTemplate={get(currentTemplate, 'id', null)}
-            onChange={onSelectTemplate}
+          <RaisedButton
+            primary
+            disabled={!templateIsDirty}
+            onClick={() => onSaveTemplate(toJS(currentTemplate))}
+            label="Tallenna sommittelu"
+          />
+          <FlatButton onClick={onAddTemplate} label="Uusi sommittelu..." />
+          <FlatButton
+            backgroundColor="#ffcccc"
+            onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
+            label="Poista sommittelu"
           />
         </TemplateControls>
-        {showControls && (
-          <TemplateControls>
-            <RaisedButton
-              primary
-              disabled={!templateIsDirty}
-              onClick={() => onSaveTemplate(toJS(currentTemplate))}
-              label="Tallenna sommittelu"
-            />
-            <FlatButton onClick={onAddTemplate} label="Uusi sommittelu..." />
-            <FlatButton
-              backgroundColor="#ffcccc"
-              onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
-              label="Poista sommittelu"
-            />
-          </TemplateControls>
-        )}
-      </div>
-    );
-  },
+      )}
+    </div>
+  ),
 );
