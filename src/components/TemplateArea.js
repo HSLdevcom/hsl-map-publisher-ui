@@ -8,6 +8,7 @@ import TemplateSlot from './TemplateSlot';
 
 const AreaContainer = styled.div`
   background-color: ${({ background = '#ccc' }) => background};
+  margin-bottom: 1rem;
 
   > * {
     margin-top: 0;

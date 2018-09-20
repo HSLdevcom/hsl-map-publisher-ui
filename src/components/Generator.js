@@ -1,16 +1,14 @@
 import React from 'react';
 import { inject, observer, PropTypes } from 'mobx-react';
 import styled from 'styled-components';
-
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
-
 import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
-import ConfigureLayout from './ConfigureLayout';
+import SelectTemplate from './SelectTemplate';
 
 const Root = styled.div`
   display: flex;
@@ -142,19 +140,13 @@ const Generator = props => {
           onReset={generatorStore.resetRows}
         />
       </Main>
+
       <Main>
-        <ConfigureLayout
-          onAddTemplate={commonStore.addTemplate}
-          onSaveTemplate={commonStore.saveTemplate}
-          onRemoveTemplate={commonStore.removeTemplate}
-          onRemoveImage={commonStore.removeImage}
-          onSelectTemplate={commonStore.selectTemplate}
+        <SelectTemplate
           currentTemplate={commonStore.currentTemplate}
-          prevSavedTemplate={commonStore.prevSavedTemplate}
-          setSavedTemplate={commonStore.setSavedTemplate}
-          templateIsDirty={commonStore.templateIsDirty}
           templates={commonStore.templates}
-          images={commonStore.images}
+          onSelectTemplate={commonStore.selectTemplate}
+          showControls={false}
         />
       </Main>
 
