@@ -108,6 +108,7 @@ store.generate = () => {
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
     }));
 
+  store.resetChecked();
   commonStore.addPosters(store.buildId, store.component, props);
 };
 
