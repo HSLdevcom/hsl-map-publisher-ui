@@ -74,10 +74,12 @@ store.setIsSummerTimetable = value => {
 };
 
 store.setChecked = (rows = [], isChecked) => {
+  const rowIds = rows.map(row => row.rowId);
+
   if (isChecked) {
-    store.checkedRows = [...store.checkedRows.slice(), ...rows.map(row => row.rowId)];
+    store.checkedRows = [...store.checkedRows.slice(), ...rowIds];
   } else {
-    store.checkedRows = [...store.checkedRows.filter(rowId => !rows.includes(rowId))];
+    store.checkedRows = store.checkedRows.filter(rowId => !rowIds.includes(rowId));
   }
 };
 
