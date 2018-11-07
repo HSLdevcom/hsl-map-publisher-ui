@@ -120,7 +120,12 @@ store.clearBuild = () => {
 
 store.getStops = async () => {
   try {
-    store.stops = await getStops();
+    store.stops = (await getStops())
+      // Users are used to shortIds without any space
+      .map(stop => ({
+        ...stop,
+        shortId: stop.shortId.replace(' ', ''),
+      }));
   } catch (error) {
     store.showConfirm(`Pysäkkien lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
