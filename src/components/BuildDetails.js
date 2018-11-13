@@ -98,9 +98,9 @@ Poster.propTypes = {
   status: PropTypes.oneOf(['PENDING', 'READY', 'FAILED']).isRequired,
   events: ObservablePropTypes.observableArrayOf(
     PropTypes.shape({
-      createdAt: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['ERROR', 'INFO']).isRequired,
-      message: PropTypes.string.isRequired,
+      createdAt: PropTypes.string,
+      type: PropTypes.oneOf(['ERROR', 'INFO']),
+      message: PropTypes.string,
     }),
   ).isRequired,
   disableEdit: PropTypes.bool.isRequired,

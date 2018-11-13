@@ -24,6 +24,7 @@ const store = observable({
   stops: [],
   builds: [],
   selectedBuild: null,
+  stopFilter: '',
   templates: [],
   images: [],
   selectedTemplate: null,
@@ -68,6 +69,11 @@ store.serializeCurrentTemplate = (template = store.currentTemplate) => {
   );
 
   return JSON.stringify(currentTemplatePlain);
+};
+
+store.setStopFilter = value => {
+  const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
+  store.stopFilter = value.replace(shortIdRegexp, '$1$2, ');
 };
 
 store.showConfirm = (message, callback = null) => {
