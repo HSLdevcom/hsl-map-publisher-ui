@@ -9,6 +9,7 @@
     "apollo-link-http": "^1.5.4",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "history": "^4.9.0",
     "lodash": "^4.17.10",
     "material-ui": "^0.20.1",
     "mobx": "^4",
