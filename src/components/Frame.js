@@ -45,7 +45,7 @@ class Frame extends Component {
     const code = new URL(window.location.href).searchParams.get("code");
 
     checkExistingSession().then((json) => {
-      if (json.isOk && json.email) {
+      if (json && json.isOk && json.email) {
         this.props.commonStore.setUser(json.email);
         this.setState({loading: false});
       } else {
@@ -53,7 +53,7 @@ class Frame extends Component {
         if (code) {
           removeAuthParams();
           authorizeUsingCode(code).then((json) => {
-            if (json.isOk && json.email) this.props.commonStore.setUser(json.email);
+            if (json && json.isOk && json.email) this.props.commonStore.setUser(json.email);
             this.setState({loading: false});
           });
         } else {
