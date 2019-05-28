@@ -6,12 +6,12 @@ const RequestMethod = {
 };
 
 const Endpoint = {
-  LOGIN: 'login',
-  SESSION: 'session',
-  LOGOUT: 'logout',
+  LOGIN: '/login',
+  SESSION: '/session',
+  LOGOUT: '/logout',
 };
 
-const BACKEND_API_URL = 'http://localhost:4000/';
+const BACKEND_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 const sendRequest = async (method, requestBody) => {
   try {
