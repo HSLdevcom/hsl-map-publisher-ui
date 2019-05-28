@@ -1,15 +1,15 @@
-import {createBrowserHistory as createHistory} from "history";
+import { createBrowserHistory as createHistory } from 'history';
 
-let history = createHistory();
+const history = createHistory();
 
 function removeAuthParams() {
-  let shareUrl = window.location.href;
+  const shareUrl = window.location.href;
   const url = new URL(shareUrl);
-  url.searchParams.delete("code");
-  url.searchParams.delete("scope");
-  history.replace({pathname: "/", search: url.search});
+  url.searchParams.delete('code');
+  url.searchParams.delete('scope');
+  history.replace({ pathname: '/', search: url.search });
 }
 
-export {
-  removeAuthParams,
-};
+function getAuthParams() {}
+
+export { removeAuthParams, getAuthParams };

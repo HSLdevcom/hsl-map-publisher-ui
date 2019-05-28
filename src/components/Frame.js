@@ -11,8 +11,8 @@ import BuildList from './BuildList';
 import ConfigureLayout from './ConfigureLayout';
 import Login from './Login';
 import Logout from './Logout';
-import {authorizeUsingCode, checkExistingSession} from "../util/auth/authService";
-import {removeAuthParams} from '../util/urlManager';
+import { authorizeUsingCode, checkExistingSession } from '../util/auth/authService';
+import { removeAuthParams } from '../util/urlManager';
 
 const Root = styled.div`
   display: flex;
@@ -33,8 +33,8 @@ class Frame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-     loading: true
-    }
+      loading: true,
+    };
   }
 
   static propTypes = {
@@ -42,22 +42,22 @@ class Frame extends Component {
   };
 
   componentDidMount() {
-    const code = new URL(window.location.href).searchParams.get("code");
+    const code = new URL(window.location.href).searchParams.get('code');
 
-    checkExistingSession().then((json) => {
+    checkExistingSession().then(json => {
       if (json && json.isOk && json.email) {
         this.props.commonStore.setUser(json.email);
-        this.setState({loading: false});
+        this.setState({ loading: false });
       } else {
         this.props.commonStore.setUser(null);
         if (code) {
           removeAuthParams();
-          authorizeUsingCode(code).then((json) => {
-            if (json && json.isOk && json.email) this.props.commonStore.setUser(json.email);
-            this.setState({loading: false});
+          authorizeUsingCode(code).then(res => {
+            if (res && res.isOk && res.email) this.props.commonStore.setUser(res.email);
+            this.setState({ loading: false });
           });
         } else {
-          this.setState({loading: false});
+          this.setState({ loading: false });
         }
       }
     });
@@ -69,43 +69,40 @@ class Frame extends Component {
 
     return (
       <div>
-        {this.state.loading &&
-          <div>Ladataan...</div>
-        }
-        {!this.state.loading && !user &&
-          <Login />
-        }
-        {!this.state.loading && user &&
-          <Root>
-            {confirm && <ConfirmDialog {...confirm} />}
-            {prompt && <PromptDialog {...prompt} />}
-            {selectedBuild && (
-              <BuildDetails
-                {...selectedBuild}
-                onRemovePoster={this.props.commonStore.removePoster}
-                onClose={this.props.commonStore.clearBuild}
-              />
-            )}
-            <Logout />
-            <Tabs>
-              <Tab label="Generointi">
-                <TabPane>
-                  <Generator />
-                </TabPane>
-              </Tab>
-              <Tab label="Sommittelu">
-                <TabPane>
-                  <ConfigureLayout />
-                </TabPane>
-              </Tab>
-              <Tab label="Tulosteet">
-                <TabPane>
-                  <BuildList />
-                </TabPane>
-              </Tab>
-            </Tabs>
-          </Root>
-        }
+        {this.state.loading && <div>Ladataan...</div>}
+        {!this.state.loading && !user && <Login />}
+        {!this.state.loading &&
+          user && (
+            <Root>
+              {confirm && <ConfirmDialog {...confirm} />}
+              {prompt && <PromptDialog {...prompt} />}
+              {selectedBuild && (
+                <BuildDetails
+                  {...selectedBuild}
+                  onRemovePoster={this.props.commonStore.removePoster}
+                  onClose={this.props.commonStore.clearBuild}
+                />
+              )}
+              <Logout />
+              <Tabs>
+                <Tab label="Generointi">
+                  <TabPane>
+                    <Generator />
+                  </TabPane>
+                </Tab>
+                <Tab label="Sommittelu">
+                  <TabPane>
+                    <ConfigureLayout />
+                  </TabPane>
+                </Tab>
+                <Tab label="Tulosteet">
+                  <TabPane>
+                    <BuildList />
+                  </TabPane>
+                </Tab>
+              </Tabs>
+            </Root>
+          )}
       </div>
     );
   }

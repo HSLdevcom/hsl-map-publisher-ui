@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
 
-const CLIENT_ID = process.env.CLIENT_ID;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+// const CLIENT_ID = process.env.CLIENT_ID;
+// const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const Root = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
-  background-image: url("./background.jpg");
+  background-image: url('./background.jpg');
 `;
 
 const Wrapper = styled.div`
@@ -18,8 +18,8 @@ const Wrapper = styled.div`
   top: 50%;
   left: 50%;
   padding: 30px 90px;
-  transform: translate(-50%,-50%);
-  box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 3px 14px rgba(0,0,0,.4);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 14px rgba(0, 0, 0, 0.4);
   border-radius: 2px;
   text-align: center;
   overflow-y: auto;
@@ -34,7 +34,6 @@ const Wrapper = styled.div`
 const Header = styled.div`
   padding: 10px 0px 10px 0px;
   user-select: none;
-
 `;
 
 const LoginButton = styled.span`
@@ -73,30 +72,33 @@ const Title = styled.h2`
 
 const LoginIcon = () => (
   <svg
-    className='line-icon'
-    version='1.1' id='Layer_1' x='0px' y='0px'
-    viewBox="0 0 448 512" height={"1em"}
-    preserveAspectRatio="xMidYMid meet"
-  >
-    <g fill={"#3e3e3e"} >
+    className="line-icon"
+    version="1.1"
+    id="Layer_1"
+    x="0px"
+    y="0px"
+    viewBox="0 0 448 512"
+    height="1em"
+    preserveAspectRatio="xMidYMid meet">
+    <g fill="#3e3e3e">
       <path
         d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"
         id="Fill-1"
       />
     </g>
   </svg>
-)
+);
 
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
     );
   };
 
   openRegisterForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`,
     );
   };
 
@@ -105,30 +107,25 @@ class Login extends Component {
       <Root>
         <Wrapper>
           <Header>
-            <Logo src={hslLogo} alt='HSL Logo'/>
+            <Logo src={hslLogo} alt="HSL Logo" />
             <Title>HSL Karttajulkaisin</Title>
           </Header>
           <p>
-            <LoginButton
-              onClick={this.openLoginForm}
-              >
+            <LoginButton onClick={this.openLoginForm}>
               <LoginIcon />
               <LoginText>Kirjaudu (HSL ID)</LoginText>
             </LoginButton>
           </p>
           <p>
-            <LoginButton
-              onClick={this.openRegisterForm}
-              >
+            <LoginButton onClick={this.openRegisterForm}>
               <LoginIcon />
               <LoginText>Luo uusi käyttäjä</LoginText>
             </LoginButton>
           </p>
         </Wrapper>
       </Root>
-    )
+    );
   }
-};
-
+}
 
 export default Login;
