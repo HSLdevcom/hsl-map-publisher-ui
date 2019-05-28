@@ -90,13 +90,13 @@ const LoginIcon = () => (
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=http://localhost:3000&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`
     );
   };
 
   openRegisterForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=http://localhost:3000&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`
     );
   };
 
