@@ -11,7 +11,7 @@ const Endpoint = {
   LOGOUT: '/logout',
 };
 
-const BACKEND_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const BACKEND_API_URL = process.env.REACT_APP_API_URL || 'https://dev-kartat.hsldev.com/julkaisin-api';
 
 const sendRequest = async (method, requestBody) => {
   try {
