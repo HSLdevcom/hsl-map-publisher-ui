@@ -7,7 +7,7 @@ function removeAuthParams() {
   const url = new URL(shareUrl);
   url.searchParams.delete('code');
   url.searchParams.delete('scope');
-  history.replace({ pathname: '/', search: url.search });
+  history.replace({ pathname: url.pathname, search: url.search });
 }
 
 function getAuthParams() {}

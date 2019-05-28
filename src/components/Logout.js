@@ -35,7 +35,7 @@ class Logout extends Component {
     logout().then(response => {
       if (response.status === 200) {
         this.props.commonStore.setUser(null);
-        window.location.replace(window.location.origin);
+        window.location.replace(window.location.href);
       }
     });
   };
