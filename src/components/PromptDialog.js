@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
+const BANNED_CHARACTERS = ['/', '\\', ':', '?', '"', '<', '>', '|'];
+
+const Message = styled.div`
+  color: red;
+`;
+
 class PromptDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: props.defaultValue };
+    this.state = {
+      value: props.defaultValue,
+      isNotValid: true,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ value: nextProps.defaultValue });
+  }
+
+  inputOnChange = (value) => {
+    const isNotValid = (BANNED_CHARACTERS.some(c => value.includes(c)));
+    this.setState({ value, isNotValid })
   }
 
   render() {
@@ -23,6 +38,7 @@ class PromptDialog extends Component {
         actions={[
           <FlatButton onClick={() => this.props.callback({ isCancelled: true })} label="Peruuta" />,
           <FlatButton
+            disabled={this.state.isNotValid}
             onClick={() =>
               this.props.callback({
                 isCancelled: false,
@@ -37,9 +53,12 @@ class PromptDialog extends Component {
         <TextField
           name={this.props.message}
           value={this.state.value}
-          onChange={(event, value) => this.setState({ value })}
+          onChange={(event, value) => this.inputOnChange(value)}
           fullWidth
         />
+      {this.state.isNotValid && this.state.value.length > 0 &&
+        <Message>Nimi ei saa sisältää merkkejä: {BANNED_CHARACTERS}</Message>
+      }
       </Dialog>
     );
   }
