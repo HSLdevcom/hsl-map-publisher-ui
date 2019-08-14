@@ -1,0 +1,12 @@
+{
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Default Introspection Endpoint": {
+        "url": "http://0.0.0.0:5000/jore/graphql",
+        "introspect": true,
+        "headers": { "user-agent": "JS GraphQL" }
+      }
+    }
+  }
+}
