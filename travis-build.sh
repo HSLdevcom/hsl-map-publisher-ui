@@ -6,7 +6,8 @@ DOCKER_TAG=${TRAVIS_BUILD_NUMBER:-latest}
 DOCKER_IMAGE=$ORG/hsl-map-publisher-ui:${DOCKER_TAG}
 DOCKER_IMAGE_LATEST=$ORG/hsl-map-publisher-ui:latest
 
-docker build --build-arg API_URL=$API_URL --build-arg JORE_API_URL=$JORE_API_URL --tag=$DOCKER_IMAGE .
+# Use latest while it may still be deployed to K5
+docker build --build-arg BUILD_ENV=latest --tag=$DOCKER_IMAGE .
 
 if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master" ]]; then
   docker login -u $DOCKER_USER -p $DOCKER_AUTH
