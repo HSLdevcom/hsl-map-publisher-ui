@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
 
-// const CLIENT_ID = process.env.CLIENT_ID;
-// const REDIRECT_URI = process.env.REDIRECT_URI;
+const { CLIENT_ID, REDIRECT_URI, REACT_APP_API_URL } = process.env;
 
 const Root = styled.div`
   position: fixed;
@@ -92,13 +91,13 @@ const LoginIcon = () => (
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
     );
   };
 
   openRegisterForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=0573682632536260&redirect_uri=https://dev-kartat.hsldev.com/julkaisin&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`,
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`,
     );
   };
 
