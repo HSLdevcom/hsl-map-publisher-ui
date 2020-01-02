@@ -102,7 +102,9 @@ store.showPrompt = (message, callback, defaultValue = '') => {
 
 store.showBuild = async id => {
   try {
-    store.selectedBuild = await getBuild({ id });
+    const build = await getBuild({ id });
+    build.posters.sort((a, b) => (a.order > b.order ? 1 : -1));
+    store.selectedBuild = build;
   } catch (error) {
     store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
