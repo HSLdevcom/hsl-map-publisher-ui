@@ -127,13 +127,6 @@ class BuildDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      first: '',
-      last: '',
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
       first: {
         value: 1,
         isValid: true,
@@ -142,7 +135,7 @@ class BuildDetails extends Component {
         value: this.props.posters.length,
         isValid: true,
       },
-    });
+    };
   }
 
   firstOnChange = e => {
@@ -191,7 +184,7 @@ class BuildDetails extends Component {
                 onChange={value => this.firstOnChange(value)}
               />
             </InputWrapper>
-            <InputWrapper>{' - '}</InputWrapper>
+            <InputWrapper> - </InputWrapper>
             <InputWrapper>
               <InputItem
                 value={this.state.last.value}
@@ -239,6 +232,7 @@ Poster.propTypes = {
 };
 
 BuildDetails.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   status: PropTypes.oneOf(['OPEN', 'CLOSED', 'PRODUCTION']).isRequired,
   posters: ObservablePropTypes.observableArrayOf(
