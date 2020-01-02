@@ -147,14 +147,14 @@ class BuildDetails extends Component {
 
   firstOnChange = e => {
     const value = e.target.value;
-    const last = parseInt(this.state.last.value);
+    const last = parseInt(this.state.last.value, 10);
     const isValid = value > 0 && value <= this.props.posters.length && value <= last;
     this.setState({ first: { value, isValid } });
   };
 
   lastOnChange = e => {
     const value = e.target.value;
-    const first = parseInt(this.state.first.value);
+    const first = parseInt(this.state.first.value, 10);
     const isValid = value >= first && value <= this.props.posters.length;
     this.setState({ last: { value, isValid } });
   };
@@ -234,7 +234,7 @@ Poster.propTypes = {
       message: PropTypes.string,
     }),
   ).isRequired,
-  disabl8eEdit: PropTypes.bool.isRequired,
+  disableEdit: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
 };
 
