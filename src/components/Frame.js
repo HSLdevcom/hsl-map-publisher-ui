@@ -45,17 +45,17 @@ class Frame extends Component {
           />
         )}
         <Tabs>
-          <Tab label="Generointi">
+          <Tab data-cy="Generointi" label="Generointi">
             <TabPane>
               <Generator />
             </TabPane>
           </Tab>
-          <Tab label="Sommittelu">
+          <Tab data-cy="Sommittelu" label="Sommittelu">
             <TabPane>
               <ConfigureLayout />
             </TabPane>
           </Tab>
-          <Tab label="Tulosteet">
+          <Tab data-cy="Tulosteet" label="Tulosteet">
             <TabPane>
               <BuildList />
             </TabPane>

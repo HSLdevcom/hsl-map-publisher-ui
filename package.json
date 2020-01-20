@@ -7,6 +7,7 @@
   "dependencies": {
     "apollo-link": "^1.2.2",
     "apollo-link-http": "^1.5.4",
+    "cypress": "^3.8.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "graphql": "^0.13.2",
@@ -35,6 +36,7 @@
     "bundle": "react-app-rewired build",
     "build": "yarn lint && CI=true yarn test && yarn bundle",
     "test": "react-app-rewired test --env=jsdom",
+    "cypress": "cypress open",
     "eject": "react-app-rewired eject",
     "lint": "yarn eslint src",
     "serve": "serve build",

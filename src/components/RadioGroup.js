@@ -9,6 +9,7 @@ const RadioGroup = props => (
     onChange={(event, value) => props.onChange(value)}>
     {Object.keys(props.valuesByLabel).map(label => (
       <RadioButton
+        data-cy={label}
         key={label}
         label={label}
         value={props.valuesByLabel[label]}

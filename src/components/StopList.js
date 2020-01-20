@@ -56,10 +56,10 @@ function rowRenderer(rows, checkedRows, onCheck) {
     const callback = (event, value) => onCheck([rows[index]], value, index);
 
     const isChecked = checkedRows.includes(rowId);
-
     return (
       <div key={key} style={style}>
         <ListItem
+          data-cy={rowId}
           leftCheckbox={<Checkbox checked={isChecked} onCheck={callback} />}
           primaryText={<PrimaryText title={title} subtitle={subtitle} />}
           style={{ fontSize: 15 }}
@@ -69,15 +69,11 @@ function rowRenderer(rows, checkedRows, onCheck) {
   };
 }
 
-const enhance = compose(
-  observer,
-  inject('commonStore', 'generatorStore'),
-);
+const enhance = compose(observer, inject('commonStore', 'generatorStore'));
 
 function StopList(props) {
   const { generatorStore, commonStore } = props;
   const { rows, checkedRows } = generatorStore;
-
   const renderer = rowRenderer(rows, checkedRows, props.onCheck);
 
   return (
@@ -85,6 +81,7 @@ function StopList(props) {
       <Row>
         <TextFieldContainer>
           <TextField
+            data-cy="filterInput"
             onChange={(event, value) => commonStore.setStopFilter(value)}
             value={commonStore.stopFilter}
             hintText="Suodata..."

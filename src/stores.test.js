@@ -1,4 +1,3 @@
-import React from 'react';
 import commonStore from './stores/commonStore';
 
 describe('commonStore', () => {
