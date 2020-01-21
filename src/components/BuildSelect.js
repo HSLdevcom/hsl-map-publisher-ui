@@ -9,9 +9,11 @@ const BuildSelect = props => (
     value={props.buildIdSelected}
     onChange={(e, i, value) => props.onChange(value)}
     style={{ flexGrow: 1 }}>
-    {props.builds.filter(({ status }) => status === 'OPEN').map(build => (
-      <MenuItem key={build.id} value={build.id} primaryText={build.title} />
-    ))}
+    {props.builds
+      .filter(({ status }) => status === 'OPEN')
+      .map(build => (
+        <MenuItem data-cy={build.id} key={build.id} value={build.id} primaryText={build.title} />
+      ))}
   </SelectField>
 );
 

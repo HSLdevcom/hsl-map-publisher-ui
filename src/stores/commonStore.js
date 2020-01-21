@@ -199,7 +199,7 @@ store.removeImage = async name => {
     }
     store.getImages();
   };
-  store.showConfirm('Haluatko varmasti poistaa kuvaa?', callback);
+  store.showConfirm('Haluatko varmasti poistaa kuvan?', callback);
 };
 
 store.removeTemplate = async id => {
@@ -216,7 +216,7 @@ store.removeTemplate = async id => {
     }
     store.getTemplates();
   };
-  store.showConfirm('Haluatko varmasti poistaa sommittelua?', callback);
+  store.showConfirm('Haluatko varmasti poistaa sommittelun?', callback);
 };
 
 store.getTemplates = async () => {

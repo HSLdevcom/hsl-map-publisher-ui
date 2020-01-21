@@ -36,7 +36,7 @@ export default observer(
   }) => (
     <div>
       <SectionHeading>Valitse sommittelu</SectionHeading>
-      <TemplateControls>
+      <TemplateControls data-cy={`select-template-${showControls ? 'with-controls' : ''}`}>
         <Select
           templates={templates}
           selectedTemplate={get(currentTemplate, 'id', null)}
@@ -50,12 +50,14 @@ export default observer(
             disabled={!templateIsDirty}
             onClick={() => onSaveTemplate(toJS(currentTemplate))}
             label="Tallenna sommittelu"
+            data-cy="save-template"
           />
-          <FlatButton onClick={onAddTemplate} label="Uusi sommittelu..." />
+          <FlatButton data-cy="new-template" onClick={onAddTemplate} label="Uusi sommittelu..." />
           <FlatButton
             backgroundColor="#ffcccc"
             onClick={() => onRemoveTemplate(get(currentTemplate, 'id'))}
             label="Poista sommittelu"
+            data-cy="remove-template"
           />
         </TemplateControls>
       )}

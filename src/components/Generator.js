@@ -149,6 +149,7 @@ const Generator = props => {
       <Heading>Generointi</Heading>
       <Footer>
         <BuildSelect
+          data-cy="build-select"
           builds={commonStore.builds.toJS()}
           buildIdSelected={generatorStore.buildId}
           onChange={generatorStore.setBuildId}

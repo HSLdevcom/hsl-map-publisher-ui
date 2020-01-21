@@ -100,6 +100,7 @@ function StopList(props) {
           disabled={checkedRows.length === 0}
           onClick={() => props.onReset()}
           label="Tyhjennä valinnat"
+          data-cy="clear-selection"
         />
         <Spacer />
         <FlatButton

@@ -36,7 +36,7 @@ class Frame extends Component {
     return (
       <Root>
         {confirm && <ConfirmDialog {...confirm} />}
-        {prompt && <PromptDialog {...prompt} />}
+        {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
         {selectedBuild && (
           <BuildDetails
             {...selectedBuild}
@@ -45,17 +45,17 @@ class Frame extends Component {
           />
         )}
         <Tabs>
-          <Tab data-cy="Generointi" label="Generointi">
+          <Tab data-cy="generate" label="Generointi">
             <TabPane>
               <Generator />
             </TabPane>
           </Tab>
-          <Tab data-cy="Sommittelu" label="Sommittelu">
+          <Tab data-cy="template" label="Sommittelu">
             <TabPane>
               <ConfigureLayout />
             </TabPane>
           </Tab>
-          <Tab data-cy="Tulosteet" label="Tulosteet">
+          <Tab data-cy="list" label="Tulosteet">
             <TabPane>
               <BuildList />
             </TabPane>
