@@ -32,7 +32,6 @@ class Frame extends Component {
 
   render() {
     const { confirm, prompt, selectedBuild } = this.props.commonStore;
-
     return (
       <Root>
         {confirm && <ConfirmDialog {...confirm} />}

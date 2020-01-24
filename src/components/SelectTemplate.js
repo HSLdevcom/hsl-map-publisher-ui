@@ -36,7 +36,7 @@ export default observer(
   }) => (
     <div>
       <SectionHeading>Valitse sommittelu</SectionHeading>
-      <TemplateControls data-cy={`select-template-${showControls ? 'with-controls' : ''}`}>
+      <TemplateControls data-cy={`select-template${showControls ? '-with-controls' : ''}`}>
         <Select
           templates={templates}
           selectedTemplate={get(currentTemplate, 'id', null)}

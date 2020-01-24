@@ -6,13 +6,19 @@ import MenuItem from 'material-ui/MenuItem';
 
 const BuildSelect = props => (
   <SelectField
+    data-cy="build-select"
     value={props.buildIdSelected}
     onChange={(e, i, value) => props.onChange(value)}
     style={{ flexGrow: 1 }}>
     {props.builds
       .filter(({ status }) => status === 'OPEN')
       .map(build => (
-        <MenuItem data-cy={build.id} key={build.id} value={build.id} primaryText={build.title} />
+        <MenuItem
+          data-cy={`${build.title}-select`}
+          key={build.id}
+          value={build.id}
+          primaryText={build.title}
+        />
       ))}
   </SelectField>
 );
