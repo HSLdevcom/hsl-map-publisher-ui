@@ -1,0 +1,8 @@
+{
+  "viewportWidth": 800,
+  "viewportHeight": 1100,
+  "baseUrl": "https://prod.kartat.hsl.fi/julkaisin",
+  "apiUrl": "https://prod.kartat.hsl.fi/julkaisin-api",
+  "numTestsKeptInMemory": 1,
+  "video": false
+}

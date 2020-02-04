@@ -1,8 +1,25 @@
 const uuidv4 = require('uuid/v4');
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const API_URL = Cypress.config().apiUrl;
+const TEST_PREFIX = 'CY-TEST';
 
-describe('Input form', () => {
+describe('General tests', () => {
+  before(() => {
+    cy.request('GET', `${API_URL}/builds`)
+      .its('body')
+      .then(buildArr => {
+        const testBuilds = buildArr.filter(build => build.title.includes('CY-TEST'));
+        console.log(testBuilds);
+        if (testBuilds.length > 0) {
+          console.log('Removing test builds. This indicates that some tests are probably failing.');
+        }
+        testBuilds.forEach(testBuild => {
+          cy.request('DELETE', `${API_URL}/builds/${testBuild.id}`);
+          console.log(`Deleting ${testBuild.id}.`);
+        });
+      });
+  });
+
   beforeEach(() => {
     cy.visit('/');
   });
@@ -53,7 +70,7 @@ describe('Input form', () => {
     cy.get('[data-cy=new-template]').click();
     cy.get('[data-cy=prompt-ok]').should('have.disabled');
 
-    const uuid = uuidv4();
+    const uuid = `${TEST_PREFIX}-${uuidv4()}`;
 
     cy.get('[data-cy=prompt-textfield]')
       .click()
@@ -67,8 +84,6 @@ describe('Input form', () => {
     cy.route('DELETE', `${API_URL}/templates`).as('deleteTemplate');
 
     cy.get('[data-cy=prompt-ok]').click();
-
-    cy.wait('@postTemplate');
 
     cy.get('[data-cy=select-template-with-controls]').click();
     cy.get(`[data-cy=${uuid}]`).should('exist');
@@ -93,7 +108,7 @@ describe('Input form', () => {
   });
 
   it('Create and delete build', () => {
-    const uuid = uuidv4();
+    const uuid = `${TEST_PREFIX}-${uuidv4()}`;
 
     cy.server();
     cy.route('POST', `${API_URL}/builds`).as('postBuild');
@@ -124,29 +139,26 @@ describe('Input form', () => {
   });
 
   it('Create build and start generating poster', () => {
-    const buildTitle = uuidv4();
-    const templateId = uuidv4();
+    const buildTitle = `${TEST_PREFIX}-${uuidv4()}`;
+    const templateId = `${TEST_PREFIX}-${uuidv4()}`;
 
     cy.server();
     cy.route('POST', `${API_URL}/builds`).as('postBuild');
     cy.route('POST', `${API_URL}/templates`).as('postTemplate');
     cy.route('POST', `${API_URL}/builds/posters`).as('postPoster');
-    console.log(`${API_URL}/builds`);
-    // Create build
+
     cy.get('[data-cy=create-build]').click();
     cy.get('[data-cy=prompt-textfield]').type(buildTitle);
     cy.get('[data-cy=prompt-ok]').click();
 
     cy.wait('@postBuild');
 
-    // Create template
     cy.get('[data-cy=template]').click();
     cy.get('[data-cy=new-template]').click();
     cy.get('[data-cy=prompt-textfield]')
       .click()
       .type(templateId);
     cy.get('[data-cy=prompt-ok]').click();
-    cy.wait('@postTemplate');
     cy.get('[data-cy=generate]').click();
 
     cy.get('[data-cy=filterInput]').type('1010128');
@@ -167,12 +179,10 @@ describe('Input form', () => {
           console.log(build.failed);
           if (build.ready) {
             cy.get(`[data-cy=${buildTitle}-show]`).click();
-            cy.get(`[data-cy=5a65a4c2-a7cf-4eef-a3e5-ba7d4fd734f4-buildDetails]`).contains(
-              'Rendered successfully',
-            );
+            cy.get(`[data-cy=${buildTitle}-buildDetails]`).contains('Rendered successfully');
             return true;
           } else if (build.failed) {
-            cy.contains('Build returned failed status.').should('not.exist');
+            cy.contains('Build returned failed status.').should('exist');
             return true;
           }
           return false;
@@ -182,6 +192,10 @@ describe('Input form', () => {
     }
 
     cy.get(`[data-cy=${buildTitle}-remove]`).click();
+    cy.get('[data-cy=confirm-ok]').click();
+
+    cy.get('[data-cy=template]').click();
+    cy.get('[data-cy=remove-template]').click();
     cy.get('[data-cy=confirm-ok]').click();
   });
 });

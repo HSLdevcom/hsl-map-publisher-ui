@@ -16,40 +16,39 @@ import Generator from './components/Generator';
 configure({ adapter: new Adapter() });
 
 it('Renders without crashing', () => {
-    shallow(<App />);
+  shallow(<App />);
 });
 
 it('Frame renders without crashing', () => {
-    shallow(
-        <Provider {...stores}>
-                <MuiThemeProvider muiTheme={theme}>
-                    <Frame />
-                </MuiThemeProvider>
-        </Provider>
-    );
+  shallow(
+    <Provider {...stores}>
+      <MuiThemeProvider muiTheme={theme}>
+        <Frame />
+      </MuiThemeProvider>
+    </Provider>,
+  );
 });
 
 const wrapper = mount(
-    <Provider {...stores}>
-            <MuiThemeProvider muiTheme={theme}>
-                <Frame />
-            </MuiThemeProvider>
-    </Provider>
+  <Provider {...stores}>
+    <MuiThemeProvider muiTheme={theme}>
+      <Frame />
+    </MuiThemeProvider>
+  </Provider>,
 );
 
 it('Frame contains BuildDetails', () => {
-    expect(wrapper.contains(BuildDetails)).toEqual(true);
+  expect(wrapper.contains(BuildDetails)).toEqual(true);
 });
 
 it('Frame contains Generator', () => {
-    expect(wrapper.contains(Generator)).toEqual(true);
+  expect(wrapper.contains(Generator)).toEqual(true);
 });
 
 it('Frame contains BuildDetails', () => {
-    expect(wrapper.contains(Tabs)).toEqual(true);
+  expect(wrapper.contains(Tabs)).toEqual(true);
 });
 
 it('Frame contains ConfigureLayout', () => {
-    expect(wrapper.contains(ConfigureLayout)).toEqual(true);
+  expect(wrapper.contains(ConfigureLayout)).toEqual(true);
 });
-

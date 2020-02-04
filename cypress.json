@@ -2,5 +2,7 @@
   "viewportWidth": 800,
   "viewportHeight": 1100,
   "baseUrl": "http://localhost:3000",
-  "numTestsKeptInMemory": 0
+  "apiUrl": "http://localhost:4000",
+  "numTestsKeptInMemory": 1,
+  "video": false
 }

@@ -1,0 +1,18 @@
+{
+  "name": "transitlog-ui-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "./run_cypress.sh",
+    "cypress": "cypress"
+  },
+  "dependencies": {
+    "cypress": "^3.8.3",
+    "cypress-commands": "^0.3.1",
+    "cypress-wait-until": "^1.5.0",
+    "dotenv": "^8.0.0",
+    "fs-extra": "^8.1.0",
+    "lodash": "^4.17.11"
+  }
+}
