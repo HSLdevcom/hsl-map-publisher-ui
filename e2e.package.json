@@ -1,10 +1,10 @@
 {
-  "name": "transitlog-ui-tests",
+  "name": "publiher-ui-tests",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "./run_cypress.sh",
+    "start": "run cypress open",
     "cypress": "cypress"
   },
   "dependencies": {
