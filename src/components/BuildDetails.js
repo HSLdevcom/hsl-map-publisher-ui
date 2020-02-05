@@ -112,7 +112,9 @@ Poster.propTypes = {
 const BuildDetails = props => (
   <Dialog
     onRequestClose={props.onClose}
-    actions={[<FlatButton onClick={props.onClose} label="Sulje" />]}
+    actions={[
+      <FlatButton data-cy="build-details-close-button" onClick={props.onClose} label="Sulje" />,
+    ]}
     style={{ height: '90vh', width: '90vw' }}
     autoScrollBodyContent
     open>

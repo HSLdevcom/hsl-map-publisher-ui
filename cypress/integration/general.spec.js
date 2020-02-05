@@ -9,7 +9,6 @@ describe('General tests', () => {
       .its('body')
       .then(buildArr => {
         const testBuilds = buildArr.filter(build => build.title.includes('CY-TEST'));
-        console.log(testBuilds);
         if (testBuilds.length > 0) {
           console.log('Removing test builds. This indicates that some tests are probably failing.');
         }
@@ -145,7 +144,7 @@ describe('General tests', () => {
     cy.server();
     cy.route('POST', `${API_URL}/builds`).as('postBuild');
     cy.route('POST', `${API_URL}/templates`).as('postTemplate');
-    cy.route('POST', `${API_URL}/builds/posters`).as('postPoster');
+    cy.route('POST', `${API_URL}/posters`).as('postPoster');
 
     cy.get('[data-cy=create-build]').click();
     cy.get('[data-cy=prompt-textfield]').type(buildTitle);
@@ -159,6 +158,8 @@ describe('General tests', () => {
       .click()
       .type(templateId);
     cy.get('[data-cy=prompt-ok]').click();
+    cy.wait('@postTemplate');
+
     cy.get('[data-cy=generate]').click();
 
     cy.get('[data-cy=filterInput]').type('1010128');
@@ -169,27 +170,15 @@ describe('General tests', () => {
     cy.get(`[data-cy=${buildTitle}-select]`).click();
     cy.get('[data-cy=generate-button]').click();
 
+    cy.wait('@postPoster');
+
     cy.get('[data-cy=list]').click();
-    for (let i = 0; i < 10; i++) {
-      const renderDone = cy
-        .request('GET', `${API_URL}/builds`)
-        .its('body')
-        .then(buildArr => {
-          const build = buildArr.find(build => build.title === buildTitle);
-          console.log(build.failed);
-          if (build.ready) {
-            cy.get(`[data-cy=${buildTitle}-show]`).click();
-            cy.get(`[data-cy=${buildTitle}-buildDetails]`).contains('Rendered successfully');
-            return true;
-          } else if (build.failed) {
-            cy.contains('Build returned failed status.').should('exist');
-            return true;
-          }
-          return false;
-        });
-      cy.wait(30000);
-      if (renderDone) break;
-    }
+
+    cy.wait(120000);
+
+    cy.get(`[data-cy=${buildTitle}-show]`).click();
+    cy.get(`[data-cy=${buildTitle}-buildDetails]`).contains('Rendered successfully');
+    cy.get(`[data-cy=build-details-close-button]`).click();
 
     cy.get(`[data-cy=${buildTitle}-remove]`).click();
     cy.get('[data-cy=confirm-ok]').click();

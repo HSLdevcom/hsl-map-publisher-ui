@@ -19,4 +19,4 @@ ENV TEST_ENV=${BUILD_ENV}
 COPY cypress.${BUILD_ENV}.json ${WORK}
 ADD cypress.${BUILD_ENV}.json cypress.json
 
-CMD yarn run cypress run -C cypress.json
+CMD yarn run cypress run -C cypress.json --record --key aea92ff5-f92b-47f7-a620-d97f8ac9872a 

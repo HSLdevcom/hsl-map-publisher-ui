@@ -4,5 +4,5 @@
   "baseUrl": "http://localhost:3000",
   "apiUrl": "http://localhost:4000",
   "numTestsKeptInMemory": 1,
-  "video": false
+  "projectId": "3o6x11"
 }

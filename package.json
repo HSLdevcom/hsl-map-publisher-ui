@@ -36,7 +36,6 @@
     "bundle": "react-app-rewired build",
     "build": "yarn lint && CI=true yarn test && yarn bundle",
     "test": "react-app-rewired test --env=jsdom",
-    "cypress": "cypress open",
     "eject": "react-app-rewired eject",
     "lint": "yarn eslint src",
     "serve": "serve build",

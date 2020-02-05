@@ -4,5 +4,6 @@
   "baseUrl": "https://dev.kartat.hsl.fi/julkaisin",
   "apiUrl": "https://dev.kartat.hsl.fi/julkaisin-api",
   "numTestsKeptInMemory": 1,
-  "video": false
+  "video": true,
+  "projectId": "3o6x11"
 }
