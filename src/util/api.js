@@ -137,6 +137,10 @@ function downloadBuild({ id }) {
   window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
 }
 
+function downloadBuildSection({ id, first, last }) {
+  window.open(`${API_URL}/downloadBuild/${id}?first=${first}&last=${last}`, '_blank');
+}
+
 export {
   getStops,
   getBuilds,
@@ -154,4 +158,5 @@ export {
   removePoster,
   downloadPoster,
   downloadBuild,
+  downloadBuildSection,
 };
