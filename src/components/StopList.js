@@ -69,10 +69,7 @@ function rowRenderer(rows, checkedRows, onCheck) {
   };
 }
 
-const enhance = compose(
-  observer,
-  inject('commonStore', 'generatorStore'),
-);
+const enhance = compose(observer, inject('commonStore', 'generatorStore'));
 
 function StopList(props) {
   const { generatorStore, commonStore } = props;

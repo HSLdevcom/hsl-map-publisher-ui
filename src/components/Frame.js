@@ -71,38 +71,37 @@ class Frame extends Component {
       <div>
         {this.state.loading && <div>Ladataan...</div>}
         {!this.state.loading && !user && <Login />}
-        {!this.state.loading &&
-          user && (
-            <Root>
-              {confirm && <ConfirmDialog {...confirm} />}
-              {prompt && <PromptDialog {...prompt} />}
-              {selectedBuild && (
-                <BuildDetails
-                  {...selectedBuild}
-                  onRemovePoster={this.props.commonStore.removePoster}
-                  onClose={this.props.commonStore.clearBuild}
-                />
-              )}
-              <Logout />
-              <Tabs>
-                <Tab label="Generointi">
-                  <TabPane>
-                    <Generator />
-                  </TabPane>
-                </Tab>
-                <Tab label="Sommittelu">
-                  <TabPane>
-                    <ConfigureLayout />
-                  </TabPane>
-                </Tab>
-                <Tab label="Tulosteet">
-                  <TabPane>
-                    <BuildList />
-                  </TabPane>
-                </Tab>
-              </Tabs>
-            </Root>
-          )}
+        {!this.state.loading && user && (
+          <Root>
+            {confirm && <ConfirmDialog {...confirm} />}
+            {prompt && <PromptDialog {...prompt} />}
+            {selectedBuild && (
+              <BuildDetails
+                {...selectedBuild}
+                onRemovePoster={this.props.commonStore.removePoster}
+                onClose={this.props.commonStore.clearBuild}
+              />
+            )}
+            <Logout />
+            <Tabs>
+              <Tab label="Generointi">
+                <TabPane>
+                  <Generator />
+                </TabPane>
+              </Tab>
+              <Tab label="Sommittelu">
+                <TabPane>
+                  <ConfigureLayout />
+                </TabPane>
+              </Tab>
+              <Tab label="Tulosteet">
+                <TabPane>
+                  <BuildList />
+                </TabPane>
+              </Tab>
+            </Tabs>
+          </Root>
+        )}
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
 
-const { CLIENT_ID, REDIRECT_URI, REACT_APP_API_URL } = process.env;
+const { REACT_APP_CLIENT_ID, REACT_APP_REDIRECT_URI } = process.env;
 
 const Root = styled.div`
   position: fixed;
@@ -91,13 +91,7 @@ const LoginIcon = () => (
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
-    );
-  };
-
-  openRegisterForm = () => {
-    window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly&nur`,
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${REACT_APP_CLIENT_ID}&redirect_uri=${REACT_APP_REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
     );
   };
 
@@ -113,12 +107,6 @@ class Login extends Component {
             <LoginButton onClick={this.openLoginForm}>
               <LoginIcon />
               <LoginText>Kirjaudu (HSL ID)</LoginText>
-            </LoginButton>
-          </p>
-          <p>
-            <LoginButton onClick={this.openRegisterForm}>
-              <LoginIcon />
-              <LoginText>Luo uusi käyttäjä</LoginText>
             </LoginButton>
           </p>
         </Wrapper>

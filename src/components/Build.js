@@ -94,15 +94,14 @@ const Build = props => {
           label="Näytä tiedot"
           style={{ marginLeft: 10 }}
         />
-        {props.pending < 1 &&
-          props.ready > 0 && (
-            <RaisedButton
-              onClick={() => downloadBuild({ id: props.id })}
-              label="Lataa PDF"
-              style={{ marginLeft: 10 }}
-              primary
-            />
-          )}
+        {props.pending < 1 && props.ready > 0 && (
+          <RaisedButton
+            onClick={() => downloadBuild({ id: props.id })}
+            label="Lataa PDF"
+            style={{ marginLeft: 10 }}
+            primary
+          />
+        )}
         {props.pending > 0 && <CircularProgress size={30} style={{ margin: '0 15px' }} />}
       </Buttons>
       <Divider />

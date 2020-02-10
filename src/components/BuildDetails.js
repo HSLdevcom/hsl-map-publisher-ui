@@ -63,14 +63,16 @@ const Poster = props => (
     </p>
 
     <p>
-      {props.events.filter(({ message }) => !!message).map(({ createdAt, type, message }) => (
-        <span
-          key={`${createdAt}${type}${message}`}
-          style={type === 'ERROR' ? { color: 'red' } : null}>
-          {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
-          <br />
-        </span>
-      ))}
+      {props.events
+        .filter(({ message }) => !!message)
+        .map(({ createdAt, type, message }) => (
+          <span
+            key={`${createdAt}${type}${message}`}
+            style={type === 'ERROR' ? { color: 'red' } : null}>
+            {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
+            <br />
+          </span>
+        ))}
     </p>
 
     <Buttons>

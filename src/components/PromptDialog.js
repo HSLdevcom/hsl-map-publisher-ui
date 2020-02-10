@@ -56,10 +56,9 @@ class PromptDialog extends Component {
           onChange={(event, value) => this.inputOnChange(value)}
           fullWidth
         />
-        {this.state.isNotValid &&
-          this.state.value.length > 0 && (
-            <Message>Nimi ei saa sisältää merkkejä: {BANNED_CHARACTERS}</Message>
-          )}
+        {this.state.isNotValid && this.state.value.length > 0 && (
+          <Message>Nimi ei saa sisältää merkkejä: {BANNED_CHARACTERS}</Message>
+        )}
       </Dialog>
     );
   }
