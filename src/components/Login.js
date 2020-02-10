@@ -10,6 +10,8 @@ const Root = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   background-image: url('./background.jpg');
+  background-size: cover;
+  background-position: center;
 `;
 
 const Wrapper = styled.div`
