@@ -84,17 +84,17 @@ class Frame extends Component {
             )}
             <Logout />
             <Tabs>
-              <Tab label="Generointi">
+              <Tab data-cy="generate" label="Generointi">
                 <TabPane>
                   <Generator />
                 </TabPane>
               </Tab>
-              <Tab label="Sommittelu">
+              <Tab data-cy="template" label="Sommittelu">
                 <TabPane>
                   <ConfigureLayout />
                 </TabPane>
               </Tab>
-              <Tab label="Tulosteet">
+              <Tab data-cy="list" label="Tulosteet">
                 <TabPane>
                   <BuildList />
                 </TabPane>

@@ -33,7 +33,13 @@ const sendRequest = async (method, requestBody) => {
 };
 
 export const authorizeUsingCode = async code => {
-  const requestBody = { code };
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const testingParam = urlParams.get('testing');
+  const isTesting = testingParam ? true : null;
+
+  const requestBody = { code, isTesting };
+
   return sendRequest(RequestMethod.POST, requestBody);
 };
 

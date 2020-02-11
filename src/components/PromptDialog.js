@@ -38,6 +38,7 @@ class PromptDialog extends Component {
         actions={[
           <FlatButton onClick={() => this.props.callback({ isCancelled: true })} label="Peruuta" />,
           <FlatButton
+            data-cy="prompt-ok"
             disabled={this.state.isNotValid}
             onClick={() =>
               this.props.callback({
@@ -51,6 +52,7 @@ class PromptDialog extends Component {
         ]}>
         <p>{this.props.message}</p>
         <TextField
+          data-cy="prompt-textfield"
           name={this.props.message}
           value={this.state.value}
           onChange={(event, value) => this.inputOnChange(value)}

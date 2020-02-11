@@ -9,7 +9,9 @@ const Root = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
-  background-image: url('./background.jpg');
+  background-image: url('./asd.jpg');
+  background-size: cover;
+  background-position: center;
 `;
 
 const Wrapper = styled.div`
