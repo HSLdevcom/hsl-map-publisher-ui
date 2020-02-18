@@ -146,6 +146,40 @@ const Generator = props => {
         />
       </Main>
 
+      <Row>
+        <Column>
+          <h3>Lähikartta</h3>
+          <div>
+            <Checkbox
+              label="Vyöhykealueet"
+              defaultValueTrue={generatorStore.mapZones}
+              onChange={value => generatorStore.setMapZones()}
+            />
+            <Checkbox
+              label="Vyöhykesymbolit"
+              defaultValueTrue={generatorStore.mapZoneSymbols}
+              onChange={value => generatorStore.setMapZoneSymbols()}
+            />
+          </div>
+        </Column>
+
+        <Column>
+          <h3>Minikartta</h3>
+          <div>
+            <Checkbox
+              label="Vyöhykealueet"
+              defaultValueTrue={generatorStore.minimapZones}
+              onChange={value => generatorStore.setMinimapZones()}
+            />
+            <Checkbox
+              label="Vyöhykesymbolit"
+              defaultValueTrue={generatorStore.minimapZoneSymbols}
+              onChange={value => generatorStore.setMinimapZoneSymbols()}
+            />
+          </div>
+        </Column>
+      </Row>
+
       <Heading>Generointi</Heading>
       <Footer>
         <BuildSelect
