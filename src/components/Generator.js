@@ -145,40 +145,41 @@ const Generator = props => {
           showControls={false}
         />
       </Main>
+      {generatorStore.component === 'StopPoster' && (
+        <Row>
+          <Column>
+            <h3>Lähikartta</h3>
+            <div>
+              <Checkbox
+                label="Vyöhykealueet"
+                defaultValueTrue={generatorStore.mapZones}
+                onChange={() => generatorStore.setMapZones()}
+              />
+              <Checkbox
+                label="Vyöhykesymbolit"
+                defaultValueTrue={generatorStore.mapZoneSymbols}
+                onChange={() => generatorStore.setMapZoneSymbols()}
+              />
+            </div>
+          </Column>
 
-      <Row>
-        <Column>
-          <h3>Lähikartta</h3>
-          <div>
-            <Checkbox
-              label="Vyöhykealueet"
-              defaultValueTrue={generatorStore.mapZones}
-              onChange={() => generatorStore.setMapZones()}
-            />
-            <Checkbox
-              label="Vyöhykesymbolit"
-              defaultValueTrue={generatorStore.mapZoneSymbols}
-              onChange={() => generatorStore.setMapZoneSymbols()}
-            />
-          </div>
-        </Column>
-
-        <Column>
-          <h3>Minikartta</h3>
-          <div>
-            <Checkbox
-              label="Vyöhykealueet"
-              defaultValueTrue={generatorStore.minimapZones}
-              onChange={() => generatorStore.setMinimapZones()}
-            />
-            <Checkbox
-              label="Vyöhykesymbolit"
-              defaultValueTrue={generatorStore.minimapZoneSymbols}
-              onChange={() => generatorStore.setMinimapZoneSymbols()}
-            />
-          </div>
-        </Column>
-      </Row>
+          <Column>
+            <h3>Minikartta</h3>
+            <div>
+              <Checkbox
+                label="Vyöhykealueet"
+                defaultValueTrue={generatorStore.minimapZones}
+                onChange={() => generatorStore.setMinimapZones()}
+              />
+              <Checkbox
+                label="Vyöhykesymbolit"
+                defaultValueTrue={generatorStore.minimapZoneSymbols}
+                onChange={() => generatorStore.setMinimapZoneSymbols()}
+              />
+            </div>
+          </Column>
+        </Row>
+      )}
 
       <Heading>Generointi</Heading>
       <Footer>
