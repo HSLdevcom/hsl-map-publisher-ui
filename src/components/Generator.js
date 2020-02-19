@@ -153,12 +153,12 @@ const Generator = props => {
             <Checkbox
               label="Vyöhykealueet"
               defaultValueTrue={generatorStore.mapZones}
-              onChange={value => generatorStore.setMapZones()}
+              onChange={() => generatorStore.setMapZones()}
             />
             <Checkbox
               label="Vyöhykesymbolit"
               defaultValueTrue={generatorStore.mapZoneSymbols}
-              onChange={value => generatorStore.setMapZoneSymbols()}
+              onChange={() => generatorStore.setMapZoneSymbols()}
             />
           </div>
         </Column>
@@ -169,12 +169,12 @@ const Generator = props => {
             <Checkbox
               label="Vyöhykealueet"
               defaultValueTrue={generatorStore.minimapZones}
-              onChange={value => generatorStore.setMinimapZones()}
+              onChange={() => generatorStore.setMinimapZones()}
             />
             <Checkbox
               label="Vyöhykesymbolit"
               defaultValueTrue={generatorStore.minimapZoneSymbols}
-              onChange={value => generatorStore.setMinimapZoneSymbols()}
+              onChange={() => generatorStore.setMinimapZoneSymbols()}
             />
           </div>
         </Column>
