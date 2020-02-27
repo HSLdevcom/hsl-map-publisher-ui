@@ -38,6 +38,7 @@ class PromptDialog extends Component {
         actions={[
           <FlatButton onClick={() => this.props.callback({ isCancelled: true })} label="Peruuta" />,
           <FlatButton
+            data-cy="prompt-ok"
             disabled={this.state.isNotValid}
             onClick={() =>
               this.props.callback({
@@ -51,15 +52,15 @@ class PromptDialog extends Component {
         ]}>
         <p>{this.props.message}</p>
         <TextField
+          data-cy="prompt-textfield"
           name={this.props.message}
           value={this.state.value}
           onChange={(event, value) => this.inputOnChange(value)}
           fullWidth
         />
-        {this.state.isNotValid &&
-          this.state.value.length > 0 && (
-            <Message>Nimi ei saa sisältää merkkejä: {BANNED_CHARACTERS}</Message>
-          )}
+        {this.state.isNotValid && this.state.value.length > 0 && (
+          <Message>Nimi ei saa sisältää merkkejä: {BANNED_CHARACTERS}</Message>
+        )}
       </Dialog>
     );
   }

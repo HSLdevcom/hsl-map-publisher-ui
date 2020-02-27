@@ -12,6 +12,7 @@ const TemplateSelect = observer(props => (
     style={{ flexGrow: 1 }}>
     {props.templates.map(template => (
       <MenuItem
+        data-cy={template.label}
         key={`template_option_${template.id}`}
         value={template.id}
         primaryText={template.label}

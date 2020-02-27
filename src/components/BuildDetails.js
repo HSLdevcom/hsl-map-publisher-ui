@@ -96,14 +96,16 @@ const Poster = props => (
     </p>
 
     <p>
-      {props.events.filter(({ message }) => !!message).map(({ createdAt, type, message }) => (
-        <span
-          key={`${createdAt}${type}${message}`}
-          style={type === 'ERROR' ? { color: 'red' } : null}>
-          {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
-          <br />
-        </span>
-      ))}
+      {props.events
+        .filter(({ message }) => !!message)
+        .map(({ createdAt, type, message }) => (
+          <span
+            key={`${createdAt}${type}${message}`}
+            style={type === 'ERROR' ? { color: 'red' } : null}>
+            {moment(createdAt).format('D.M.YYYY HH:mm')} {message}
+            <br />
+          </span>
+        ))}
     </p>
 
     <Buttons>
@@ -157,13 +159,19 @@ class BuildDetails extends Component {
     return (
       <Dialog
         onRequestClose={this.props.onClose}
-        actions={[<FlatButton onClick={this.props.onClose} label="Sulje" />]}
+        actions={[
+          <FlatButton
+            data-cy="build-details-close-button"
+            onClick={this.props.onClose}
+            label="Sulje"
+          />,
+        ]}
         style={{ height: '90vh', width: '90vw' }}
         autoScrollBodyContent
         open>
         <Root>
           <h2>{this.props.title}</h2>
-          <PosterList>
+          <PosterList data-cy={`${this.props.title}-buildDetails`}>
             {this.props.posters.map((poster, index) => (
               <Poster
                 {...poster}

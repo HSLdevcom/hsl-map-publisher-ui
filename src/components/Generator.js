@@ -154,11 +154,13 @@ const Generator = props => {
           onChange={generatorStore.setBuildId}
         />
         <FlatButton
+          data-cy="create-build"
           onClick={() => commonStore.addBuild()}
           label="Uusi lista..."
           style={{ height: 40, marginLeft: 10 }}
         />
         <RaisedButton
+          data-cy="generate-button"
           disabled={stopCount < 1 || !generatorStore.buildId}
           onClick={() => {
             if (commonStore.templateIsDirty) {

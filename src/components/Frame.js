@@ -32,11 +32,10 @@ class Frame extends Component {
 
   render() {
     const { confirm, prompt, selectedBuild } = this.props.commonStore;
-
     return (
       <Root>
         {confirm && <ConfirmDialog {...confirm} />}
-        {prompt && <PromptDialog {...prompt} />}
+        {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
         {selectedBuild && (
           <BuildDetails
             {...selectedBuild}
@@ -45,17 +44,17 @@ class Frame extends Component {
           />
         )}
         <Tabs>
-          <Tab label="Generointi">
+          <Tab data-cy="generate" label="Generointi">
             <TabPane>
               <Generator />
             </TabPane>
           </Tab>
-          <Tab label="Sommittelu">
+          <Tab data-cy="template" label="Sommittelu">
             <TabPane>
               <ConfigureLayout />
             </TabPane>
           </Tab>
-          <Tab label="Tulosteet">
+          <Tab data-cy="list" label="Tulosteet">
             <TabPane>
               <BuildList />
             </TabPane>

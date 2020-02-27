@@ -61,7 +61,9 @@ const Build = props => {
   return (
     <Root>
       <Row>
-        <Title title={props.title}>{props.title}</Title>
+        <Title data-cy={props.title} title={props.title}>
+          {props.title}
+        </Title>
         <div>Luotu: {moment(props.createdAt).format('D.M.YYYY HH:mm')}</div>
       </Row>
 
@@ -84,25 +86,26 @@ const Build = props => {
         </SelectField>
         <Spacer />
         <FlatButton
+          data-cy={`${props.title}-remove`}
           disabled={props.status !== 'OPEN'}
           onClick={() => props.onRemoveBuild()}
           label="Poista"
           style={{ marginLeft: 10 }}
         />
         <FlatButton
+          data-cy={`${props.title}-show`}
           onClick={() => props.onSelect()}
           label="Näytä tiedot"
           style={{ marginLeft: 10 }}
         />
-        {props.pending < 1 &&
-          props.ready > 0 && (
-            <RaisedButton
-              onClick={() => downloadBuild({ id: props.id })}
-              label="Lataa PDF"
-              style={{ marginLeft: 10 }}
-              primary
-            />
-          )}
+        {props.pending < 1 && props.ready > 0 && (
+          <RaisedButton
+            onClick={() => downloadBuild({ id: props.id })}
+            label="Lataa PDF"
+            style={{ marginLeft: 10 }}
+            primary
+          />
+        )}
         {props.pending > 0 && <CircularProgress size={30} style={{ margin: '0 15px' }} />}
       </Buttons>
       <Divider />
