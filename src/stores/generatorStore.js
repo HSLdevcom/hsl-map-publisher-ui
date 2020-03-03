@@ -126,13 +126,10 @@ store.generate = () => {
         store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
       printTimetablesAsGreyscale:
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
-      mapZones: store.timetableAsA4Format || store.timetableAsGreyscale ? null : store.mapZones,
-      mapZoneSymbols:
-        store.timetableAsA4Format || store.timetableAsGreyscale ? null : store.mapZoneSymbols,
-      minimapZones:
-        store.timetableAsA4Format || store.timetableAsGreyscale ? null : store.minimapZones,
-      minimapZoneSymbols:
-        store.timetableAsA4Format || store.timetableAsGreyscale ? null : store.minimapZoneSymbols,
+      mapZones: store.component === 'StopPoster' ? store.mapZones : null,
+      mapZoneSymbols: store.component === 'StopPoster' ? store.mapZones : null,
+      minimapZones: store.component === 'StopPoster' ? store.mapZonesnull : null,
+      minimapZoneSymbols: store.component === 'StopPoster' ? store.mapZones : null,
     }));
 
   store.resetChecked();
