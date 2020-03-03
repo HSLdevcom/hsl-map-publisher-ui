@@ -127,9 +127,9 @@ store.generate = () => {
       printTimetablesAsGreyscale:
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
       mapZones: store.component === 'StopPoster' ? store.mapZones : null,
-      mapZoneSymbols: store.component === 'StopPoster' ? store.mapZones : null,
-      minimapZones: store.component === 'StopPoster' ? store.mapZonesnull : null,
-      minimapZoneSymbols: store.component === 'StopPoster' ? store.mapZones : null,
+      mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
+      minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
+      minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
     }));
 
   store.resetChecked();
