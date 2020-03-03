@@ -28,6 +28,10 @@ const store = observable({
   timetableAsA4Format: true,
   timetableAsGreyscale: false,
   checkedRows: [],
+  mapZones: true,
+  mapZoneSymbols: true,
+  minimapZones: true,
+  minimapZoneSymbols: true,
   get rows() {
     let rows = [];
 
@@ -91,6 +95,22 @@ store.setBuildId = id => {
   store.buildId = id;
 };
 
+store.setMapZones = () => {
+  store.mapZones = !store.mapZones;
+};
+
+store.setMapZoneSymbols = () => {
+  store.mapZoneSymbols = !store.mapZoneSymbols;
+};
+
+store.setMinimapZones = () => {
+  store.minimapZones = !store.minimapZones;
+};
+
+store.setMinimapZoneSymbols = () => {
+  store.minimapZoneSymbols = !store.minimapZoneSymbols;
+};
+
 store.generate = () => {
   const format = date => moment(date).format('YYYY-MM-DD');
   const props = store.rows
@@ -106,6 +126,10 @@ store.generate = () => {
         store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
       printTimetablesAsGreyscale:
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
+      mapZones: store.component === 'StopPoster' ? store.mapZones : null,
+      mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
+      minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
+      minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
     }));
 
   store.resetChecked();
