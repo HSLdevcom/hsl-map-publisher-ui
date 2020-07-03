@@ -12,7 +12,12 @@ const ConfirmDialog = props => (
       props.allowCancel && (
         <FlatButton onClick={() => props.callback({ isCancelled: true })} label="Peruuta" />
       ),
-      <FlatButton onClick={() => props.callback({ isCancelled: false })} label="OK" primary />,
+      <FlatButton
+        data-cy="confirm-ok"
+        onClick={() => props.callback({ isCancelled: false })}
+        label="OK"
+        primary
+      />,
     ]}>
     <p>{props.message}</p>
   </Dialog>

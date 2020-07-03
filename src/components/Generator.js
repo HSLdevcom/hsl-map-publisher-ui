@@ -145,6 +145,41 @@ const Generator = props => {
           showControls={false}
         />
       </Main>
+      {generatorStore.component === 'StopPoster' && (
+        <Row>
+          <Column>
+            <h3>Lähikartta</h3>
+            <div>
+              <Checkbox
+                label="Vyöhykealueet"
+                defaultValueTrue={generatorStore.mapZones}
+                onChange={() => generatorStore.setMapZones()}
+              />
+              <Checkbox
+                label="Vyöhykesymbolit"
+                defaultValueTrue={generatorStore.mapZoneSymbols}
+                onChange={() => generatorStore.setMapZoneSymbols()}
+              />
+            </div>
+          </Column>
+
+          <Column>
+            <h3>Minikartta</h3>
+            <div>
+              <Checkbox
+                label="Vyöhykealueet"
+                defaultValueTrue={generatorStore.minimapZones}
+                onChange={() => generatorStore.setMinimapZones()}
+              />
+              <Checkbox
+                label="Vyöhykesymbolit"
+                defaultValueTrue={generatorStore.minimapZoneSymbols}
+                onChange={() => generatorStore.setMinimapZoneSymbols()}
+              />
+            </div>
+          </Column>
+        </Row>
+      )}
 
       <Heading>Generointi</Heading>
       <Footer>
@@ -154,11 +189,13 @@ const Generator = props => {
           onChange={generatorStore.setBuildId}
         />
         <FlatButton
+          data-cy="create-build"
           onClick={() => commonStore.addBuild()}
           label="Uusi lista..."
           style={{ height: 40, marginLeft: 10 }}
         />
         <RaisedButton
+          data-cy="generate-button"
           disabled={stopCount < 1 || !generatorStore.buildId}
           onClick={() => {
             if (commonStore.templateIsDirty) {

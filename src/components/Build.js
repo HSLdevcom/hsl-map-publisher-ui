@@ -61,7 +61,9 @@ const Build = props => {
   return (
     <Root>
       <Row>
-        <Title title={props.title}>{props.title}</Title>
+        <Title data-cy={props.title} title={props.title}>
+          {props.title}
+        </Title>
         <div>Luotu: {moment(props.createdAt).format('D.M.YYYY HH:mm')}</div>
       </Row>
 
@@ -84,12 +86,14 @@ const Build = props => {
         </SelectField>
         <Spacer />
         <FlatButton
+          data-cy={`${props.title}-remove`}
           disabled={props.status !== 'OPEN'}
           onClick={() => props.onRemoveBuild()}
           label="Poista"
           style={{ marginLeft: 10 }}
         />
         <FlatButton
+          data-cy={`${props.title}-show`}
           onClick={() => props.onSelect()}
           label="Näytä tiedot"
           style={{ marginLeft: 10 }}

@@ -1,0 +1,8 @@
+{
+  "viewportWidth": 800,
+  "viewportHeight": 1100,
+  "baseUrl": "http://localhost:3000",
+  "apiUrl": "http://localhost:4000",
+  "numTestsKeptInMemory": 1,
+  "projectId": "3o6x11"
+}

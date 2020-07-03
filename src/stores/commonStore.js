@@ -102,7 +102,9 @@ store.showPrompt = (message, callback, defaultValue = '') => {
 
 store.showBuild = async id => {
   try {
-    store.selectedBuild = await getBuild({ id });
+    const build = await getBuild({ id });
+    build.posters.sort((a, b) => (a.order > b.order ? 1 : -1));
+    store.selectedBuild = build;
   } catch (error) {
     store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
@@ -197,7 +199,7 @@ store.removeImage = async name => {
     }
     store.getImages();
   };
-  store.showConfirm('Haluatko varmasti poistaa kuvaa?', callback);
+  store.showConfirm('Haluatko varmasti poistaa kuvan?', callback);
 };
 
 store.removeTemplate = async id => {
@@ -214,7 +216,7 @@ store.removeTemplate = async id => {
     }
     store.getTemplates();
   };
-  store.showConfirm('Haluatko varmasti poistaa sommittelua?', callback);
+  store.showConfirm('Haluatko varmasti poistaa sommittelun?', callback);
 };
 
 store.getTemplates = async () => {
