@@ -41,7 +41,8 @@
     "eject": "react-app-rewired eject",
     "lint": "yarn eslint src",
     "serve": "serve build",
-    "prettier": "prettier src/**/* --write"
+    "prettier": "prettier src/**/* --write",
+    "cypress": "run cypress open"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

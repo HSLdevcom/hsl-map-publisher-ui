@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
 
-const { REACT_APP_CLIENT_ID, REACT_APP_REDIRECT_URI } = process.env;
-
 const Root = styled.div`
   position: fixed;
   width: 100%;
@@ -67,8 +65,8 @@ const Logo = styled.img`
   vertical-align: middle;
 `;
 
-const Title = styled.h2`
-  margin-top: 10px 0px 10px 0px;
+const Title = styled.div`
+  padding-top: 15px;
 `;
 
 const LoginIcon = () => (
@@ -93,7 +91,7 @@ const LoginIcon = () => (
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${REACT_APP_CLIENT_ID}&redirect_uri=${REACT_APP_REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
+      `https://hslid-uat.cinfra.fi/openid/auth?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
     );
   };
 

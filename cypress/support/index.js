@@ -1,3 +1,4 @@
+import './commands';
 import 'cypress-commands';
 
 // const fs = require('fs-extra');
