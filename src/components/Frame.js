@@ -42,7 +42,11 @@ class Frame extends Component {
   };
 
   componentDidMount() {
-    const code = new URL(window.location.href).searchParams.get('code');
+    const url = new URL(window.location.href).searchParams;
+    let code = null;
+    if (url) {
+      code = url.get('code');
+    }
 
     checkExistingSession().then(json => {
       if (json && json.isOk && json.email) {
