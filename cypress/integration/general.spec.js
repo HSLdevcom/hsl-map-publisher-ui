@@ -5,6 +5,8 @@ const TEST_PREFIX = 'CY-TEST';
 
 describe('General tests', () => {
   before(() => {
+    cy.hslLogin();
+    cy.wait(3000);
     cy.request('GET', `${API_URL}/builds`)
       .its('body')
       .then(buildArr => {
@@ -21,6 +23,8 @@ describe('General tests', () => {
 
   beforeEach(() => {
     cy.visit('/');
+    cy.hslLogin();
+    cy.wait(3000);
   });
 
   it('Tabs change pages', () => {

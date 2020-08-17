@@ -301,4 +301,10 @@ store.removePoster = async id => {
   store.showConfirm('Haluatko varmasti poistaa julisteen?', callback);
 };
 
+store.setUser = user => {
+  store.user = user;
+};
+
+store.getUser = () => store.user;
+
 export default store;

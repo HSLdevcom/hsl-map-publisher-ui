@@ -10,6 +10,8 @@ import StopList from './StopList';
 import BuildSelect from './BuildSelect';
 import SelectTemplate from './SelectTemplate';
 
+const allowedDomains = process.env.DOMAINS_ALLOWED_TO_GENERATE || 'hsl.fi';
+
 const Root = styled.div`
   display: flex;
   flex-flow: column;
@@ -49,6 +51,9 @@ const Heading = styled.h2`
 
 const Generator = props => {
   const { commonStore, generatorStore } = props;
+  const user = commonStore.getUser();
+  const userDomain = user.split('@')[1];
+  const allowedToGenerate = allowedDomains.split(',').includes(userDomain);
   const stopCount = generatorStore.rows
     .filter(({ rowId }) => generatorStore.checkedRows.includes(rowId))
     .map(({ stopIds }) => stopIds.length)
@@ -196,7 +201,7 @@ const Generator = props => {
         />
         <RaisedButton
           data-cy="generate-button"
-          disabled={stopCount < 1 || !generatorStore.buildId}
+          disabled={(stopCount < 1 || !generatorStore.buildId) && !allowedToGenerate}
           onClick={() => {
             if (commonStore.templateIsDirty) {
               commonStore.showConfirm(

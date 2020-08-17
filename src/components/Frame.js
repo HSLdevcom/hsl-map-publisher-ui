@@ -9,6 +9,10 @@ import BuildDetails from './BuildDetails';
 import Generator from './Generator';
 import BuildList from './BuildList';
 import ConfigureLayout from './ConfigureLayout';
+import Login from './Login';
+import Logout from './Logout';
+import { authorizeUsingCode, checkExistingSession } from '../util/auth/authService';
+import { removeAuthParams } from '../util/urlManager';
 
 const Root = styled.div`
   display: flex;
@@ -26,41 +30,83 @@ const TabPane = styled.div`
 `;
 
 class Frame extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
+
   static propTypes = {
     commonStore: PropTypes.objectOrObservableObject.isRequired,
   };
 
+  componentDidMount() {
+    const url = new URL(window.location.href).searchParams;
+    let code = null;
+    if (url) {
+      code = url.get('code');
+    }
+
+    checkExistingSession().then(json => {
+      if (json && json.isOk && json.email) {
+        this.props.commonStore.setUser(json.email);
+        this.setState({ loading: false });
+      } else {
+        this.props.commonStore.setUser(null);
+        if (code) {
+          removeAuthParams();
+          authorizeUsingCode(code).then(res => {
+            if (res && res.isOk && res.email) this.props.commonStore.setUser(res.email);
+            this.setState({ loading: false });
+          });
+        } else {
+          this.setState({ loading: false });
+        }
+      }
+    });
+  }
+
   render() {
     const { confirm, prompt, selectedBuild } = this.props.commonStore;
+    const user = this.props.commonStore.getUser();
+
     return (
-      <Root>
-        {confirm && <ConfirmDialog {...confirm} />}
-        {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
-        {selectedBuild && (
-          <BuildDetails
-            {...selectedBuild}
-            onRemovePoster={this.props.commonStore.removePoster}
-            onClose={this.props.commonStore.clearBuild}
-          />
+      <div>
+        {this.state.loading && <div>Ladataan...</div>}
+        {!this.state.loading && !user && <Login />}
+        {!this.state.loading && user && (
+          <Root>
+            {confirm && <ConfirmDialog {...confirm} />}
+            {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
+            {selectedBuild && (
+              <BuildDetails
+                {...selectedBuild}
+                onRemovePoster={this.props.commonStore.removePoster}
+                onClose={this.props.commonStore.clearBuild}
+              />
+            )}
+            <Logout />
+            <Tabs>
+              <Tab data-cy="generate" label="Generointi">
+                <TabPane>
+                  <Generator />
+                </TabPane>
+              </Tab>
+              <Tab data-cy="template" label="Sommittelu">
+                <TabPane>
+                  <ConfigureLayout />
+                </TabPane>
+              </Tab>
+              <Tab data-cy="list" label="Tulosteet">
+                <TabPane>
+                  <BuildList />
+                </TabPane>
+              </Tab>
+            </Tabs>
+          </Root>
         )}
-        <Tabs>
-          <Tab data-cy="generate" label="Generointi">
-            <TabPane>
-              <Generator />
-            </TabPane>
-          </Tab>
-          <Tab data-cy="template" label="Sommittelu">
-            <TabPane>
-              <ConfigureLayout />
-            </TabPane>
-          </Tab>
-          <Tab data-cy="list" label="Tulosteet">
-            <TabPane>
-              <BuildList />
-            </TabPane>
-          </Tab>
-        </Tabs>
-      </Root>
+      </div>
     );
   }
 }

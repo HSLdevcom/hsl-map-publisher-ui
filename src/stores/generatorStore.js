@@ -112,6 +112,7 @@ store.setMinimapZoneSymbols = () => {
 };
 
 store.generate = () => {
+  const user = commonStore.getUser();
   const format = date => moment(date).format('YYYY-MM-DD');
   const props = store.rows
     .filter(({ rowId }) => store.checkedRows.includes(rowId))
@@ -130,6 +131,7 @@ store.generate = () => {
       mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
       minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
       minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
+      user,
     }));
 
   store.resetChecked();
