@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject, PropTypes } from 'mobx-react';
 import styled from 'styled-components';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import ConfirmDialog from './ConfirmDialog';
 import PromptDialog from './PromptDialog';
@@ -27,6 +28,11 @@ const Root = styled.div`
 
 const TabPane = styled.div`
   height: calc(100vh - 70px);
+`;
+
+const Loading = styled.div`
+  height: 100vh;
+  width: 100%;
 `;
 
 class Frame extends Component {
@@ -73,7 +79,11 @@ class Frame extends Component {
 
     return (
       <div>
-        {this.state.loading && <div>Ladataan...</div>}
+        {this.state.loading && (
+          <Loading>
+            <CircularProgress size={200} style={{ display: 'block', margin: 'auto', top: '35%' }} />
+          </Loading>
+        )}
         {!this.state.loading && !user && <Login />}
         {!this.state.loading && user && (
           <Root>
