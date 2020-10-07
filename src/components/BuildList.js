@@ -70,15 +70,17 @@ class BuildList extends Component {
             onRemovePoster={id => this.props.commonStore.removePoster(id)}
           />
         ))}
-        <ToggleBuildsContainer>
-          <Row>
-            <FlatButton
-              onClick={() => this.toggleBuilds()}
-              label={this.toggleBuildsLabel(storeBuilds.length)}
-              style={{ marginLeft: 10, color: 'rgb(0, 119, 199)' }}
-            />
-          </Row>
-        </ToggleBuildsContainer>
+        {storeBuilds.length > this.state.maxBuilds && (
+          <ToggleBuildsContainer>
+            <Row>
+              <FlatButton
+                onClick={() => this.toggleBuilds()}
+                label={this.toggleBuildsLabel(storeBuilds.length)}
+                style={{ marginLeft: 10, color: 'rgb(0, 119, 199)' }}
+              />
+            </Row>
+          </ToggleBuildsContainer>
+        )}
       </Root>
     );
   }
