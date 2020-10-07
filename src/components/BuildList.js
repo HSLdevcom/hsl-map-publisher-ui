@@ -10,7 +10,7 @@ const Root = styled.div`
   flex-flow: column;
   flex-basis: 10px;
   max-width: 100%;
-  height: 100%;
+  height: 95%;
   padding: 10px 30px;
   margin: auto;
   box-sizing: border-box;
