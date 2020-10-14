@@ -27,6 +27,7 @@ const sendRequest = async (method, requestBody) => {
     });
     return await response.json();
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(e);
     return { error: e };
   }
@@ -54,6 +55,7 @@ export const checkExistingSession = async () => {
     });
     return await response.json();
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(e);
     return { error: e };
   }
@@ -70,6 +72,7 @@ export const logout = async () => {
     });
     return response;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(e);
     return { error: e };
   }

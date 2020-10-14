@@ -6,7 +6,7 @@ Cypress.Commands.add('hslLogin', () => {
   const HSL_TESTING_HSLID_PASSWORD = process.env.HSL_TESTING_HSLID_PASSWORD || '';
 
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID || '';
-  const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || '';
+  const { CLIENT_SECRET } = require('../../constants');
 
   const authHeader = `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`;
 
