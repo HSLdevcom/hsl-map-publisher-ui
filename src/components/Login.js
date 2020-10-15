@@ -143,7 +143,7 @@ class Login extends Component {
                 {`Nimiavaruus: ${process.env.REACT_APP_NAMESPACE}`}
               </React.Fragment>
             }
-            placement="right-start">
+            placement="right-end">
             <InfoWrapper>
               <InfoIcon />
             </InfoWrapper>
