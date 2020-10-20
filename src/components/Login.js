@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
+import InfoIcon from './icons/InfoIcon';
+import LoginIcon from './icons/LoginIcon';
 
 const Root = styled.div`
   position: fixed;
@@ -16,7 +20,8 @@ const Wrapper = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  padding: 30px 90px;
+  width: 405px;
+  height: 275px;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 14px rgba(0, 0, 0, 0.4);
   border-radius: 2px;
@@ -54,6 +59,17 @@ const LoginButton = styled.span`
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 14px rgba(0, 0, 0, 0.4);
 `;
 
+const LightTooltip = withStyles(theme => ({
+  tooltip: {
+    backgroundColor: '#ffffffe6',
+    color: '#3e3e3e',
+    boxShadow: theme.shadows[1],
+    'font-family': 'Gotham Rounded SSm A, Gotham Rounded SSm B, Arial, Georgia, Serif',
+    'font-weight': 400,
+    fontSize: 11,
+  },
+}))(Tooltip);
+
 const LoginText = styled.span`
   margin-left: 10px;
 `;
@@ -69,24 +85,11 @@ const Title = styled.div`
   padding-top: 15px;
 `;
 
-const LoginIcon = () => (
-  <svg
-    className="line-icon"
-    version="1.1"
-    id="Layer_1"
-    x="0px"
-    y="0px"
-    viewBox="0 0 448 512"
-    height="1em"
-    preserveAspectRatio="xMidYMid meet">
-    <g fill="#3e3e3e">
-      <path
-        d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"
-        id="Fill-1"
-      />
-    </g>
-  </svg>
-);
+const InfoWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
 
 class Login extends Component {
   openLoginForm = () => {
@@ -99,16 +102,27 @@ class Login extends Component {
     return (
       <Root>
         <Wrapper>
+          <LightTooltip
+            title={
+              <React.Fragment>
+                Käytä nimiavaruuteen kirjattua tunnusta. <br />
+                {`Nimiavaruus: ${process.env.REACT_APP_NAMESPACE}`}
+              </React.Fragment>
+            }
+            placement="right-end">
+            <InfoWrapper>
+              <InfoIcon />
+            </InfoWrapper>
+          </LightTooltip>
+
           <Header>
             <Logo src={hslLogo} alt="HSL Logo" />
             <Title>HSL Karttajulkaisin</Title>
           </Header>
-          <p>
-            <LoginButton onClick={this.openLoginForm}>
-              <LoginIcon />
-              <LoginText>Kirjaudu (HSL ID)</LoginText>
-            </LoginButton>
-          </p>
+          <LoginButton onClick={this.openLoginForm}>
+            <LoginIcon />
+            <LoginText>Kirjaudu (HSL ID)</LoginText>
+          </LoginButton>
         </Wrapper>
       </Root>
     );
