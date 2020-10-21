@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  test-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
+        env:
+          CYPRESS_BASE_URL: https://dev.kartat.hsl.fi/julkaisin
+          CYPRESS_HSLID_CLIENT_ID: ${{ secrets.CYPRESS_HSLID_CLIENT_ID }}
+          CYPRESS_HSLID_CLIENT_SECRET: ${{ secrets.CYPRESS_HSLID_CLIENT_SECRET }}
+          CYPRESS_TESTING_HSLID_USERNAME: ${{ secrets.CYPRESS_TESTING_HSLID_USERNAME }}
+          CYPRESS_TESTING_HSLID_PASSWORD: ${{ secrets.CYPRESS_TESTING_HSLID_PASSWORD }}
+      - name: Upload screenshot artifacts
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: Upload video artifacts
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos

@@ -2,11 +2,10 @@ Cypress.Commands.add('hslLogin', () => {
   const AUTH_URI = 'https://hslid-uat.cinfra.fi/openid/token';
   const AUTH_SCOPE = 'email https://oneportal.trivore.com/scope/groups.readonly';
 
-  const HSL_TESTING_HSLID_USERNAME = process.env.HSL_TESTING_HSLID_USERNAME || '';
-  const HSL_TESTING_HSLID_PASSWORD = process.env.HSL_TESTING_HSLID_PASSWORD || '';
-
-  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID || '';
-  const { CLIENT_SECRET } = require('../../constants');
+  const CLIENT_ID = Cypress.env('CYPRESS_HSLID_CLIENT_ID');
+  const CLIENT_SECRET = Cypress.env('CYPRESS_HSLID_CLIENT_SECRET');
+  const HSLID_USERNAME = Cypress.env('CYPRESS_TESTING_HSLID_USERNAME');
+  const HSLID_PASSWORD = Cypress.env('CYPRESS_TESTING_HSLID_PASSWORD');
 
   const authHeader = `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`;
 
@@ -21,8 +20,8 @@ Cypress.Commands.add('hslLogin', () => {
     body: {
       scope: AUTH_SCOPE,
       grant_type: 'password',
-      username: HSL_TESTING_HSLID_USERNAME,
-      password: HSL_TESTING_HSLID_PASSWORD,
+      username: HSLID_USERNAME,
+      password: HSLID_PASSWORD,
     },
   };
 
