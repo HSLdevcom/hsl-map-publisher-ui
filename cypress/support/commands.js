@@ -31,6 +31,9 @@ Cypress.Commands.add('hslLogin', () => {
     expect(response.status).to.eq(200);
     expect(access_token).to.be.ok;
     // testing = QueryParams.testing
-    cy.visit(`/?code=${access_token}`);
+    cy.log('asdasdasda');
+    cy.log(access_token);
+    cy.visit(`/?code=${access_token}&testing=true`);
+    cy.wait(3000);
   });
 });
