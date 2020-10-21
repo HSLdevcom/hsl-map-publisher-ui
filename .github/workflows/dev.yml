@@ -1,6 +1,9 @@
 name: Test
 
 on:
+  push:
+    branches:
+      - 160-github-actions
   pull_request:
     branches:
       - development
