@@ -9,18 +9,6 @@ BUILD_AND_PUSH_BRANCHES=('development', 'stage', 'master')
 if [[ $TRAVIS_BRANCH == "development" ]]; then
   DOCKER_TAG=dev
   BUILD_ENV=dev
-
-  echo "Building cypress test image with env -> dev and tag -> dev"
-
-  DOCKER_IMAGE_CYPRESS=$ORG/publisher-ui-e2e:dev
-  docker build --build-arg BUILD_ENV=dev -t $DOCKER_IMAGE_CYPRESS -f e2e.dockerfile .
-
-  if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then
-    echo "Pushing builded cypress test image to registry with tag -> dev"
-
-    docker login -u $DOCKER_USER -p $DOCKER_AUTH
-    docker push $DOCKER_IMAGE_CYPRESS
-  fi
 fi
 
 if [[ $TRAVIS_BRANCH == "stage" ]]; then
