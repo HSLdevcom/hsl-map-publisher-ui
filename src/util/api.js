@@ -12,6 +12,7 @@ async function createRequest(path, method = 'GET', body) {
       ? {}
       : {
           method,
+          credentials: 'include',
           body: JSON.stringify(body),
         };
 
