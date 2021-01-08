@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
+import TextField from 'material-ui/TextField';
 import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import StopList from './StopList';
@@ -180,6 +181,17 @@ const Generator = props => {
           </Column>
         </Row>
       )}
+
+      <h3>Linjasuodatus</h3>
+      <Row>
+        <TextField
+          data-cy="routeFilterInput"
+          onChange={(event, value) => commonStore.setRouteFilter(value)}
+          value={commonStore.routeFilter}
+          hintText={'Esim. 7*'}
+          fullWidth
+        />
+      </Row>
 
       <Heading>Generointi</Heading>
       <Footer>
