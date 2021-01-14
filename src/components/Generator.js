@@ -188,7 +188,7 @@ const Generator = props => {
           data-cy="routeFilterInput"
           onChange={(event, value) => commonStore.setRouteFilter(value)}
           value={commonStore.routeFilter}
-          hintText={'Esim. 7*'}
+          hintText="Esim. 7*"
           fullWidth
         />
       </Row>
