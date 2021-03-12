@@ -25,6 +25,7 @@ const store = observable({
   builds: [],
   selectedBuild: null,
   stopFilter: '',
+  routeFilter: '',
   templates: [],
   images: [],
   selectedTemplate: null,
@@ -306,5 +307,9 @@ store.setUser = user => {
 };
 
 store.getUser = () => store.user;
+
+store.setRouteFilter = value => {
+  store.routeFilter = value;
+};
 
 export default store;
