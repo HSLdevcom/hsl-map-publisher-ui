@@ -113,6 +113,7 @@ store.setMinimapZoneSymbols = () => {
 
 store.generate = () => {
   const user = commonStore.getUser();
+  const routeFilter = commonStore.routeFilter;
   const format = date => moment(date).format('YYYY-MM-DD');
   const props = store.rows
     .filter(({ rowId }) => store.checkedRows.includes(rowId))
@@ -132,6 +133,7 @@ store.generate = () => {
       minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
       minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
       user,
+      routeFilter,
     }));
 
   store.resetChecked();
