@@ -283,7 +283,6 @@ store.addPosters = async (buildId, component, props) => {
       buildId,
       component,
       props,
-      template: get(store, 'currentTemplate.id', 'default_footer'),
     });
   } catch (error) {
     store.showConfirm(`Julisteen lisääminen epäonnistui: ${error.message}`);
