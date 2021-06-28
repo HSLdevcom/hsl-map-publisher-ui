@@ -133,6 +133,7 @@ store.generate = () => {
         store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
       printTimetablesAsGreyscale:
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
+      template: commonStore.currentTemplate.id,
       selectedRuleTemplates: store.selectedRuleTemplates,
       mapZones: store.component === 'StopPoster' ? store.mapZones : null,
       mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
