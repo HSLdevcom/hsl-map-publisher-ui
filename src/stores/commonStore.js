@@ -35,6 +35,9 @@ const store = observable({
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
     return currentTemplate || templates[0];
   },
+  get ruleTemplates() {
+    return store.templates.filter(t => t.rules !== null);
+  },
   get templateIsDirty() {
     const { currentTemplate } = store;
     const serializedTemplate = store.serializeCurrentTemplate(currentTemplate);
