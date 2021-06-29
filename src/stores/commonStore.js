@@ -47,7 +47,7 @@ const store = observable({
 });
 
 store.serializeCurrentTemplate = (template = store.currentTemplate) => {
-  const pickProps = ['id', 'label', 'areas']; // We only want these props from
+  const pickProps = ['id', 'label', 'areas', 'rules']; // We only want these props from
   // the template.
 
   const currentTemplatePlain = reduce(

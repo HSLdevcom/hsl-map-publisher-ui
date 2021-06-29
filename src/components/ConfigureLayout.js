@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import { observable } from 'mobx';
 import get from 'lodash/get';
 import TemplateArea from './TemplateArea';
+import TemplateRules from './TemplateRules';
 import ArrowDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ImageLibrary from './ImageLibrary';
 import Instructions from './Instructions';
@@ -55,6 +56,7 @@ class ConfigureLayout extends Component {
     library: false,
     instructions: false,
     areas: true,
+    rules: false,
   };
 
   componentDidUpdate() {
@@ -136,6 +138,16 @@ class ConfigureLayout extends Component {
               {currentTemplate.areas.map((area, key) => (
                 <TemplateArea area={area} key={`template_area_${key}`} />
               ))}
+            </SlideDown>
+            <SectionHeading onClick={this.toggle('rules')}>
+              Säännöt{' '}
+              <CollapseButtonArrow
+                open={this.sections.rules}
+                style={{ width: '30px', height: '30px' }}
+              />
+            </SectionHeading>
+            <SlideDown closed={!this.sections.rules}>
+              <TemplateRules rules={currentTemplate.rules} />
             </SlideDown>
           </React.Fragment>
         )}
