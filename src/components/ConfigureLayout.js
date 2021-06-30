@@ -56,7 +56,7 @@ class ConfigureLayout extends Component {
     library: false,
     instructions: false,
     areas: true,
-    rules: false,
+    rules: true,
   };
 
   componentDidUpdate() {
