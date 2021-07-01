@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Chip from 'material-ui/Chip';
-import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
@@ -44,7 +43,7 @@ class TemplateRuleBlock extends Component {
     if (newType !== element.type) {
       element.type = newType;
     }
-    element.value = newType === 'OPER' ? [] : '';
+    element.value = newType === 'OPER' ? [{ type: 'RULE', name: '', value: '' }] : '';
   };
 
   onValueSelectChange = (event, index, value) => {
@@ -60,8 +59,13 @@ class TemplateRuleBlock extends Component {
   };
 
   removeSubElement = index => {
-    this.props.element.value.splice(index, 1);
-  }
+    const { element, deleteElement } = this.props;
+    if (element.value.length === 1) {
+      deleteElement();
+    } else {
+      this.props.element.value.splice(index, 1);
+    }
+  };
 
   renderRuleOption() {
     const { element } = this.props;
@@ -115,7 +119,10 @@ class TemplateRuleBlock extends Component {
       <React.Fragment>
         {element.value.map((subElement, index) => (
           <div key={index}>
-            <TemplateRuleBlock element={subElement} onDelete={() => this.removeSubElement(index)} />
+            <TemplateRuleBlock
+              element={subElement}
+              deleteElement={() => this.removeSubElement(index)}
+            />
           </div>
         ))}
         {element.name !== 'NOT' && (
@@ -128,12 +135,12 @@ class TemplateRuleBlock extends Component {
   }
 
   render() {
-    const { element, onDelete } = this.props;
+    const { element, deleteElement } = this.props;
     return (
       <Chip
         style={styles.chip}
         backgroundColor={element.type === 'RULE' ? '#FFCCCC' : undefined}
-        onRequestDelete={onDelete}>
+        onRequestDelete={deleteElement}>
         <div style={styles.wrapper}>
           <TemplateRuleSelectInput
             value={element.name}
@@ -146,7 +153,7 @@ class TemplateRuleBlock extends Component {
           {element.type === 'RULE' && this.renderRuleOption()}
         </div>
       </Chip>
-    )
+    );
   }
 }
 
@@ -156,7 +163,7 @@ TemplateRuleBlock.propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, mobxPropTypes.arrayOrObservableArray]),
   }).isRequired,
-  onDelete: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func.isRequired,
 };
 
 export default TemplateRuleBlock;
