@@ -78,6 +78,7 @@ class TemplateRuleBlock extends Component {
             defaultValue={element.value}
             onChange={this.onValueTextChange}
             style={{ width: 50 }}
+            errorText={element.value === '' ? <div /> : null}
             onKeyDown={e => e.stopPropagation()}
           />
         );

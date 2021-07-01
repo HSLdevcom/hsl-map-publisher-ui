@@ -20,6 +20,7 @@ const TemplateRuleSelectInput = ({ value, onSelect, width, items }) => (
     style={{ width }}
     labelStyle={styles.selectLabel}
     autoWidth
+    errorText={value === '' ? <div /> : null}
     iconStyle={styles.selectIcon}>
     {items.map((val, index) => (
       <MenuItem value={val} primaryText={val} key={index} />
