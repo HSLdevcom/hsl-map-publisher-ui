@@ -16,6 +16,7 @@ import {
   removeImage,
 } from '../util/api';
 import get from 'lodash/get';
+import { isEmpty } from 'lodash';
 import reduce from 'lodash/reduce';
 
 const store = observable({
@@ -35,6 +36,9 @@ const store = observable({
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
     return currentTemplate || templates[0];
   },
+  get ruleTemplates() {
+    return store.templates.filter(t => !isEmpty(t.rules));
+  },
   get templateIsDirty() {
     const { currentTemplate } = store;
     const serializedTemplate = store.serializeCurrentTemplate(currentTemplate);
@@ -44,7 +48,7 @@ const store = observable({
 });
 
 store.serializeCurrentTemplate = (template = store.currentTemplate) => {
-  const pickProps = ['id', 'label', 'areas']; // We only want these props from
+  const pickProps = ['id', 'label', 'areas', 'rules']; // We only want these props from
   // the template.
 
   const currentTemplatePlain = reduce(
@@ -280,7 +284,6 @@ store.addPosters = async (buildId, component, props) => {
       buildId,
       component,
       props,
-      template: get(store, 'currentTemplate.id', 'default_footer'),
     });
   } catch (error) {
     store.showConfirm(`Julisteen lisääminen epäonnistui: ${error.message}`);
