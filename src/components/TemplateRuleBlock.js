@@ -140,7 +140,7 @@ class TemplateRuleBlock extends Component {
       <Chip
         style={styles.chip}
         backgroundColor={element.type === 'RULE' ? '#FFCCCC' : undefined}
-        onRequestDelete={deleteElement}>
+        onRequestDelete={element.type === 'RULE' ? deleteElement : null}>
         <div style={styles.wrapper}>
           <TemplateRuleSelectInput
             value={element.name}

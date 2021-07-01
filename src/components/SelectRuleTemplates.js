@@ -11,7 +11,7 @@ const SectionHeading = styled.h4`
 `;
 
 
-const MultiSelectTemplate = observer(props => (
+const SelectRuleTemplates = observer(props => (
   <div>
     <SectionHeading>Valitse vaihtoehtoiset sommittelut</SectionHeading>
     <SelectField
@@ -23,7 +23,9 @@ const MultiSelectTemplate = observer(props => (
         <MenuItem
           data-cy={template.label}
           key={`template_option_${template.id}`}
-          checked={props.selectedRuleTemplates && props.selectedRuleTemplates.indexOf(template.id) > -1}
+          checked={
+            props.selectedRuleTemplates && props.selectedRuleTemplates.indexOf(template.id) > -1
+          }
           value={template.id}
           primaryText={template.label}
         />
@@ -32,15 +34,15 @@ const MultiSelectTemplate = observer(props => (
   </div>
 ));
 
-MultiSelectTemplate.defaultProps = {
+SelectRuleTemplates.defaultProps = {
   selectedRuleTemplates: [],
   templates: [],
 };
 
-MultiSelectTemplate.propTypes = {
+SelectRuleTemplates.propTypes = {
   selectedRuleTemplates: mobxPropTypes.arrayOrObservableArray,
   templates: mobxPropTypes.arrayOrObservableArray,
   setSelectedRuleTemplates: PropTypes.func.isRequired,
 };
 
-export default MultiSelectTemplate;
+export default SelectRuleTemplates;

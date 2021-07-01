@@ -147,7 +147,7 @@ class ConfigureLayout extends Component {
               />
             </SectionHeading>
             <SlideDown closed={!this.sections.rules}>
-              <TemplateRules rules={currentTemplate.rules} />
+              <TemplateRules template={currentTemplate} />
             </SlideDown>
           </React.Fragment>
         )}

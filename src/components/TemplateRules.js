@@ -1,39 +1,35 @@
 import React, { Component } from 'react';
-import Chip from 'material-ui/Chip';
 import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
-import SelectField from 'material-ui/SelectField';
-import TextField from 'material-ui/TextField';
-import MenuItem from 'material-ui/MenuItem';
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
-import get from 'lodash/get';
-import { computed, observable, toJS } from 'mobx'; // eslint-disable-line no-unused-vars
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 
 import TemplateRuleBlock from './TemplateRuleBlock';
 
 @observer
 class TemplateRules extends Component {
+  addRules = () => {
+    const { template } = this.props;
+    template.rules = { type: 'RULE', name: '', value: '' };
+  };
+
+  deleteRules = () => {
+    this.props.template.rules = {};
+  };
+
   render() {
-    console.log(this.props)
-    return this.props.rules !== null ? (
+    const { template } = this.props;
+    return !isEmpty(template.rules) ? (
       <div>
-        <TemplateRuleBlock element={this.props.rules} />
+        <TemplateRuleBlock element={template.rules} deleteElement={this.deleteRules} />
       </div>
     ) : (
-      <RaisedButton label="LUO SÄÄNTÖ" />
+      <RaisedButton label="LUO SÄÄNTÖ" onClick={this.addRules} />
     );
   }
 }
 
 TemplateRules.propTypes = {
-  rules: mobxPropTypes.objectOrObservableObject,
-};
-
-TemplateRules.defaultProps = {
-  rules: {},
+  template: mobxPropTypes.observableObject.isRequired,
 };
 
 export default TemplateRules;

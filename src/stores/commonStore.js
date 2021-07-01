@@ -16,6 +16,7 @@ import {
   removeImage,
 } from '../util/api';
 import get from 'lodash/get';
+import { isEmpty } from 'lodash';
 import reduce from 'lodash/reduce';
 
 const store = observable({
@@ -36,7 +37,7 @@ const store = observable({
     return currentTemplate || templates[0];
   },
   get ruleTemplates() {
-    return store.templates.filter(t => t.rules !== null);
+    return store.templates.filter(t => !isEmpty(t.rules));
   },
   get templateIsDirty() {
     const { currentTemplate } = store;
