@@ -18,12 +18,19 @@ class TemplateRules extends Component {
 
   render() {
     const { template } = this.props;
-    return !isEmpty(template.rules) ? (
-      <div>
-        <TemplateRuleBlock element={template.rules} deleteElement={this.deleteRules} />
+    return (
+      <div
+        style={{
+          width: 'max-content',
+          maxWidth: '100%',
+          marginBottom: '20px',
+        }}>
+        {!isEmpty(template.rules) ? (
+          <TemplateRuleBlock element={template.rules} deleteElement={this.deleteRules} />
+        ) : (
+          <RaisedButton label="LUO SÄÄNTÖ" onClick={this.addRules} />
+        )}
       </div>
-    ) : (
-      <RaisedButton label="LUO SÄÄNTÖ" onClick={this.addRules} />
     );
   }
 }
