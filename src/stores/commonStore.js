@@ -18,6 +18,7 @@ import {
 import get from 'lodash/get';
 import { isEmpty } from 'lodash';
 import reduce from 'lodash/reduce';
+import generatorStore from './generatorStore';
 
 const store = observable({
   confirm: null,
@@ -215,6 +216,9 @@ store.removeTemplate = async id => {
       if (store.selectedTemplate === id) {
         store.selectedTemplate = get(store, 'templates[0].id', null);
       }
+      generatorStore.setSelectedRuleTemplates(
+        generatorStore.selectedRuleTemplates.filter(r => r !== id),
+      );
     } catch (error) {
       console.error(error); // eslint-disable-line no-console
       store.showConfirm(`Sommittelun poistaminen epäonnistui: ${error.message}`);
