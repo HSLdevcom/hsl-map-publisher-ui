@@ -77,7 +77,8 @@ class TemplateRuleBlock extends Component {
             name="route-input"
             defaultValue={element.value}
             onChange={this.onValueTextChange}
-            style={{ width: 50 }}
+            style={{ width: 65 }}
+            hintText="JORE-id"
             errorText={element.value === '' ? <div /> : null}
             onKeyDown={e => e.stopPropagation()}
           />

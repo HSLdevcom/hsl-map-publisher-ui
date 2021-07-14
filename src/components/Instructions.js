@@ -143,11 +143,11 @@ export default () => (
     <Paragraph>
       Sääntö luodaan 'LUO SÄÄNTÖ' -painikkeesta. Klikkaa laatikosta, ja valitse pudotusvalikosta
       uusi ehto (ZONE, CITY, MODE ja ROUTE) tai funktio (AND, OR, NOT). Säännölle annetaan ehto
-      pudotusvalikosta tai tekstisyötteen avulla (ROUTE). AND ja OR -funktioille voi lisätä uusia
-      ehtoja + -painikkeesta. Laatikkon reunat kuvaavat, mitkä säännöt kuuluvat mihinkin funktioon.
-      Ehtoja voi poistaa x -painikkeesta. Kun funktion sisältä poistaa viimeisen säännön, koko
-      funktio poistetaan. Kaikki säännöt voi poistaa sommitelusta klikkaamalla kaikki ehtolauseet
-      pois x -painikkeella.
+      pudotusvalikosta tai tekstisyötteen avulla (ROUTE). ROUTE:n arvoksi annetaan linjan JORE-id.
+      AND ja OR -funktioille voi lisätä uusia ehtoja + -painikkeesta. Laatikkon reunat kuvaavat,
+      mitkä säännöt kuuluvat mihinkin funktioon. Ehtoja voi poistaa x -painikkeesta. Kun funktion
+      sisältä poistaa viimeisen säännön, koko funktio poistetaan. Kaikki säännöt voi poistaa
+      sommitelusta klikkaamalla kaikki ehtolauseet pois x -painikkeella.
     </Paragraph>
     <Paragraph>Muista tallentaa sommittelu sääntöjen muokkaamisen jälkeen.</Paragraph>
   </Instructions>

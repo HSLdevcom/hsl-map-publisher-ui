@@ -5,11 +5,9 @@ import styled from 'styled-components';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-
 const SectionHeading = styled.h4`
   margin-bottom: 0;
 `;
-
 
 const SelectRuleTemplates = observer(props => (
   <div>
