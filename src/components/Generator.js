@@ -10,6 +10,7 @@ import Checkbox from './Checkbox';
 import StopList from './StopList';
 import BuildSelect from './BuildSelect';
 import SelectTemplate from './SelectTemplate';
+import SelectRuleTemplates from './SelectRuleTemplates';
 
 const Root = styled.div`
   display: flex;
@@ -146,6 +147,15 @@ const Generator = props => {
           showControls={false}
         />
       </Main>
+
+      <Main>
+        <SelectRuleTemplates
+          selectedRuleTemplates={generatorStore.selectedRuleTemplates}
+          templates={commonStore.ruleTemplates}
+          setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
+        />
+      </Main>
+
       {generatorStore.component === 'StopPoster' && (
         <Row>
           <Column>

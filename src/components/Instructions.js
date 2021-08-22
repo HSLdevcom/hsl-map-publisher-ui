@@ -133,5 +133,22 @@ export default () => (
         SVG tiedostot sommitteluun.
       </li>
     </Ol>
+    <Heading>Säännöt</Heading>
+    <Paragraph>
+      Sommitteluille voi antaa sääntöjä, jolloin kyseisen sommittelun voi antaa vaihtoehtoiseksi
+      sommitteluksi pääsommittelun lisäksi. Jos vaihtoehtoisen sommittelun säännöt toteutuvat,
+      julisteessa käytetään sitä. Muussa tapauksessa käytetään valittua pääsommittelua. Sääntöjä ei
+      käytetä, jos sommittelu on valittu pääsommitteluksi.
+    </Paragraph>
+    <Paragraph>
+      Sääntö luodaan 'LUO SÄÄNTÖ' -painikkeesta. Klikkaa laatikosta, ja valitse pudotusvalikosta
+      uusi ehto (ZONE, CITY, MODE ja ROUTE) tai funktio (AND, OR, NOT). Säännölle annetaan ehto
+      pudotusvalikosta tai tekstisyötteen avulla (ROUTE). ROUTE:n arvoksi annetaan linjan JORE-id.
+      AND ja OR -funktioille voi lisätä uusia ehtoja + -painikkeesta. Laatikkon reunat kuvaavat,
+      mitkä säännöt kuuluvat mihinkin funktioon. Ehtoja voi poistaa x -painikkeesta. Kun funktion
+      sisältä poistaa viimeisen säännön, koko funktio poistetaan. Kaikki säännöt voi poistaa
+      sommitelusta klikkaamalla kaikki ehtolauseet pois x -painikkeella.
+    </Paragraph>
+    <Paragraph>Muista tallentaa sommittelu sääntöjen muokkaamisen jälkeen.</Paragraph>
   </Instructions>
 );

@@ -122,8 +122,8 @@ function removeBuild({ id }) {
   return deleteJson(`builds/${id}`);
 }
 
-function addPosters({ buildId, component, template, props }) {
-  return postJson('posters', { buildId, props, template, component });
+function addPosters({ buildId, component, props }) {
+  return postJson('posters', { buildId, props, component });
 }
 
 function removePoster({ id }) {
