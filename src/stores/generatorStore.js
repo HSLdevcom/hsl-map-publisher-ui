@@ -31,6 +31,7 @@ const store = observable({
   selectedRuleTemplates: [],
   mapZones: true,
   mapZoneSymbols: true,
+  salesPoint: true,
   minimapZones: true,
   minimapZoneSymbols: true,
   get rows() {
@@ -108,6 +109,10 @@ store.setMapZoneSymbols = () => {
   store.mapZoneSymbols = !store.mapZoneSymbols;
 };
 
+store.setSalesPoint = () => {
+  store.salesPoint = !store.salesPoint;
+};
+
 store.setMinimapZones = () => {
   store.minimapZones = !store.minimapZones;
 };
@@ -137,6 +142,7 @@ store.generate = () => {
       selectedRuleTemplates: store.selectedRuleTemplates,
       mapZones: store.component === 'StopPoster' ? store.mapZones : null,
       mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
+      salesPoint: store.component === 'StopPoster' ? store.salesPoint : null,
       minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
       minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
       user,
