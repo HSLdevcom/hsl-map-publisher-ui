@@ -27,3 +27,4 @@ docker run -d -p 3000:3000 hsl-map-publisher-ui
 
 where `$API_URL` is URL to publisher REST API.
  
+Changes for test commit
