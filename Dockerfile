@@ -14,8 +14,8 @@ RUN yarn
 # Bundle app source
 COPY . ${WORK}
 
-ARG BUILD_ENV=production
-COPY .env.${BUILD_ENV} ${WORK}/.env.production
+ARG BUILD_ENV=prod
+COPY .env.${BUILD_ENV} ${WORK}/.env.prod
 
 RUN yarn build
 
