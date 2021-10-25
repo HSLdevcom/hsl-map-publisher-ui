@@ -8,6 +8,7 @@ import commonStore from './commonStore';
 const componentsByLabel = {
   Pysäkkijuliste: 'StopPoster',
   Aikataulu: 'Timetable',
+  PysäkkijulisteA3: 'A3StopPoster',
 };
 
 const rowTypesByLabel = {
@@ -34,6 +35,7 @@ const store = observable({
   salesPoint: true,
   minimapZones: true,
   minimapZoneSymbols: true,
+  legend: true,
   get rows() {
     let rows = [];
 
@@ -121,6 +123,10 @@ store.setMinimapZoneSymbols = () => {
   store.minimapZoneSymbols = !store.minimapZoneSymbols;
 };
 
+store.setLegend = () => {
+  store.legend = !store.legend;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -145,6 +151,7 @@ store.generate = () => {
       salesPoint: store.component === 'StopPoster' ? store.salesPoint : null,
       minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
       minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
+      legend: store.component === 'StopPoster' ? store.legend : null,
       user,
       routeFilter,
     }));
