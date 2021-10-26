@@ -8,6 +8,7 @@ import commonStore from './commonStore';
 const componentsByLabel = {
   Pysäkkijuliste: 'StopPoster',
   Aikataulu: 'Timetable',
+  PysäkkijulisteA3: 'A3StopPoster',
 };
 
 const rowTypesByLabel = {
