@@ -61,7 +61,7 @@ describe('General tests', () => {
 
   it('Filter filters list and selecting values works', () => {
     cy.get('[data-cy=filterInput]')
-      .type('1010109,1010128,1020100')
+      .type('1010107,1010108,1010109')
       .should('have.value', '1010107,1010108,1010109');
 
     cy.get('[data-cy=1010107]').click();
