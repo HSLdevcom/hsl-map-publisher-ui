@@ -62,10 +62,11 @@ describe('General tests', () => {
   it('Filter filters list and selecting values works', () => {
     cy.get('[data-cy=filterInput]')
       .type('1010109,1010128,1020100')
-      .should('have.value', '1010109,1010128,1020100');
+      .should('have.value', '1010107,1010108,1010109');
 
+    cy.get('[data-cy=1010107]').click();
+    cy.get('[data-cy=1010108]').click();
     cy.get('[data-cy=1010109]').click();
-    cy.get('[data-cy=1020100]').click();
   });
 
   it('Create template and remove it', () => {
@@ -166,8 +167,8 @@ describe('General tests', () => {
 
     cy.get('[data-cy=generate]').click();
 
-    cy.get('[data-cy=filterInput]').type('1010128');
-    cy.get('[data-cy=1010128]').click();
+    cy.get('[data-cy=filterInput]').type('1020128');
+    cy.get('[data-cy=1020128]').click();
     cy.get('[data-cy=select-template]').click();
     cy.get(`[data-cy=${templateId}]`).click();
     cy.get('[data-cy=build-select]').click();
