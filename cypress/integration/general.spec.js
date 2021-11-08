@@ -167,8 +167,8 @@ describe('General tests', () => {
 
     cy.get('[data-cy=generate]').click();
 
-    cy.get('[data-cy=filterInput]').type('1020128');
-    cy.get('[data-cy=1020128]').click();
+    cy.get('[data-cy=filterInput]').type('1020131');
+    cy.get('[data-cy=1020131]').click();
     cy.get('[data-cy=select-template]').click();
     cy.get(`[data-cy=${templateId}]`).click();
     cy.get('[data-cy=build-select]').click();
