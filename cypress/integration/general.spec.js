@@ -161,7 +161,7 @@ describe('General tests', () => {
     cy.get('[data-cy=new-template]').click();
     cy.get('[data-cy=prompt-textfield]')
       .click()
-      .type(templateId, { waitForAnimations: false });
+      .type(templateId, { animationDistanceThreshold: 50 });
     cy.get('[data-cy=prompt-ok]').click();
     cy.wait('@postTemplate');
 
