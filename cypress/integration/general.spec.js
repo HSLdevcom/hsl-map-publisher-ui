@@ -159,9 +159,10 @@ describe('General tests', () => {
 
     cy.get('[data-cy=template]').click();
     cy.get('[data-cy=new-template]').click();
+    cy.wait(1000); // Fix for waiting for the animation to complete
     cy.get('[data-cy=prompt-textfield]')
       .click()
-      .type(templateId, { animationDistanceThreshold: 20 });
+      .type(templateId);
     cy.get('[data-cy=prompt-ok]').click();
     cy.wait('@postTemplate');
 
