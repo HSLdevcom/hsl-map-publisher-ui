@@ -107,7 +107,7 @@ describe('General tests', () => {
 
   it('Test name validation for list', () => {
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type('/');
+    cy.get('[data-cy=prompt-textfield]').type('/', { force: true });
     cy.get('[data-cy=prompt-ok]').should('have.disabled');
   });
 
