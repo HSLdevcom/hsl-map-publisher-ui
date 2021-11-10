@@ -152,7 +152,7 @@ describe('General tests', () => {
     cy.route('POST', `${API_URL}/posters`).as('postPoster');
 
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type(buildTitle);
+    cy.get('[data-cy=prompt-textfield]').type(buildTitle, { force: true });
     cy.get('[data-cy=prompt-ok]').click();
 
     cy.wait('@postBuild');
