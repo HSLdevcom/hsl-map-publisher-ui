@@ -78,7 +78,7 @@ describe('General tests', () => {
 
     cy.get('[data-cy=prompt-textfield]')
       .click()
-      .type(uuid);
+      .type(uuid, { force: true });
 
     cy.get('[data-cy=prompt-textfield]').should('have.value', uuid);
     cy.get('[data-cy=prompt-ok]').should('have.enabled');
@@ -118,7 +118,7 @@ describe('General tests', () => {
     cy.route('POST', `${API_URL}/builds`).as('postBuild');
 
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type(uuid);
+    cy.get('[data-cy=prompt-textfield]').type(uuid, { force: true });
     cy.get('[data-cy=prompt-textfield]').should('have.value', uuid);
     cy.get('[data-cy=prompt-ok]').should('have.enabled');
     cy.get('[data-cy=prompt-ok]').click();
