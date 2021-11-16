@@ -61,11 +61,12 @@ describe('General tests', () => {
 
   it('Filter filters list and selecting values works', () => {
     cy.get('[data-cy=filterInput]')
-      .type('1010109,1010128,1020100')
-      .should('have.value', '1010109,1010128,1020100');
+      .type('1010107,1010108,1010109')
+      .should('have.value', '1010107,1010108,1010109');
 
+    cy.get('[data-cy=1010107]').click();
+    cy.get('[data-cy=1010108]').click();
     cy.get('[data-cy=1010109]').click();
-    cy.get('[data-cy=1020100]').click();
   });
 
   it('Create template and remove it', () => {
@@ -77,7 +78,7 @@ describe('General tests', () => {
 
     cy.get('[data-cy=prompt-textfield]')
       .click()
-      .type(uuid);
+      .type(uuid, { force: true });
 
     cy.get('[data-cy=prompt-textfield]').should('have.value', uuid);
     cy.get('[data-cy=prompt-ok]').should('have.enabled');
@@ -106,7 +107,7 @@ describe('General tests', () => {
 
   it('Test name validation for list', () => {
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type('/');
+    cy.get('[data-cy=prompt-textfield]').type('/', { force: true });
     cy.get('[data-cy=prompt-ok]').should('have.disabled');
   });
 
@@ -117,7 +118,7 @@ describe('General tests', () => {
     cy.route('POST', `${API_URL}/builds`).as('postBuild');
 
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type(uuid);
+    cy.get('[data-cy=prompt-textfield]').type(uuid, { force: true });
     cy.get('[data-cy=prompt-textfield]').should('have.value', uuid);
     cy.get('[data-cy=prompt-ok]').should('have.enabled');
     cy.get('[data-cy=prompt-ok]').click();
@@ -151,7 +152,7 @@ describe('General tests', () => {
     cy.route('POST', `${API_URL}/posters`).as('postPoster');
 
     cy.get('[data-cy=create-build]').click();
-    cy.get('[data-cy=prompt-textfield]').type(buildTitle);
+    cy.get('[data-cy=prompt-textfield]').type(buildTitle, { force: true });
     cy.get('[data-cy=prompt-ok]').click();
 
     cy.wait('@postBuild');
@@ -160,14 +161,14 @@ describe('General tests', () => {
     cy.get('[data-cy=new-template]').click();
     cy.get('[data-cy=prompt-textfield]')
       .click()
-      .type(templateId);
+      .type(templateId, { force: true });
     cy.get('[data-cy=prompt-ok]').click();
     cy.wait('@postTemplate');
 
     cy.get('[data-cy=generate]').click();
 
-    cy.get('[data-cy=filterInput]').type('1010128');
-    cy.get('[data-cy=1010128]').click();
+    cy.get('[data-cy=filterInput]').type('1020131');
+    cy.get('[data-cy=1020131]').click();
     cy.get('[data-cy=select-template]').click();
     cy.get(`[data-cy=${templateId}]`).click();
     cy.get('[data-cy=build-select]').click();
