@@ -28,6 +28,7 @@ const store = observable({
   timetableAsA4Format: true,
   timetableAsGreyscale: false,
   checkedRows: [],
+  selectedRuleTemplates: [],
   mapZones: true,
   mapZoneSymbols: true,
   minimapZones: true,
@@ -91,6 +92,10 @@ store.resetChecked = () => {
   store.checkedRows = [];
 };
 
+store.setSelectedRuleTemplates = value => {
+  store.selectedRuleTemplates = value;
+};
+
 store.setBuildId = id => {
   store.buildId = id;
 };
@@ -128,6 +133,8 @@ store.generate = () => {
         store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
       printTimetablesAsGreyscale:
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
+      template: commonStore.currentTemplate.id,
+      selectedRuleTemplates: store.selectedRuleTemplates,
       mapZones: store.component === 'StopPoster' ? store.mapZones : null,
       mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
       minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
