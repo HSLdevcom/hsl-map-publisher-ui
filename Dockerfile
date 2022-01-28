@@ -8,7 +8,7 @@ WORKDIR ${WORK}
 
 # Install app dependencies
 COPY package.json yarn.lock ${WORK}/
-RUN yarn && yarn cache clean
+RUN yarn
 
 # Bundle app source
 COPY . ${WORK}
@@ -18,19 +18,6 @@ COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
 RUN yarn build
 
-FROM node:12-alpine
-
-ENV WORK /opt/publisher
-
-# Create app directory
-RUN mkdir -p ${WORK}
-WORKDIR ${WORK}
-
-# Install serve from app dependencies
-COPY package.json yarn.lock ${WORK}/
-RUN npm install serve --no-save
-
-# Copy builded files from builder
-COPY --from=builder /opt/publisher/build build/
-
-CMD npm run serve
+# Copy builded files from builder to nginx
+FROM nginx:1.21-alpine
+COPY --from=builder /opt/publisher/build /usr/share/nginx/html
