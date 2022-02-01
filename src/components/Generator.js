@@ -90,6 +90,7 @@ const Generator = props => {
             valuesByLabel={generatorStore.rowTypesByLabel}
             valueSelected={generatorStore.rowType}
             onChange={value => generatorStore.setRowType(value)}
+            disabled={generatorStore.component === 'TerminalPoster'}
           />
         </Column>
 

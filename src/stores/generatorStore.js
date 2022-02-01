@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import moment from 'moment';
 
-import { stopsToRows, stopsToGroupRows, getVisibleRows } from '../util/stops';
+import { stopsToRows, stopsToGroupRows, stopsToTerminalRows, getVisibleRows } from '../util/stops';
 
 import commonStore from './commonStore';
 
@@ -9,11 +9,13 @@ const componentsByLabel = {
   Pysäkkijuliste: 'StopPoster',
   Aikataulu: 'Timetable',
   PysäkkijulisteA3: 'A3StopPoster',
+  Terminaalijuliste: 'TerminalPoster',
 };
 
 const rowTypesByLabel = {
   Pysäkit: 'stop',
   Ajolistat: 'group',
+  Terminaalit: 'terminal',
 };
 
 const store = observable({
@@ -37,11 +39,17 @@ const store = observable({
   minimapZoneSymbols: true,
   get rows() {
     let rows = [];
-
-    if (store.rowType === 'stop') {
-      rows = stopsToRows(commonStore.stops);
-    } else {
-      rows = stopsToGroupRows(commonStore.stops);
+    switch (store.rowType) {
+      case 'stop':
+        rows = stopsToRows(commonStore.stops);
+        break;
+      case 'group':
+        rows = stopsToGroupRows(commonStore.stops);
+        break;
+      case 'terminal':
+        rows = stopsToTerminalRows(commonStore.stops);
+        break;
+      default:
     }
 
     return getVisibleRows(rows, commonStore.stopFilter);
@@ -50,6 +58,9 @@ const store = observable({
 
 store.setComponent = value => {
   store.component = value;
+  if (value === 'TerminalPoster') {
+    store.rowType = 'terminal';
+  }
 };
 
 store.setTimetableA4Format = value => {

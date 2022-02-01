@@ -14,15 +14,21 @@ const RadioGroup = props => (
         label={label}
         value={props.valuesByLabel[label]}
         style={{ marginBottom: 10 }}
+        disabled={props.disabled}
       />
     ))}
   </RadioButtonGroup>
 );
 
+RadioGroup.defaultProps = {
+  disabled: false,
+};
+
 RadioGroup.propTypes = {
   valuesByLabel: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   valueSelected: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
   onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
 
 export default RadioGroup;
