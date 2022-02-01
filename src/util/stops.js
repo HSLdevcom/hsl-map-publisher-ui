@@ -110,6 +110,20 @@ function stopsToGroupRows(stops) {
   });
 }
 
+function stopsToTerminalRows(stops) {
+  const terminalStops = stops.filter(s => s.terminalByTerminalId !== null );
+  const grouped = groupBy(terminalStops, 'terminalByTerminalId.terminalId')
+  return flatMap(Object.keys(grouped), terminalName => {
+    const stopIds = grouped[terminalName].map(({ stopId }) => stopId);
+    return {
+      rowId: terminalName,
+      title: grouped[terminalName][0].terminalByTerminalId.nameFi,
+      subtitle: `(${terminalName}) ${stopsText(grouped[terminalName])}`,
+      stopIds,
+    };
+  });
+}
+
 function getFilterKeywords(filterValue = '') {
   return filterValue
     .split(',')
@@ -135,4 +149,4 @@ function getVisibleRows(rows, filterValue) {
   );
 }
 
-export { stopsToRows, stopsToGroupRows, getVisibleRows, getFilterKeywords };
+export { stopsToRows, stopsToGroupRows, stopsToTerminalRows, getVisibleRows, getFilterKeywords };
