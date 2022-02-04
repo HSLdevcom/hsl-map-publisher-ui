@@ -27,11 +27,12 @@ function posterCountText(posterCount) {
   return `${posterCount} julistepaikka${posterCount !== 1 ? 'a' : ''}`;
 }
 
-function stopsText(stops) {
+function stopsText(stops, showPosterCount) {
   const shortIds = stops.map(({ shortId }) => shortId).sort();
   const shortIdDesc = `${shortIds[0]} - ${shortIds[shortIds.length - 1]}`;
-  const shelterDesc = posterCountText(stops[0].posterCount);
-  return `${shortIdDesc} (${stops.length} pysäkkiä) - ${shelterDesc}`;
+  return showPosterCount
+    ? `${shortIdDesc} (${stops.length} pysäkkiä) - ${posterCountText(stops[0].posterCount)}`
+    : `${shortIdDesc} (${stops.length} pysäkkiä)`;
 }
 
 function groupKey(shortId) {
@@ -103,7 +104,7 @@ function stopsToGroupRows(stops) {
       return {
         rowId: groupName + stopIds[0],
         title: groupName,
-        subtitle: stopsText(stopsInGroup),
+        subtitle: stopsText(stopsInGroup, true),
         stopIds,
       };
     });
@@ -111,14 +112,14 @@ function stopsToGroupRows(stops) {
 }
 
 function stopsToTerminalRows(stops) {
-  const terminalStops = stops.filter(s => s.terminalByTerminalId !== null );
-  const grouped = groupBy(terminalStops, 'terminalByTerminalId.terminalId')
+  const terminalStops = stops.filter(s => s.terminalByTerminalId !== null);
+  const grouped = groupBy(terminalStops, 'terminalByTerminalId.terminalId');
   return flatMap(Object.keys(grouped), terminalName => {
     const stopIds = grouped[terminalName].map(({ stopId }) => stopId);
     return {
       rowId: terminalName,
       title: grouped[terminalName][0].terminalByTerminalId.nameFi,
-      subtitle: `(${terminalName}) ${stopsText(grouped[terminalName])}`,
+      subtitle: `(${terminalName}) ${stopsText(grouped[terminalName], false)}`,
       stopIds,
     };
   });

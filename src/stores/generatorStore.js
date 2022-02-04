@@ -12,6 +12,8 @@ const componentsByLabel = {
   Terminaalijuliste: 'TerminalPoster',
 };
 
+export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
+
 const rowTypesByLabel = {
   Pysäkit: 'stop',
   Ajolistat: 'group',
@@ -139,9 +141,14 @@ store.generate = () => {
   const format = date => moment(date).format('YYYY-MM-DD');
   const props = store.rows
     .filter(({ rowId }) => store.checkedRows.includes(rowId))
-    .reduce((prev, { stopIds }) => [...prev, ...stopIds], [])
+    .reduce(
+      (prev, { rowId, stopIds }) =>
+        store.component !== 'TerminalPoster' ? [...prev, ...stopIds] : [...prev, rowId],
+      [],
+    )
     .map(stopId => ({
-      stopId,
+      stopId: store.component !== 'TerminalPoster' ? stopId : null,
+      terminalId: store.component === 'TerminalPoster' ? stopId : null, // Stop id is terminal id if terminalcomponent will be rendered.
       date: format(store.date),
       isSummerTimetable: store.isSummerTimetable,
       dateBegin: store.dateBegin ? format(store.dateBegin) : null,
@@ -152,11 +159,15 @@ store.generate = () => {
         store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
       template: commonStore.currentTemplate.id,
       selectedRuleTemplates: store.selectedRuleTemplates,
-      mapZones: store.component === 'StopPoster' ? store.mapZones : null,
-      mapZoneSymbols: store.component === 'StopPoster' ? store.mapZoneSymbols : null,
-      salesPoint: store.component === 'StopPoster' ? store.salesPoint : null,
-      minimapZones: store.component === 'StopPoster' ? store.minimapZones : null,
-      minimapZoneSymbols: store.component === 'StopPoster' ? store.minimapZoneSymbols : null,
+      mapZones: componentsWithMapOptions.includes(store.component) ? store.mapZones : null,
+      mapZoneSymbols: componentsWithMapOptions.includes(store.component)
+        ? store.mapZoneSymbols
+        : null,
+      salesPoint: componentsWithMapOptions.includes(store.component) ? store.salesPoint : null,
+      minimapZones: componentsWithMapOptions.includes(store.component) ? store.minimapZones : null,
+      minimapZoneSymbols: componentsWithMapOptions.includes(store.component)
+        ? store.minimapZoneSymbols
+        : null,
       user,
       routeFilter,
     }));

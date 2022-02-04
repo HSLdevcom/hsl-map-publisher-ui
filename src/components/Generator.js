@@ -11,6 +11,7 @@ import StopList from './StopList';
 import BuildSelect from './BuildSelect';
 import SelectTemplate from './SelectTemplate';
 import SelectRuleTemplates from './SelectRuleTemplates';
+import { componentsWithMapOptions } from '../stores/generatorStore';
 
 const Root = styled.div`
   display: flex;
@@ -53,7 +54,8 @@ const Generator = props => {
   const { commonStore, generatorStore } = props;
   const stopCount = generatorStore.rows
     .filter(({ rowId }) => generatorStore.checkedRows.includes(rowId))
-    .map(({ stopIds }) => stopIds.length)
+    // For TerminalPoster one terminal means one poster, otherwise use the amount of stops
+    .map(({ stopIds }) => (generatorStore.component === 'TerminalPoster' ? 1 : stopIds.length))
     .reduce((prev, cur) => prev + cur, 0);
 
   return (
@@ -157,7 +159,7 @@ const Generator = props => {
         />
       </Main>
 
-      {generatorStore.component === 'StopPoster' && (
+      {componentsWithMapOptions.includes(generatorStore.component) && (
         <Row>
           <Column>
             <h3>Lähikartta</h3>
