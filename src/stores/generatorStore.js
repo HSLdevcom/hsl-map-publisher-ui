@@ -147,8 +147,7 @@ store.generate = () => {
       [],
     )
     .map(stopId => ({
-      stopId: store.component !== 'TerminalPoster' ? stopId : null,
-      terminalId: store.component === 'TerminalPoster' ? stopId : null, // Stop id is terminal id if terminalcomponent will be rendered.
+      stopId,
       date: format(store.date),
       isSummerTimetable: store.isSummerTimetable,
       dateBegin: store.dateBegin ? format(store.dateBegin) : null,

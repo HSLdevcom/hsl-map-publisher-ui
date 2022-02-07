@@ -151,13 +151,15 @@ const Generator = props => {
         />
       </Main>
 
-      <Main>
-        <SelectRuleTemplates
-          selectedRuleTemplates={generatorStore.selectedRuleTemplates}
-          templates={commonStore.ruleTemplates}
-          setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
-        />
-      </Main>
+      {generatorStore.component !== 'TerminalPoster' && (
+        <Main>
+          <SelectRuleTemplates
+            selectedRuleTemplates={generatorStore.selectedRuleTemplates}
+            templates={commonStore.ruleTemplates}
+            setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
+          />
+        </Main>
+      )}
 
       {componentsWithMapOptions.includes(generatorStore.component) && (
         <Row>
