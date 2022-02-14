@@ -25,6 +25,7 @@ const store = observable({
   rowTypesByLabel,
   component: 'StopPoster',
   rowType: 'stop',
+  terminalId: '',
   date: new Date(),
   dateBegin: null,
   dateEnd: null,
@@ -63,7 +64,7 @@ const store = observable({
 store.setComponent = value => {
   store.component = value;
   if (value === 'TerminalPoster') {
-    store.rowType = 'terminal';
+    store.rowType = 'stop';
   }
 };
 
@@ -77,6 +78,12 @@ store.setTimetableGreyscale = value => {
 
 store.setRowType = value => {
   store.rowType = value;
+};
+
+store.setTerminalId = value => {
+  store.terminalId = value;
+  store.checkedRows = commonStore.terminals.find(t => t.terminalId === value).stops;
+  commonStore.setShowOnlyCheckedStops(true);
 };
 
 store.setDate = value => {
@@ -141,37 +148,41 @@ store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
   const format = date => moment(date).format('YYYY-MM-DD');
-  const props = store.rows
+
+  const stops = store.rows
     .filter(({ rowId }) => store.checkedRows.includes(rowId))
-    .reduce(
-      (prev, { rowId, stopIds }) =>
-        store.component !== 'TerminalPoster' ? [...prev, ...stopIds] : [...prev, rowId],
-      [],
-    )
-    .map(stopId => ({
-      stopId,
-      date: format(store.date),
-      isSummerTimetable: store.isSummerTimetable,
-      dateBegin: store.dateBegin ? format(store.dateBegin) : null,
-      dateEnd: store.dateEnd ? format(store.dateEnd) : null,
-      printTimetablesAsA4:
-        store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
-      printTimetablesAsGreyscale:
-        store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
-      template: commonStore.currentTemplate.id,
-      selectedRuleTemplates: store.selectedRuleTemplates,
-      mapZones: componentsWithMapOptions.includes(store.component) ? store.mapZones : null,
-      mapZoneSymbols: componentsWithMapOptions.includes(store.component)
-        ? store.mapZoneSymbols
-        : null,
-      salesPoint: componentsWithMapOptions.includes(store.component) ? store.salesPoint : null,
-      minimapZones: componentsWithMapOptions.includes(store.component) ? store.minimapZones : null,
-      minimapZoneSymbols: componentsWithMapOptions.includes(store.component)
-        ? store.minimapZoneSymbols
-        : null,
-      user,
-      routeFilter,
-    }));
+    .reduce((prev, { stopIds }) => [...prev, ...stopIds], []);
+
+  const propsTemplate = (id, selectedStops = null) => ({
+    stopId: id,
+    selectedStops: selectedStops.join(','),
+    date: format(store.date),
+    isSummerTimetable: store.isSummerTimetable,
+    dateBegin: store.dateBegin ? format(store.dateBegin) : null,
+    dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+    printTimetablesAsA4:
+      store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
+    printTimetablesAsGreyscale:
+      store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
+    template: commonStore.currentTemplate.id,
+    selectedRuleTemplates: store.selectedRuleTemplates,
+    mapZones: componentsWithMapOptions.includes(store.component) ? store.mapZones : null,
+    mapZoneSymbols: componentsWithMapOptions.includes(store.component)
+      ? store.mapZoneSymbols
+      : null,
+    salesPoint: componentsWithMapOptions.includes(store.component) ? store.salesPoint : null,
+    minimapZones: componentsWithMapOptions.includes(store.component) ? store.minimapZones : null,
+    minimapZoneSymbols: componentsWithMapOptions.includes(store.component)
+      ? store.minimapZoneSymbols
+      : null,
+    user,
+    routeFilter,
+  });
+
+  const props =
+    store.component !== 'TerminalPoster'
+      ? stops.map(stopId => propsTemplate(stopId))
+      : [propsTemplate(store.terminalId, stops)];
 
   store.resetChecked();
   commonStore.addPosters(store.buildId, store.component, props);

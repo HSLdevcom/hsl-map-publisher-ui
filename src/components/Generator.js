@@ -12,6 +12,7 @@ import BuildSelect from './BuildSelect';
 import SelectTemplate from './SelectTemplate';
 import SelectRuleTemplates from './SelectRuleTemplates';
 import { componentsWithMapOptions } from '../stores/generatorStore';
+import TerminalSelect from './TerminalSelect';
 
 const Root = styled.div`
   display: flex;
@@ -138,6 +139,16 @@ const Generator = props => {
         </Column>
       </Row>
 
+      {generatorStore.component === 'TerminalPoster' && (
+        <Main>
+          <TerminalSelect
+            selectedTerminal={generatorStore.terminalId}
+            terminals={commonStore.terminals}
+            onChange={generatorStore.setTerminalId}
+          />
+        </Main>
+      )}
+
       <Main>
         <StopList onCheck={generatorStore.setChecked} onReset={generatorStore.resetChecked} />
       </Main>
@@ -239,7 +250,7 @@ const Generator = props => {
               generatorStore.generate();
             }
           }}
-          label={`Generoi (${stopCount})`}
+          label={`Generoi (${generatorStore.component !== 'TerminalPoster' ? stopCount : 1})`}
           style={{ height: 40, marginLeft: 10 }}
           primary
         />

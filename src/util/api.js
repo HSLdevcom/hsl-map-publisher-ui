@@ -43,7 +43,6 @@ async function deleteJson(path) {
 }
 
 async function getStops() {
-  // This is so far the only place that uses graphql.
   const link = new HttpLink({ uri: JORE_API_URL });
 
   const operation = {
@@ -80,6 +79,38 @@ async function getStops() {
   }
 
   return get(stopData, 'data.allStops.nodes', []);
+}
+
+async function getTerminals() {
+  const link = new HttpLink({ uri: JORE_API_URL });
+
+  const operation = {
+    query: gql`
+      {
+        allTerminals {
+          nodes {
+            terminalId
+            nameFi
+            stops: stopsByTerminalId {
+              nodes {
+                stopId
+              }
+            }
+          }
+        }
+      }
+    `,
+  };
+
+  let terminalData;
+
+  try {
+    terminalData = await makePromise(execute(link, operation));
+  } catch (err) {
+    throw new Error(err.message);
+  }
+
+  return get(terminalData, 'data.allTerminals.nodes', []);
 }
 
 function getBuilds() {
@@ -148,6 +179,7 @@ function downloadBuildSection({ id, first, last }) {
 
 export {
   getStops,
+  getTerminals,
   getBuilds,
   getImages,
   removeImage,
