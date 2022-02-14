@@ -53,8 +53,10 @@ const store = observable({
         break;
       default:
     }
-
-    return getVisibleRows(rows, commonStore.stopFilter);
+    const filteredRows = getVisibleRows(rows, commonStore.stopFilter);
+    return commonStore.showOnlyCheckedStops
+      ? filteredRows.filter(f => store.checkedRows.includes(f.rowId))
+      : filteredRows;
   },
 });
 
