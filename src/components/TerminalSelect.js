@@ -23,6 +23,7 @@ const TerminalSelect = observer(props => (
     <SectionHeading>Terminaali</SectionHeading>
     <SelectDiv>
       <SelectField
+        hintText="Valitse terminaali..."
         value={props.selectedTerminal}
         onChange={(e, i, value) => props.onChange(value)}
         style={{ flexGrow: 1 }}>

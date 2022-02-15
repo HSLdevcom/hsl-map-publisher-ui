@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import moment from 'moment';
 
-import { stopsToRows, stopsToGroupRows, stopsToTerminalRows, getVisibleRows } from '../util/stops';
+import { stopsToRows, stopsToGroupRows, getVisibleRows } from '../util/stops';
 
 import commonStore from './commonStore';
 
@@ -17,7 +17,6 @@ export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
 const rowTypesByLabel = {
   Pysäkit: 'stop',
   Ajolistat: 'group',
-  Terminaalit: 'terminal',
 };
 
 const store = observable({
@@ -42,17 +41,11 @@ const store = observable({
   minimapZoneSymbols: true,
   get rows() {
     let rows = [];
-    switch (store.rowType) {
-      case 'stop':
-        rows = stopsToRows(commonStore.stops);
-        break;
-      case 'group':
-        rows = stopsToGroupRows(commonStore.stops);
-        break;
-      case 'terminal':
-        rows = stopsToTerminalRows(commonStore.stops);
-        break;
-      default:
+
+    if (store.rowType === 'stop') {
+      rows = stopsToRows(commonStore.stops);
+    } else {
+      rows = stopsToGroupRows(commonStore.stops);
     }
     const filteredRows = getVisibleRows(rows, commonStore.stopFilter);
     return commonStore.showOnlyCheckedStops
@@ -82,8 +75,8 @@ store.setRowType = value => {
 
 store.setTerminalId = value => {
   store.terminalId = value;
-  store.checkedRows = commonStore.terminals.find(t => t.terminalId === value).stops;
-  commonStore.setShowOnlyCheckedStops(true);
+  store.checkedRows = commonStore.terminals.find(t => t.terminalId === value).stops; // Pre-select the corresponding stops
+  commonStore.setShowOnlyCheckedStops(true); // Also hide another stops from the list.
 };
 
 store.setDate = value => {

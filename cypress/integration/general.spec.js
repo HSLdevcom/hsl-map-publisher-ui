@@ -50,10 +50,6 @@ describe('General tests', () => {
       .click()
       .should('have.value', 'group');
 
-    cy.get('[data-cy=Terminaalit]')
-      .click()
-      .should('have.value', 'terminal');
-
     cy.get('[data-cy=Pysäkit]')
       .click()
       .should('have.value', 'stop');

@@ -60,10 +60,6 @@ async function getStops() {
             distributionOrder
             stopZone
             stopTariff
-            terminalByTerminalId {
-              terminalId
-              nameFi
-            }
           }
         }
       }

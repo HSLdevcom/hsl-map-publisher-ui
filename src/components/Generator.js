@@ -239,7 +239,11 @@ const Generator = props => {
         />
         <RaisedButton
           data-cy="generate-button"
-          disabled={stopCount < 1 || !generatorStore.buildId}
+          disabled={
+            stopCount < 1 ||
+            !generatorStore.buildId ||
+            (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '')
+          }
           onClick={() => {
             if (commonStore.templateIsDirty) {
               commonStore.showConfirm(

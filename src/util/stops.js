@@ -27,12 +27,11 @@ function posterCountText(posterCount) {
   return `${posterCount} julistepaikka${posterCount !== 1 ? 'a' : ''}`;
 }
 
-function stopsText(stops, showPosterCount) {
+function stopsText(stops) {
   const shortIds = stops.map(({ shortId }) => shortId).sort();
   const shortIdDesc = `${shortIds[0]} - ${shortIds[shortIds.length - 1]}`;
-  return showPosterCount
-    ? `${shortIdDesc} (${stops.length} pysäkkiä) - ${posterCountText(stops[0].posterCount)}`
-    : `${shortIdDesc} (${stops.length} pysäkkiä)`;
+  const shelterDesc = posterCountText(stops[0].posterCount);
+  return `${shortIdDesc} (${stops.length} pysäkkiä) - ${shelterDesc}`;
 }
 
 function groupKey(shortId) {
@@ -104,24 +103,10 @@ function stopsToGroupRows(stops) {
       return {
         rowId: groupName + stopIds[0],
         title: groupName,
-        subtitle: stopsText(stopsInGroup, true),
+        subtitle: stopsText(stopsInGroup),
         stopIds,
       };
     });
-  });
-}
-
-function stopsToTerminalRows(stops) {
-  const terminalStops = stops.filter(s => s.terminalByTerminalId !== null);
-  const grouped = groupBy(terminalStops, 'terminalByTerminalId.terminalId');
-  return flatMap(Object.keys(grouped), terminalName => {
-    const stopIds = grouped[terminalName].map(({ stopId }) => stopId);
-    return {
-      rowId: terminalName,
-      title: grouped[terminalName][0].terminalByTerminalId.nameFi,
-      subtitle: `(${terminalName}) ${stopsText(grouped[terminalName], false)}`,
-      stopIds,
-    };
   });
 }
 
@@ -150,4 +135,4 @@ function getVisibleRows(rows, filterValue) {
   );
 }
 
-export { stopsToRows, stopsToGroupRows, stopsToTerminalRows, getVisibleRows, getFilterKeywords };
+export { stopsToRows, stopsToGroupRows, getVisibleRows, getFilterKeywords };

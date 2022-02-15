@@ -111,7 +111,10 @@ function StopList(props) {
           label="Valitse kaikki"
         />
         <FlatButton
-          onClick={() => setShowOnlyCheckedStops(!showOnlyCheckedStops)}
+          onClick={() => {
+            setShowOnlyCheckedStops(!showOnlyCheckedStops);
+            setStopFilter('');
+          }}
           label={!showOnlyCheckedStops ? 'Näytä valitut' : 'Näytä kaikki'}
         />
       </Row>
