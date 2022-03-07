@@ -148,7 +148,7 @@ store.generate = () => {
 
   const propsTemplate = (id, selectedStops = null) => ({
     stopId: id,
-    selectedStops: selectedStops.join(','),
+    selectedStops: selectedStops && selectedStops.join(','),
     date: format(store.date),
     isSummerTimetable: store.isSummerTimetable,
     dateBegin: store.dateBegin ? format(store.dateBegin) : null,
