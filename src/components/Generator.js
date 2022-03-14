@@ -171,6 +171,11 @@ const Generator = props => {
                 defaultValueTrue={generatorStore.mapZoneSymbols}
                 onChange={() => generatorStore.setMapZoneSymbols()}
               />
+              <Checkbox
+                label="Lähin myyntipiste"
+                defaultValueTrue={generatorStore.salesPoint}
+                onChange={() => generatorStore.setSalesPoint()}
+              />
             </div>
           </Column>
 
