@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12-alpine as builder
 
 ENV WORK /opt/publisher
 
@@ -7,16 +7,17 @@ RUN mkdir -p ${WORK}
 WORKDIR ${WORK}
 
 # Install app dependencies
-COPY yarn.lock ${WORK}
-COPY package.json ${WORK}
+COPY package.json yarn.lock ${WORK}/
 RUN yarn
 
 # Bundle app source
 COPY . ${WORK}
 
-ARG BUILD_ENV=production
+ARG BUILD_ENV=prod
 COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
 RUN yarn build
 
-CMD yarn run serve
+# Copy builded files from builder to nginx
+FROM nginx:1.21-alpine
+COPY --from=builder /opt/publisher/build /usr/share/nginx/html
