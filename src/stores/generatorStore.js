@@ -75,8 +75,13 @@ store.setRowType = value => {
 
 store.setTerminalId = value => {
   store.terminalId = value;
-  store.checkedRows = commonStore.terminals.find(t => t.terminalId === value).stops; // Pre-select the corresponding stops
-  commonStore.setShowOnlyCheckedStops(true); // Also hide another stops from the list.
+  if (value) {
+    store.checkedRows = commonStore.terminals.find(t => t.terminalId === value).stops; // Pre-select the corresponding stops
+    commonStore.setShowOnlyCheckedStops(true); // Also hide another stops from the list.
+  } else {
+    store.checkedRows = [];
+    commonStore.setShowOnlyCheckedStops(false);
+  }
 };
 
 store.setDate = value => {

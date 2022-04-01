@@ -3,42 +3,35 @@ import PropTypes from 'prop-types';
 import { observer, PropTypes as mobxPropTypes } from 'mobx-react';
 
 import styled from 'styled-components';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from 'react-select';
 
 const SectionHeading = styled.h4`
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
 `;
 
-const SelectDiv = styled.div`
-  display: flex;
-  padding: 0 0 0.5rem 0;
-  > * {
-    flex: none;
-  }
-`;
+const TerminalSelect = props => {
+  const mappedTerminals = props.terminals.map(t => ({
+    option: t.terminalId,
+    label: `${t.nameFi} (${t.terminalId})`,
+  }));
 
-const TerminalSelect = observer(props => (
-  <div>
-    <SectionHeading>Terminaali</SectionHeading>
-    <SelectDiv>
-      <SelectField
-        hintText="Valitse terminaali..."
-        value={props.selectedTerminal}
-        onChange={(e, i, value) => props.onChange(value)}
-        style={{ flexGrow: 1 }}>
-        {props.terminals.map(terminal => (
-          <MenuItem
-            data-cy={terminal.terminalId}
-            key={`template_option_${terminal.terminalId}`}
-            value={terminal.terminalId}
-            primaryText={`${terminal.nameFi} (${terminal.terminalId})`}
-          />
-        ))}
-      </SelectField>
-    </SelectDiv>
-  </div>
-));
+  const selected = mappedTerminals.find(t => t.option === props.selectedTerminal);
+
+  return (
+    <div>
+      <SectionHeading>Terminaali</SectionHeading>
+      <Select
+        placeholder="Valitse terminaali..."
+        noOptionsMessage={() => 'Haulla ei löydy terminaalia.'}
+        options={mappedTerminals}
+        defaultValue={selected}
+        onChange={value => (value ? props.onChange(value.option) : props.onChange(''))}
+        isClearable
+        isSearchable
+      />
+    </div>
+  );
+};
 
 TerminalSelect.propTypes = {
   selectedTerminal: PropTypes.string.isRequired,
@@ -46,4 +39,8 @@ TerminalSelect.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default TerminalSelect;
+TerminalSelect.defaultProps = {
+  terminals: [],
+};
+
+export default observer(TerminalSelect);
