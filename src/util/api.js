@@ -130,6 +130,10 @@ function removePoster({ id }) {
   return deleteJson(`posters/${id}`);
 }
 
+function cancelPoster(item) {
+  return postJson('cancelPoster', { item });
+}
+
 function downloadPoster({ id }) {
   window.open(`${API_URL}/downloadPoster/${id}`, '_blank');
 }
@@ -157,6 +161,7 @@ export {
   removeBuild,
   addPosters,
   removePoster,
+  cancelPoster,
   downloadPoster,
   downloadBuild,
   downloadBuildSection,

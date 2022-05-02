@@ -94,6 +94,7 @@ class Frame extends Component {
                 {...selectedBuild}
                 onRemovePoster={this.props.commonStore.removePoster}
                 onClose={this.props.commonStore.clearBuild}
+                onCancelPoster={this.props.commonStore.cancelPoster}
               />
             )}
             <Logout />

@@ -8,6 +8,7 @@ import {
   removeBuild,
   addPosters,
   removePoster,
+  cancelPoster,
   getTemplates,
   addTemplate,
   saveTemplate,
@@ -307,6 +308,15 @@ store.removePoster = async id => {
     store.refreshBuild();
   };
   store.showConfirm('Haluatko varmasti poistaa julisteen?', callback);
+};
+
+store.cancelPoster = async id => {
+  try {
+    await cancelPoster({ id });
+  } catch (error) {
+    console.error(error); // eslint-disable-line no-console
+  }
+  store.refreshBuild();
 };
 
 store.setUser = user => {
