@@ -39,6 +39,7 @@ const store = observable({
   salesPoint: true,
   minimapZones: true,
   minimapZoneSymbols: true,
+  legend: true,
   get rows() {
     let rows = [];
 
@@ -142,6 +143,10 @@ store.setMinimapZoneSymbols = () => {
   store.minimapZoneSymbols = !store.minimapZoneSymbols;
 };
 
+store.setLegend = () => {
+  store.legend = !store.legend;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -173,6 +178,7 @@ store.generate = () => {
     minimapZoneSymbols: componentsWithMapOptions.includes(store.component)
       ? store.minimapZoneSymbols
       : null,
+    legend: componentsWithMapOptions.includes(store.component) ? store.legend : null,
     user,
     routeFilter,
   });

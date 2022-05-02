@@ -192,6 +192,11 @@ const Generator = props => {
                 defaultValueTrue={generatorStore.salesPoint}
                 onChange={() => generatorStore.setSalesPoint()}
               />
+              <Checkbox
+                label="Legenda"
+                defaultValueTrue={generatorStore.legend}
+                onChange={() => generatorStore.setLegend()}
+              />
             </div>
           </Column>
 
