@@ -38,6 +38,10 @@ describe('General tests', () => {
       .click()
       .should('have.value', 'Timetable');
 
+    cy.get('[data-cy=Terminaalijuliste]')
+      .click()
+      .should('have.value', 'TerminalPoster');
+
     cy.get('[data-cy=Pysäkkijuliste]')
       .click()
       .should('have.value', 'StopPoster');

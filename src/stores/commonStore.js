@@ -1,6 +1,7 @@
 import { observable, toJS } from 'mobx';
 import {
   getStops,
+  getTerminals,
   getBuilds,
   getBuild,
   addBuild,
@@ -24,9 +25,11 @@ const store = observable({
   confirm: null,
   prompt: null,
   stops: [],
+  terminals: [],
   builds: [],
   selectedBuild: null,
   stopFilter: '',
+  showOnlyCheckedStops: false,
   routeFilter: '',
   templates: [],
   images: [],
@@ -80,6 +83,10 @@ store.serializeCurrentTemplate = (template = store.currentTemplate) => {
 store.setStopFilter = value => {
   const shortIdRegexp = /([a-zA-Z]{1,2})\s*([0-9]{4})\s*,?\s+/g;
   store.stopFilter = value.replace(shortIdRegexp, '$1$2, ');
+};
+
+store.setShowOnlyCheckedStops = value => {
+  store.showOnlyCheckedStops = value;
 };
 
 store.showConfirm = (message, callback = null) => {
@@ -142,6 +149,19 @@ store.getStops = async () => {
       }));
   } catch (error) {
     store.showConfirm(`Pysäkkien lataaminen epäonnistui: ${error.message}`);
+    console.error(error); // eslint-disable-line no-console
+  }
+};
+
+store.getTerminals = async () => {
+  try {
+    const terminals = await getTerminals();
+    store.terminals = terminals.map(terminal => ({
+      ...terminal,
+      stops: terminal.stops.nodes.map(s => s.stopId),
+    }));
+  } catch (error) {
+    store.showConfirm(`Terminaalien lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
   }
 };

@@ -11,6 +11,7 @@ setConfig({ logLevel: 'debug' });
 const { commonStore } = stores;
 
 commonStore.getStops();
+commonStore.getTerminals();
 commonStore.getBuilds();
 commonStore.getTemplates();
 commonStore.getImages();
