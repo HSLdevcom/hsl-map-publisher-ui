@@ -244,6 +244,7 @@ Poster.propTypes = {
   ).isRequired,
   disableEdit: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 BuildDetails.propTypes = {
@@ -255,6 +256,7 @@ BuildDetails.propTypes = {
   ).isRequired,
   onRemovePoster: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
   onClose: PropTypes.func.isRequired,
+  onCancelPoster: PropTypes.func.isRequired,
 };
 
 export default BuildDetails;
