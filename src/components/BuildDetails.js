@@ -120,6 +120,12 @@ const Poster = props => (
         label="Lataa PDF"
         primary
       />
+      <FlatButton
+        disabled={props.status !== 'PENDING'}
+        onClick={() => props.onCancel()}
+        label="Peruuta"
+        primary
+      />
     </Buttons>
     <Divider />
   </PosterRoot>
@@ -179,6 +185,7 @@ class BuildDetails extends Component {
                 key={poster.id}
                 disableEdit={this.props.status !== 'OPEN'}
                 onRemove={() => this.props.onRemovePoster(poster.id)}
+                onCancel={() => this.props.onCancelPoster(poster.id)}
               />
             ))}
           </PosterList>
