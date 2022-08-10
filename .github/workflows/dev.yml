@@ -42,6 +42,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
+          start: yarn start
         env:
          CYPRESS_BASE_URL: http://localhost:3000
          CYPRESS_HSLID_CLIENT_ID: ${{ secrets.CYPRESS_HSLID_CLIENT_ID }}
