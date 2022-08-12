@@ -9,7 +9,7 @@ const JORE_API_URL = process.env.REACT_APP_JORE_API_URL || 'https://kartat.hsl.c
 async function createRequest(path, method = 'GET', body) {
   const options =
     method === 'GET'
-      ? {}
+      ? { credentials: 'include' }
       : {
           method,
           credentials: 'include',
