@@ -10,10 +10,7 @@ import BuildDetails from './BuildDetails';
 import Generator from './Generator';
 import BuildList from './BuildList';
 import ConfigureLayout from './ConfigureLayout';
-import Login from './Login';
 import Logout from './Logout';
-import { authorizeUsingCode, checkExistingSession } from '../util/auth/authService';
-import { removeAuthParams } from '../util/urlManager';
 
 const Root = styled.div`
   display: flex;
@@ -38,86 +35,70 @@ const Loading = styled.div`
 class Frame extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-    };
+
+    this.props.commonStore.getStops();
+    this.props.commonStore.getTerminals();
+    this.props.commonStore.getBuilds();
+    this.props.commonStore.getTemplates();
+    this.props.commonStore.getImages();
+
+    setInterval(() => {
+      if (
+        this.props.commonStore.builds.some(({ pending }) => pending > 0) &&
+        document.visibilityState === 'visible'
+      ) {
+        this.props.commonStore.getBuilds();
+      }
+    }, 5000);
   }
 
   static propTypes = {
     commonStore: PropTypes.objectOrObservableObject.isRequired,
   };
 
-  componentDidMount() {
-    const url = new URL(window.location.href).searchParams;
-    let code = null;
-    if (url) {
-      code = url.get('code');
+  render() {
+    const { confirm, prompt, selectedBuild, stops } = this.props.commonStore;
+
+    if (stops.length === 0) {
+      // Still loading data, show spinner
+      return (
+        <Loading>
+          <CircularProgress size={200} style={{ display: 'block', margin: 'auto', top: '35%' }} />
+        </Loading>
+      );
     }
 
-    checkExistingSession().then(json => {
-      if (json && json.isOk && json.email) {
-        this.props.commonStore.setUser(json.email);
-        this.setState({ loading: false });
-      } else {
-        this.props.commonStore.setUser(null);
-        if (code) {
-          removeAuthParams();
-          authorizeUsingCode(code).then(res => {
-            if (res && res.isOk && res.email) this.props.commonStore.setUser(res.email);
-            this.setState({ loading: false });
-          });
-        } else {
-          this.setState({ loading: false });
-        }
-      }
-    });
-  }
-
-  render() {
-    const { confirm, prompt, selectedBuild } = this.props.commonStore;
-    const user = this.props.commonStore.getUser();
-
     return (
-      <div>
-        {this.state.loading && (
-          <Loading>
-            <CircularProgress size={200} style={{ display: 'block', margin: 'auto', top: '35%' }} />
-          </Loading>
+      <Root>
+        {confirm && <ConfirmDialog {...confirm} />}
+        {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
+        {selectedBuild && (
+          <BuildDetails
+            {...selectedBuild}
+            onRemovePoster={this.props.commonStore.removePoster}
+            onClose={this.props.commonStore.clearBuild}
+            onCancelPoster={this.props.commonStore.cancelPoster}
+          />
         )}
-        {!this.state.loading && !user && <Login />}
-        {!this.state.loading && user && (
-          <Root>
-            {confirm && <ConfirmDialog {...confirm} />}
-            {prompt && <PromptDialog data-cy="prompt" {...prompt} />}
-            {selectedBuild && (
-              <BuildDetails
-                {...selectedBuild}
-                onRemovePoster={this.props.commonStore.removePoster}
-                onClose={this.props.commonStore.clearBuild}
-                onCancelPoster={this.props.commonStore.cancelPoster}
-              />
-            )}
-            <Logout />
-            <Tabs>
-              <Tab data-cy="generate" label="Generointi">
-                <TabPane>
-                  <Generator />
-                </TabPane>
-              </Tab>
-              <Tab data-cy="template" label="Sommittelu">
-                <TabPane>
-                  <ConfigureLayout />
-                </TabPane>
-              </Tab>
-              <Tab data-cy="list" label="Tulosteet">
-                <TabPane>
-                  <BuildList />
-                </TabPane>
-              </Tab>
-            </Tabs>
-          </Root>
-        )}
-      </div>
+        <Logout />
+        <Tabs>
+          <Tab data-cy="generate" label="Generointi">
+            <TabPane>
+              <Generator />
+            </TabPane>
+          </Tab>
+          <Tab data-cy="template" label="Sommittelu">
+            <TabPane>
+              <ConfigureLayout />
+            </TabPane>
+          </Tab>
+          <Tab data-cy="list" label="Tulosteet">
+            <TabPane>
+              <BuildList />
+            </TabPane>
+          </Tab>
+        </Tabs>
+      </Root>
     );
   }
 }
