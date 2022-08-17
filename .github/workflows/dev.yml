@@ -41,7 +41,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          build: npm run build
           start: yarn start
         env:
          CYPRESS_BASE_URL: http://localhost:3000
