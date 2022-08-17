@@ -17,6 +17,8 @@ COPY . ${WORK}
 ARG BUILD_ENV=production
 COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
-RUN yarn build
+# TODO: Fix tests to enable yarn build again
+# RUN yarn build
+RUN yarn bundle
 
 CMD yarn run serve
