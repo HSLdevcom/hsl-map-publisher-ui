@@ -8,23 +8,6 @@ import { AppContainer, setConfig } from 'react-hot-loader';
 
 setConfig({ logLevel: 'debug' });
 
-const { commonStore } = stores;
-
-commonStore.getStops();
-commonStore.getTerminals();
-commonStore.getBuilds();
-commonStore.getTemplates();
-commonStore.getImages();
-
-setInterval(() => {
-  if (
-    commonStore.builds.some(({ pending }) => pending > 0) &&
-    document.visibilityState === 'visible'
-  ) {
-    commonStore.getBuilds();
-  }
-}, 5000);
-
 const root = document.getElementById('root');
 
 const render = Component => {
