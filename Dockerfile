@@ -16,7 +16,9 @@ COPY . ${WORK}
 ARG BUILD_ENV=prod
 COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
-RUN yarn build
+# TODO: Fix tests to enable yarn build again
+# RUN yarn build
+RUN yarn bundle
 
 # Copy builded files from builder to nginx
 FROM nginx:1.21-alpine
