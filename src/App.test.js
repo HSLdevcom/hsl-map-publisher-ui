@@ -15,30 +15,69 @@ import Generator from './components/Generator';
 
 import stores from './stores/stores';
 
+const MOCK_DATA = {
+  build: {
+    id: '123456-65421',
+    title: 'testi',
+    status: 'OPEN',
+    posters: [],
+    createdAt: '2022-08-23T18:55:52.988Z',
+    updatedAt: '2022-08-23T18:55:52.988Z',
+    pending: 0,
+    failed: 0,
+    ready: 0,
+  },
+  template: {
+    id: 'test',
+    label: 'test',
+    areas: [],
+    created_at: '2022-09-06T12:56:28.539Z',
+    updated_at: '2022-09-06T12:56:28.539Z',
+    rules: {
+      type: 'RULE',
+      name: 'ZONE',
+      value: 'A',
+    },
+  },
+  stop: {
+    distributionArea: 'alue1',
+    distributionOrder: 104,
+    drivebyTimetable: 1,
+    nameFi: 'Meritullinkatu',
+    posterCount: 0,
+    shortId: 'H 2014',
+    stopId: '1010107',
+    stopTariff: '01',
+    stopType: '04',
+    stopZone: 'A',
+  },
+};
+
 configure({ adapter: new Adapter() });
 
 fetchMock.enableMocks();
 
 describe('App component tests', () => {
+  stores.commonStore.selectedBuild = MOCK_DATA.build;
+  stores.commonStore.stops = [MOCK_DATA.stop];
+
   it('App renders without crashing', () => {
-    shallow(<App />);
+    shallow(
+      <Provider {...stores}>
+        <App />
+      </Provider>,
+    );
   });
 });
 
 describe('Frame component tests', () => {
-  fetch.mockResponse(
-    JSON.stringify({
-      isOk: true,
-      email: 'testi@kayttaja.com',
-    }),
+  fetch.mockResponses(
+    [JSON.stringify({ data: { allStops: { nodes: [MOCK_DATA.stop] } } }), { status: 200 }],
+    [JSON.stringify([]), { status: 200 }],
+    [JSON.stringify([MOCK_DATA.build]), { status: 200 }],
+    [JSON.stringify([MOCK_DATA.template]), { status: 200 }],
+    [JSON.stringify([]), { status: 200 }],
   );
-
-  stores.commonStore.selectedBuild = {
-    id: '123456-65421',
-    title: 'testi',
-    status: 'OPEN',
-    posters: [],
-  };
 
   const mountedWrapper = mount(
     <Provider {...stores}>
