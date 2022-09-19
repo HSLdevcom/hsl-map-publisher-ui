@@ -37,7 +37,7 @@ class Frame extends Component {
     super(props);
 
     this.props.commonStore.getStops();
-    // this.props.commonStore.getTerminals();
+    this.props.commonStore.getTerminals();
     this.props.commonStore.getBuilds();
     this.props.commonStore.getTemplates();
     this.props.commonStore.getImages();

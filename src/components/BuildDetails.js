@@ -120,6 +120,12 @@ const Poster = props => (
         label="Lataa PDF"
         primary
       />
+      <FlatButton
+        disabled={props.status !== 'PENDING'}
+        onClick={() => props.onCancel()}
+        label="Peruuta"
+        primary
+      />
     </Buttons>
     <Divider />
   </PosterRoot>
@@ -179,6 +185,7 @@ class BuildDetails extends Component {
                 key={poster.id}
                 disableEdit={this.props.status !== 'OPEN'}
                 onRemove={() => this.props.onRemovePoster(poster.id)}
+                onCancel={() => this.props.onCancelPoster(poster.id)}
               />
             ))}
           </PosterList>
@@ -237,6 +244,7 @@ Poster.propTypes = {
   ).isRequired,
   disableEdit: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 BuildDetails.propTypes = {
@@ -248,6 +256,7 @@ BuildDetails.propTypes = {
   ).isRequired,
   onRemovePoster: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
   onClose: PropTypes.func.isRequired,
+  onCancelPoster: PropTypes.func.isRequired,
 };
 
 export default BuildDetails;

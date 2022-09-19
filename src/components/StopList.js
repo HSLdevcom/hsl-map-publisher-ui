@@ -74,6 +74,8 @@ const enhance = compose(observer, inject('commonStore', 'generatorStore'));
 function StopList(props) {
   const { generatorStore, commonStore } = props;
   const { rows, checkedRows } = generatorStore;
+  const { showOnlyCheckedStops, setShowOnlyCheckedStops } = commonStore;
+  const { stopFilter, setStopFilter } = commonStore;
   const renderer = rowRenderer(rows, checkedRows, props.onCheck);
 
   return (
@@ -82,14 +84,14 @@ function StopList(props) {
         <TextFieldContainer>
           <TextField
             data-cy="filterInput"
-            onChange={(event, value) => commonStore.setStopFilter(value)}
-            value={commonStore.stopFilter}
+            onChange={(event, value) => setStopFilter(value)}
+            value={stopFilter}
             hintText="Suodata..."
             fullWidth
           />
-          {commonStore.stopFilter && (
+          {stopFilter && (
             <IconButton
-              onClick={() => commonStore.setStopFilter('')}
+              onClick={() => setStopFilter('')}
               style={{ position: 'absolute', right: 0 }}>
               <ClearIcon />
             </IconButton>
@@ -104,9 +106,16 @@ function StopList(props) {
         />
         <Spacer />
         <FlatButton
-          disabled={!commonStore.stopFilter.length}
+          disabled={!stopFilter.length}
           onClick={() => props.onCheck(rows, true)}
           label="Valitse kaikki"
+        />
+        <FlatButton
+          onClick={() => {
+            setShowOnlyCheckedStops(!showOnlyCheckedStops);
+            setStopFilter('');
+          }}
+          label={!showOnlyCheckedStops ? 'Näytä valitut' : 'Näytä kaikki'}
         />
       </Row>
       <ListContainer>

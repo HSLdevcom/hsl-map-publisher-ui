@@ -11,6 +11,8 @@ import StopList from './StopList';
 import BuildSelect from './BuildSelect';
 import SelectTemplate from './SelectTemplate';
 import SelectRuleTemplates from './SelectRuleTemplates';
+import { componentsWithMapOptions } from '../stores/generatorStore';
+import TerminalSelect from './TerminalSelect';
 
 const Root = styled.div`
   display: flex;
@@ -53,7 +55,8 @@ const Generator = props => {
   const { commonStore, generatorStore } = props;
   const stopCount = generatorStore.rows
     .filter(({ rowId }) => generatorStore.checkedRows.includes(rowId))
-    .map(({ stopIds }) => stopIds.length)
+    // For TerminalPoster one terminal means one poster, otherwise use the amount of stops
+    .map(({ stopIds }) => (generatorStore.component === 'TerminalPoster' ? 1 : stopIds.length))
     .reduce((prev, cur) => prev + cur, 0);
 
   return (
@@ -90,6 +93,7 @@ const Generator = props => {
             valuesByLabel={generatorStore.rowTypesByLabel}
             valueSelected={generatorStore.rowType}
             onChange={value => generatorStore.setRowType(value)}
+            disabled={generatorStore.component === 'TerminalPoster'}
           />
         </Column>
 
@@ -135,6 +139,16 @@ const Generator = props => {
         </Column>
       </Row>
 
+      {generatorStore.component === 'TerminalPoster' && (
+        <Main>
+          <TerminalSelect
+            selectedTerminal={generatorStore.terminalId}
+            terminals={commonStore.terminals}
+            onChange={generatorStore.setTerminalId}
+          />
+        </Main>
+      )}
+
       <Main>
         <StopList onCheck={generatorStore.setChecked} onReset={generatorStore.resetChecked} />
       </Main>
@@ -148,15 +162,17 @@ const Generator = props => {
         />
       </Main>
 
-      <Main>
-        <SelectRuleTemplates
-          selectedRuleTemplates={generatorStore.selectedRuleTemplates}
-          templates={commonStore.ruleTemplates}
-          setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
-        />
-      </Main>
+      {generatorStore.component !== 'TerminalPoster' && (
+        <Main>
+          <SelectRuleTemplates
+            selectedRuleTemplates={generatorStore.selectedRuleTemplates}
+            templates={commonStore.ruleTemplates}
+            setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
+          />
+        </Main>
+      )}
 
-      {generatorStore.component === 'StopPoster' && (
+      {componentsWithMapOptions.includes(generatorStore.component) && (
         <Row>
           <Column>
             <h3>Lähikartta</h3>
@@ -175,6 +191,11 @@ const Generator = props => {
                 label="Lähin myyntipiste"
                 defaultValueTrue={generatorStore.salesPoint}
                 onChange={() => generatorStore.setSalesPoint()}
+              />
+              <Checkbox
+                label="Legenda"
+                defaultValueTrue={generatorStore.legend}
+                onChange={() => generatorStore.setLegend()}
               />
             </div>
           </Column>
@@ -223,7 +244,11 @@ const Generator = props => {
         />
         <RaisedButton
           data-cy="generate-button"
-          disabled={stopCount < 1 || !generatorStore.buildId}
+          disabled={
+            stopCount < 1 ||
+            !generatorStore.buildId ||
+            (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '')
+          }
           onClick={() => {
             if (commonStore.templateIsDirty) {
               commonStore.showConfirm(
@@ -234,7 +259,7 @@ const Generator = props => {
               generatorStore.generate();
             }
           }}
-          label={`Generoi (${stopCount})`}
+          label={`Generoi (${generatorStore.component !== 'TerminalPoster' ? stopCount : 1})`}
           style={{ height: 40, marginLeft: 10 }}
           primary
         />
