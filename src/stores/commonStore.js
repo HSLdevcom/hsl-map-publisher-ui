@@ -117,7 +117,7 @@ store.showPrompt = (message, callback, defaultValue = '') => {
 store.showBuild = async id => {
   try {
     const build = await getBuild({ id });
-    build.posters.sort((a, b) => (a.order > b.order ? 1 : -1));
+    store.sortPosters(build.posters);
     store.selectedBuild = build;
   } catch (error) {
     store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
@@ -128,12 +128,18 @@ store.showBuild = async id => {
 store.refreshBuild = async () => {
   if (!store.selectedBuild) return;
   try {
-    store.selectedBuild = await getBuild({ id: store.selectedBuild.id });
+    const build = await getBuild({ id: store.selectedBuild.id });
+    store.sortPosters(build.posters);
+    store.selectedBuild = build;
   } catch (error) {
     store.selectedBuild = null;
     store.showConfirm(`Tietojen lataaminen epäonnistui: ${error.message}`);
     console.error(error); // eslint-disable-line no-console
   }
+};
+
+store.sortPosters = posters => {
+  posters.sort((a, b) => (a.order > b.order ? 1 : -1));
 };
 
 store.clearBuild = () => {
