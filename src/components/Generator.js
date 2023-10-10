@@ -111,7 +111,7 @@ const Generator = props => {
           <DatePicker
             name="Päivämäärä"
             value={generatorStore.date}
-            onChange={(event, value) => generatorStore.setDate(value)}
+            onChange={(_, value) => generatorStore.setDate(value)}
             container="inline"
           />
         </Column>
@@ -222,7 +222,7 @@ const Generator = props => {
       <Row>
         <TextField
           data-cy="routeFilterInput"
-          onChange={(event, value) => commonStore.setRouteFilter(value)}
+          onChange={(_, value) => commonStore.setRouteFilter(value)}
           value={commonStore.routeFilter}
           hintText="Esim. 7*"
           fullWidth
@@ -249,8 +249,13 @@ const Generator = props => {
             !generatorStore.buildId ||
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '')
           }
-          onClick={() => {
-            if (commonStore.templateIsDirty) {
+          onClick={async () => {
+            if ((await commonStore.currentTemplate) === undefined) {
+              commonStore.showConfirm(
+                'Sommittelua ei ole valittu, generointia ei voida aloittaa !',
+                false,
+              );
+            } else if (commonStore.templateIsDirty) {
               commonStore.showConfirm(
                 'Sommittelussa on tallentamattomia muutoksia. Julisteet generoidaan tallennetulla versiolla. Haluatko jatkaa?',
                 generatorStore.generate,
