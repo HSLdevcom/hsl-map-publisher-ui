@@ -40,6 +40,7 @@ const store = observable({
   minimapZones: true,
   minimapZoneSymbols: true,
   legend: true,
+  isSmallTerminalPoster: false,
   get rows() {
     let rows = [];
 
@@ -147,6 +148,10 @@ store.setLegend = () => {
   store.legend = !store.legend;
 };
 
+store.setIsSmallTerminalPoster = () => {
+  store.isSmallTerminalPoster = !store.isSmallTerminalPoster;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -181,6 +186,8 @@ store.generate = () => {
     legend: componentsWithMapOptions.includes(store.component) ? store.legend : null,
     user,
     routeFilter,
+    isSmallTerminalPoster:
+      store.isSmallTerminalPoster && store.component === componentsByLabel.Terminaalijuliste,
   });
 
   const props =

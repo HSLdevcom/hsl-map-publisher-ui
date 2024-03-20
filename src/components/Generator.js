@@ -84,6 +84,15 @@ const Generator = props => {
                 />
               </div>
             )}
+            {generatorStore.component === 'TerminalPoster' && (
+              <div>
+                <Checkbox
+                  label="70x100 Juliste"
+                  defaultValueTrue={generatorStore.isSmallTerminalPoster}
+                  onChange={() => generatorStore.setIsSmallTerminalPoster()}
+                />
+              </div>
+            )}
           </div>
         </Column>
 
