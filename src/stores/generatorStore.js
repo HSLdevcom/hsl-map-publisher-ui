@@ -10,6 +10,7 @@ const componentsByLabel = {
   Aikataulu: 'Timetable',
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
+  'Linja-aikataulu': 'LineTimetable',
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
@@ -41,6 +42,7 @@ const store = observable({
   minimapZoneSymbols: true,
   legend: true,
   isSmallTerminalPoster: false,
+  lineId: '',
   get rows() {
     let rows = [];
 
@@ -152,6 +154,10 @@ store.setIsSmallTerminalPoster = () => {
   store.isSmallTerminalPoster = !store.isSmallTerminalPoster;
 };
 
+store.setLineId = value => {
+  store.lineId = value;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -190,10 +196,30 @@ store.generate = () => {
       store.isSmallTerminalPoster && store.component === componentsByLabel.Terminaalijuliste,
   });
 
-  const props =
-    store.component !== 'TerminalPoster'
-      ? stops.map(stopId => propsTemplate(stopId))
-      : [propsTemplate(store.terminalId, stops)];
+  const lineTimetablePropsTemplate = id => ({
+    lineId: id,
+    dateBegin: store.dateBegin ? format(store.dateBegin) : null,
+    dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+    printTimetablesAsA4: true,
+    selectedRuleTemplates: [],
+    template: commonStore.currentTemplate.id,
+  });
+
+  let props;
+
+  switch (store.component) {
+    case 'TerminalPoster':
+      props = [propsTemplate(store.terminalId, stops)];
+      break;
+
+    case 'LineTimetable':
+      props = [lineTimetablePropsTemplate(store.lineId)];
+      break;
+
+    default:
+      props = stops.map(stopId => propsTemplate(stopId));
+      break;
+  }
 
   store.resetChecked();
   commonStore.addPosters(store.buildId, store.component, props);
