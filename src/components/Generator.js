@@ -281,7 +281,9 @@ const Generator = props => {
             (stopCount < 1 && generatorStore.component !== 'LineTimetable') ||
             !generatorStore.buildId ||
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
-            (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '')
+            (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '') ||
+            (generatorStore.component === 'LineTimetable' && !generatorStore.dateBegin) ||
+            (generatorStore.component === 'LineTimetable' && !generatorStore.dateEnd)
           }
           onClick={async () => {
             if ((await commonStore.currentTemplate) === undefined) {
