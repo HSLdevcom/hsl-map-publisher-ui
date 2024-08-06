@@ -13,6 +13,7 @@ import SelectTemplate from './SelectTemplate';
 import SelectRuleTemplates from './SelectRuleTemplates';
 import { componentsWithMapOptions } from '../stores/generatorStore';
 import TerminalSelect from './TerminalSelect';
+import LineSelect from './LineSelect';
 
 const Root = styled.div`
   display: flex;
@@ -102,7 +103,10 @@ const Generator = props => {
             valuesByLabel={generatorStore.rowTypesByLabel}
             valueSelected={generatorStore.rowType}
             onChange={value => generatorStore.setRowType(value)}
-            disabled={generatorStore.component === 'TerminalPoster'}
+            disabled={
+              generatorStore.component === 'TerminalPoster' ||
+              generatorStore.component === 'LineTimetable'
+            }
           />
         </Column>
 
@@ -112,6 +116,7 @@ const Generator = props => {
             valuesByLabel={{ Talvi: false, Kesä: true }}
             valueSelected={generatorStore.isSummerTimetable}
             onChange={value => generatorStore.setIsSummerTimetable(value)}
+            disabled={generatorStore.component === 'LineTimetable'}
           />
         </Column>
 
@@ -158,28 +163,42 @@ const Generator = props => {
         </Main>
       )}
 
-      <Main>
-        <StopList onCheck={generatorStore.setChecked} onReset={generatorStore.resetChecked} />
-      </Main>
-
-      <Main>
-        <SelectTemplate
-          currentTemplate={commonStore.currentTemplate}
-          templates={commonStore.templates}
-          onSelectTemplate={commonStore.selectTemplate}
-          showControls={false}
-        />
-      </Main>
-
-      {generatorStore.component !== 'TerminalPoster' && (
+      {generatorStore.component === 'LineTimetable' && (
         <Main>
-          <SelectRuleTemplates
-            selectedRuleTemplates={generatorStore.selectedRuleTemplates}
-            templates={commonStore.ruleTemplates}
-            setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
-          />
+          <LineSelect onChange={generatorStore.setLineId} />
         </Main>
       )}
+
+      {generatorStore.component !== 'LineTimetable' && (
+        <div>
+          <Main>
+            <StopList
+              onCheck={generatorStore.setChecked}
+              onReset={generatorStore.resetChecked}
+              disabled={generatorStore.component === 'LineTimetable'}
+            />
+          </Main>
+          <Main>
+            <SelectTemplate
+              currentTemplate={commonStore.currentTemplate}
+              templates={commonStore.templates}
+              onSelectTemplate={commonStore.selectTemplate}
+              showControls={false}
+            />
+          </Main>
+        </div>
+      )}
+
+      {generatorStore.component !== 'TerminalPoster' &&
+        generatorStore.component !== 'LineTimetable' && (
+          <Main>
+            <SelectRuleTemplates
+              selectedRuleTemplates={generatorStore.selectedRuleTemplates}
+              templates={commonStore.ruleTemplates}
+              setSelectedRuleTemplates={generatorStore.setSelectedRuleTemplates}
+            />
+          </Main>
+        )}
 
       {componentsWithMapOptions.includes(generatorStore.component) && (
         <Row>
@@ -227,16 +246,21 @@ const Generator = props => {
         </Row>
       )}
 
-      <h3>Linjasuodatus</h3>
-      <Row>
-        <TextField
-          data-cy="routeFilterInput"
-          onChange={(_, value) => commonStore.setRouteFilter(value)}
-          value={commonStore.routeFilter}
-          hintText="Esim. 7*"
-          fullWidth
-        />
-      </Row>
+      {generatorStore.component !== 'LineTimetable' && (
+        <div>
+          <h3>Linjasuodatus</h3>
+          <Row>
+            <TextField
+              disabled={generatorStore.component === 'LineTimetable'}
+              data-cy="routeFilterInput"
+              onChange={(_, value) => commonStore.setRouteFilter(value)}
+              value={commonStore.routeFilter}
+              hintText="Esim. 7*"
+              fullWidth
+            />
+          </Row>
+        </div>
+      )}
 
       <Heading>Generointi</Heading>
       <Footer>
@@ -254,9 +278,10 @@ const Generator = props => {
         <RaisedButton
           data-cy="generate-button"
           disabled={
-            stopCount < 1 ||
+            (stopCount < 1 && generatorStore.component !== 'LineTimetable') ||
             !generatorStore.buildId ||
-            (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '')
+            (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
+            (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '')
           }
           onClick={async () => {
             if ((await commonStore.currentTemplate) === undefined) {
