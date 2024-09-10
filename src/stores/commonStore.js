@@ -16,9 +16,10 @@ import {
   removeTemplate,
   getImages,
   removeImage,
+  getAllLines,
 } from '../util/api';
 import get from 'lodash/get';
-import { isEmpty } from 'lodash';
+import { filter, isEmpty } from 'lodash';
 import reduce from 'lodash/reduce';
 import generatorStore from './generatorStore';
 
@@ -36,6 +37,8 @@ const store = observable({
   images: [],
   selectedTemplate: null,
   prevSavedTemplate: null,
+  lines: [],
+  lineQuery: '',
   get currentTemplate() {
     const { selectedTemplate, templates } = store;
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
@@ -353,6 +356,23 @@ store.getUser = () => store.user;
 
 store.setRouteFilter = value => {
   store.routeFilter = value;
+};
+
+store.setLineQuery = async query => {
+  store.lineQuery = query;
+  const results = await store.getLines();
+  store.lines = results;
+};
+
+store.getLines = async () => {
+  const { data } = await getAllLines();
+  const filteredLines = filter(
+    data.allLines.nodes,
+    line =>
+      line.lineId.toLowerCase().includes(store.lineQuery.toLowerCase()) ||
+      line.nameFi.toLowerCase().includes(store.lineQuery.toLowerCase()),
+  );
+  return filteredLines;
 };
 
 export default store;
