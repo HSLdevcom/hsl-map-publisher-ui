@@ -31,7 +31,7 @@ const mapLineItems = (lines, onClick) => {
       </ListItem>
     ));
   }
-  return <p>Haulla ei löytynyt linjoja</p>;
+  return '';
 };
 
 const LineSelect = props => (

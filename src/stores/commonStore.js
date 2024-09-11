@@ -372,7 +372,19 @@ store.getLines = async () => {
       line.lineId.toLowerCase().includes(store.lineQuery.toLowerCase()) ||
       line.nameFi.toLowerCase().includes(store.lineQuery.toLowerCase()),
   );
-  return filteredLines;
+
+  const compareLineNameOrder = (a, b) => {
+    if (a.lineId.substring(1, 4) !== b.lineId.substring(1, 4)) {
+      return a.lineId.substring(1, 4) > b.lineId.substring(1, 4) ? 1 : -1;
+    } else if (a.lineId.substring(0, 1) !== b.lineId.substring(0, 1)) {
+      return a.lineId.substring(0, 1) > b.lineId.substring(0, 1) ? 1 : -1;
+    }
+    return a.lineId.substring(4, 6) > b.lineId.substring(4, 6) ? 1 : -1;
+  };
+
+  const sortedLines = filteredLines.sort(compareLineNameOrder);
+
+  return sortedLines;
 };
 
 export default store;
