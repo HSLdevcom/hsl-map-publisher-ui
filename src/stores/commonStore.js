@@ -19,9 +19,14 @@ import {
   getAllLines,
 } from '../util/api';
 import get from 'lodash/get';
-import { filter, isEmpty } from 'lodash';
+import { filter, isEmpty, some } from 'lodash';
 import reduce from 'lodash/reduce';
 import generatorStore from './generatorStore';
+import {
+  compareLineNameOrder,
+  shortenTrainParsedLineId,
+  TRANSPORTATION_MODES,
+} from '../util/lines';
 
 const store = observable({
   confirm: null,
@@ -373,16 +378,14 @@ store.getLines = async () => {
       line.nameFi.toLowerCase().includes(store.lineQuery.toLowerCase()),
   );
 
-  const compareLineNameOrder = (a, b) => {
-    if (a.lineId.substring(1, 4) !== b.lineId.substring(1, 4)) {
-      return a.lineId.substring(1, 4) > b.lineId.substring(1, 4) ? 1 : -1;
-    } else if (a.lineId.substring(0, 1) !== b.lineId.substring(0, 1)) {
-      return a.lineId.substring(0, 1) > b.lineId.substring(0, 1) ? 1 : -1;
+  const checkedLines = filteredLines.map(line => {
+    if (some(line.routes.nodes, route => route.mode === TRANSPORTATION_MODES.RAIL)) {
+      return { ...line, lineIdParsed: shortenTrainParsedLineId(line.lineIdParsed) };
     }
-    return a.lineId.substring(4, 6) > b.lineId.substring(4, 6) ? 1 : -1;
-  };
+    return line;
+  });
 
-  const sortedLines = filteredLines.sort(compareLineNameOrder);
+  const sortedLines = checkedLines.sort(compareLineNameOrder);
 
   return sortedLines;
 };
