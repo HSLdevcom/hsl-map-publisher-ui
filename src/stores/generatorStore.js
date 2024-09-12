@@ -42,7 +42,7 @@ const store = observable({
   minimapZoneSymbols: true,
   legend: true,
   isSmallTerminalPoster: false,
-  lineId: '',
+  selectedLines: [],
   get rows() {
     let rows = [];
 
@@ -154,8 +154,12 @@ store.setIsSmallTerminalPoster = () => {
   store.isSmallTerminalPoster = !store.isSmallTerminalPoster;
 };
 
-store.setLineId = value => {
-  store.lineId = value;
+store.addLine = line => {
+  store.selectedLines.push(line);
+};
+
+store.removeLine = line => {
+  store.selectedLines.remove(line);
 };
 
 store.generate = () => {
@@ -213,7 +217,7 @@ store.generate = () => {
       break;
 
     case 'LineTimetable':
-      props = [lineTimetablePropsTemplate(store.lineId)];
+      props = store.selectedLines.map(line => lineTimetablePropsTemplate(line.lineId));
       break;
 
     default:

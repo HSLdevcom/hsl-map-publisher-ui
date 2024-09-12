@@ -109,6 +109,44 @@ async function getTerminals() {
   return get(terminalData, 'data.allTerminals.nodes', []);
 }
 
+async function getAllLines() {
+  const link = new HttpLink({ uri: JORE_API_URL });
+
+  const query = {
+    query: gql`
+      query AllLinesQuery {
+        allLines {
+          nodes {
+            lineId
+            nameFi
+            dateBegin
+            dateEnd
+            trunkRoute
+            lineIdParsed
+            routes {
+              totalCount
+              nodes {
+                mode
+                type
+              }
+            }
+          }
+        }
+      }
+    `,
+  };
+
+  let results;
+
+  try {
+    results = await makePromise(execute(link, query));
+  } catch (err) {
+    throw new Error(err.message);
+  }
+
+  return results;
+}
+
 function getBuilds() {
   return getJson('builds');
 }
@@ -182,6 +220,7 @@ export {
   getTerminals,
   getBuilds,
   getImages,
+  getAllLines,
   removeImage,
   getTemplates,
   addTemplate,

@@ -16,11 +16,17 @@ import {
   removeTemplate,
   getImages,
   removeImage,
+  getAllLines,
 } from '../util/api';
 import get from 'lodash/get';
-import { isEmpty } from 'lodash';
+import { filter, isEmpty, some } from 'lodash';
 import reduce from 'lodash/reduce';
 import generatorStore from './generatorStore';
+import {
+  compareLineNameOrder,
+  shortenTrainParsedLineId,
+  TRANSPORTATION_MODES,
+} from '../util/lines';
 
 const store = observable({
   confirm: null,
@@ -36,6 +42,8 @@ const store = observable({
   images: [],
   selectedTemplate: null,
   prevSavedTemplate: null,
+  lines: [],
+  lineQuery: '',
   get currentTemplate() {
     const { selectedTemplate, templates } = store;
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
@@ -353,6 +361,33 @@ store.getUser = () => store.user;
 
 store.setRouteFilter = value => {
   store.routeFilter = value;
+};
+
+store.setLineQuery = async query => {
+  store.lineQuery = query;
+  const results = await store.getLines();
+  store.lines = results;
+};
+
+store.getLines = async () => {
+  const { data } = await getAllLines();
+  const filteredLines = filter(
+    data.allLines.nodes,
+    line =>
+      line.lineId.toLowerCase().includes(store.lineQuery.toLowerCase()) ||
+      line.nameFi.toLowerCase().includes(store.lineQuery.toLowerCase()),
+  );
+
+  const checkedLines = filteredLines.map(line => {
+    if (some(line.routes.nodes, route => route.mode === TRANSPORTATION_MODES.RAIL)) {
+      return { ...line, lineIdParsed: shortenTrainParsedLineId(line.lineIdParsed) };
+    }
+    return line;
+  });
+
+  const sortedLines = checkedLines.sort(compareLineNameOrder);
+
+  return sortedLines;
 };
 
 export default store;

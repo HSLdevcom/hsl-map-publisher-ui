@@ -60,6 +60,31 @@ const Generator = props => {
     .map(({ stopIds }) => (generatorStore.component === 'TerminalPoster' ? 1 : stopIds.length))
     .reduce((prev, cur) => prev + cur, 0);
 
+  const getAmount = () => {
+    let text = '';
+    switch (generatorStore.component) {
+      case 'StopPoster':
+        text = stopCount;
+        break;
+
+      case 'Timetable':
+        text = stopCount;
+        break;
+
+      case 'TerminalPoster':
+        text = 1;
+        break;
+
+      case 'LineTimetable':
+        text = generatorStore.selectedLines.length;
+        break;
+      default:
+        text = 0;
+        break;
+    }
+    return text;
+  };
+
   return (
     <Root>
       <Row>
@@ -165,7 +190,14 @@ const Generator = props => {
 
       {generatorStore.component === 'LineTimetable' && (
         <Main>
-          <LineSelect onChange={generatorStore.setLineId} />
+          <LineSelect
+            setLineQuery={commonStore.setLineQuery}
+            lines={commonStore.lines}
+            lineQuery={commonStore.lineQuery}
+            addLine={generatorStore.addLine}
+            removeLine={generatorStore.removeLine}
+            selectedLines={generatorStore.selectedLines}
+          />
         </Main>
       )}
 
@@ -300,7 +332,7 @@ const Generator = props => {
               generatorStore.generate();
             }
           }}
-          label={`Generoi (${generatorStore.component !== 'TerminalPoster' ? stopCount : 1})`}
+          label={`Generoi (${getAmount()})`}
           style={{ height: 40, marginLeft: 10 }}
           primary
         />
