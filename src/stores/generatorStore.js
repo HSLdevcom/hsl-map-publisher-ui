@@ -11,10 +11,7 @@ const componentsByLabel = {
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
   'Linja-aikataulu': 'LineTimetable',
-<<<<<<< HEAD
   Kilvitysohje: 'StopRoutePlate',
-=======
->>>>>>> 72030bf (AB#32085: Add UI for testing line timetable generation (#111))
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
