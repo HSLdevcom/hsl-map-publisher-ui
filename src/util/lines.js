@@ -4,7 +4,10 @@ const TRANSPORTATION_MODES = {
   RAIL: 'RAIL',
   SUBWAY: 'SUBWAY',
   TRAM: 'TRAM',
+<<<<<<< HEAD
   L_RAIL: 'L_RAIL',
+=======
+>>>>>>> 070ed39 (AB#32085: Improve search UX, generate multiple line timetables at once (#113))
 };
 
 function compareLineNameOrder(a, b) {
