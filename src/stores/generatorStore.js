@@ -204,7 +204,7 @@ store.generate = () => {
     lineId: id,
     dateBegin: store.dateBegin ? format(store.dateBegin) : null,
     dateEnd: store.dateEnd ? format(store.dateEnd) : null,
-    printTimetablesAsA4: true,
+    printAsA5: true,
     selectedRuleTemplates: [],
     template: commonStore.currentTemplate.id,
   });
