@@ -280,14 +280,14 @@ const Generator = props => {
 
       {generatorStore.component !== 'LineTimetable' && (
         <div>
-          <h3>Linjasuodatus</h3>
+          <h3>Poissuodatettavat linjat</h3>
           <Row>
             <TextField
               disabled={generatorStore.component === 'LineTimetable'}
               data-cy="routeFilterInput"
               onChange={(_, value) => commonStore.setRouteFilter(value)}
               value={commonStore.routeFilter}
-              hintText="Esim. 7*"
+              hintText="Esim. 1,7,9N"
               fullWidth
             />
           </Row>
