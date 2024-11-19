@@ -218,13 +218,13 @@ const Generator = props => {
         </Row>
       )}
 
-      <h3>Linjasuodatus</h3>
+      <h3>Poissuodatettavat linjat</h3>
       <Row>
         <TextField
           data-cy="routeFilterInput"
           onChange={(event, value) => commonStore.setRouteFilter(value)}
           value={commonStore.routeFilter}
-          hintText="Esim. 7*"
+          hintText="Esim. 1,7,9N"
           fullWidth
         />
       </Row>
