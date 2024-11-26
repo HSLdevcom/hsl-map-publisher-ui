@@ -10,6 +10,7 @@ const componentsByLabel = {
   Aikataulu: 'Timetable',
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
+  'Linja-aikataulu': 'LineTimetable',
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
@@ -40,6 +41,8 @@ const store = observable({
   minimapZones: true,
   minimapZoneSymbols: true,
   legend: true,
+  isSmallTerminalPoster: false,
+  selectedLines: [],
   get rows() {
     let rows = [];
 
@@ -147,6 +150,18 @@ store.setLegend = () => {
   store.legend = !store.legend;
 };
 
+store.setIsSmallTerminalPoster = () => {
+  store.isSmallTerminalPoster = !store.isSmallTerminalPoster;
+};
+
+store.addLine = line => {
+  store.selectedLines.push(line);
+};
+
+store.removeLine = line => {
+  store.selectedLines.remove(line);
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -181,12 +196,34 @@ store.generate = () => {
     legend: componentsWithMapOptions.includes(store.component) ? store.legend : null,
     user,
     routeFilter,
+    isSmallTerminalPoster:
+      store.isSmallTerminalPoster && store.component === componentsByLabel.Terminaalijuliste,
   });
 
-  const props =
-    store.component !== 'TerminalPoster'
-      ? stops.map(stopId => propsTemplate(stopId))
-      : [propsTemplate(store.terminalId, stops)];
+  const lineTimetablePropsTemplate = id => ({
+    lineId: id,
+    dateBegin: store.dateBegin ? format(store.dateBegin) : null,
+    dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+    printAsA5: true,
+    selectedRuleTemplates: [],
+    template: commonStore.currentTemplate.id,
+  });
+
+  let props;
+
+  switch (store.component) {
+    case 'TerminalPoster':
+      props = [propsTemplate(store.terminalId, stops)];
+      break;
+
+    case 'LineTimetable':
+      props = store.selectedLines.map(line => lineTimetablePropsTemplate(line.lineId));
+      break;
+
+    default:
+      props = stops.map(stopId => propsTemplate(stopId));
+      break;
+  }
 
   store.resetChecked();
   commonStore.addPosters(store.buildId, store.component, props);
