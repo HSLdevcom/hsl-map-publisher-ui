@@ -278,6 +278,7 @@ const Generator = props => {
         </Row>
       )}
 
+
       {generatorStore.component !== 'LineTimetable' && (
         <div>
           <h3>Poissuodatettavat linjat</h3>
