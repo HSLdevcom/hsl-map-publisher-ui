@@ -108,11 +108,6 @@ const Generator = props => {
                   defaultValueTrue={generatorStore.timetableAsGreyscale}
                   onChange={value => generatorStore.setTimetableGreyscale(value)}
                 />
-                <Checkbox
-                  label="Tulosta kansilehti"
-                  defaultValueTrue={generatorStore.showCoverPage}
-                  onChange={value => generatorStore.setShowCoverPage(value)}
-                />
               </div>
             )}
             {generatorStore.component === 'TerminalPoster' && (

@@ -10,7 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
-import { downloadPoster, downloadBuildSection } from '../util/api';
+import { downloadPoster, downloadBuildSection, downloadCoverPageBuild } from '../util/api';
 
 const Root = styled.div`
   overflow: auto;
@@ -160,6 +160,12 @@ class BuildDetails extends Component {
     this.setState({ last: { value, isValid } });
   };
 
+  isCoverPagePrintingAllowed = posters => {
+    // Enable timetable cover page only if the build contains timetables
+    const hasTimetablePosters = posters.filter(poster => poster.component === 'Timetable');
+    return hasTimetablePosters.length > 0;
+  };
+
   render() {
     const buildDownloadEnabled = this.state.first.isValid && this.state.last.isValid;
     return (
@@ -220,6 +226,21 @@ class BuildDetails extends Component {
                 })
               }
               label="Lataa PDF"
+              primary
+            />
+            <RaisedButton
+              disabled={
+                !buildDownloadEnabled && !this.isCoverPagePrintingAllowed(this.props.posters)
+              }
+              style={{ marginLeft: '1rem' }}
+              onClick={() =>
+                downloadCoverPageBuild({
+                  id: this.props.id,
+                  first: this.state.first.value - 1,
+                  last: this.state.last.value,
+                })
+              }
+              label="Lataa kansilehdellinen PDF"
               primary
             />
           </Buttons>

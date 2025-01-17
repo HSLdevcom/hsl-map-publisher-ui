@@ -43,7 +43,6 @@ const store = observable({
   legend: true,
   isSmallTerminalPoster: false,
   selectedLines: [],
-  showCoverPage: false,
   get rows() {
     let rows = [];
 
@@ -155,10 +154,6 @@ store.setIsSmallTerminalPoster = () => {
   store.isSmallTerminalPoster = !store.isSmallTerminalPoster;
 };
 
-store.setShowCoverPage = () => {
-  store.showCoverPage = !store.showCoverPage;
-};
-
 store.addLine = line => {
   store.selectedLines.push(line);
 };
@@ -203,7 +198,6 @@ store.generate = () => {
     routeFilter,
     isSmallTerminalPoster:
       store.isSmallTerminalPoster && store.component === componentsByLabel.Terminaalijuliste,
-    showCoverPage: store.showCoverPage && store.component === componentsByLabel.Aikataulu,
   });
 
   const lineTimetablePropsTemplate = id => ({
