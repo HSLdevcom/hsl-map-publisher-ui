@@ -211,8 +211,19 @@ function downloadBuild({ id }) {
   window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
 }
 
+function downloadCoverPageBuild({ id }) {
+  window.open(`${API_URL}/downloadBuild/${id}?printCoverPage=true`, '_blank');
+}
+
 function downloadBuildSection({ id, first, last }) {
   window.open(`${API_URL}/downloadBuild/${id}?first=${first}&last=${last}`, '_blank');
+}
+
+function downloadCoverPageBuildSection({ id, first, last }) {
+  window.open(
+    `${API_URL}/downloadBuild/${id}?first=${first}&last=${last}&printCoverPage=true`,
+    '_blank',
+  );
 }
 
 export {
@@ -236,4 +247,6 @@ export {
   downloadPoster,
   downloadBuild,
   downloadBuildSection,
+  downloadCoverPageBuild,
+  downloadCoverPageBuildSection,
 };
