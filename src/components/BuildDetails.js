@@ -230,7 +230,7 @@ class BuildDetails extends Component {
             />
             <RaisedButton
               disabled={
-                !buildDownloadEnabled && !this.isCoverPagePrintingAllowed(this.props.posters)
+                buildDownloadEnabled ? !this.isCoverPagePrintingAllowed(this.props.posters) : true
               }
               style={{ marginLeft: '1rem' }}
               onClick={() =>
