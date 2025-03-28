@@ -4,6 +4,7 @@ const TRANSPORTATION_MODES = {
   RAIL: 'RAIL',
   SUBWAY: 'SUBWAY',
   TRAM: 'TRAM',
+  L_RAIL: 'L_RAIL',
 };
 
 function compareLineNameOrder(a, b) {

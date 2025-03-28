@@ -44,6 +44,7 @@ const store = observable({
   prevSavedTemplate: null,
   lines: [],
   lineQuery: '',
+  stopModeFilter: '',
   get currentTemplate() {
     const { selectedTemplate, templates } = store;
     const currentTemplate = templates.find(template => template.id === selectedTemplate);
@@ -388,6 +389,10 @@ store.getLines = async () => {
   const sortedLines = checkedLines.sort(compareLineNameOrder);
 
   return sortedLines;
+};
+
+store.setStopModeFilter = newValue => {
+  store.stopModeFilter = newValue;
 };
 
 export default store;

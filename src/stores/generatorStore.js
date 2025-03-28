@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import moment from 'moment';
 
-import { stopsToRows, stopsToGroupRows, getVisibleRows } from '../util/stops';
+import { stopsToRows, stopsToGroupRows, getVisibleRows, filterByStopMode } from '../util/stops';
 
 import commonStore from './commonStore';
 
@@ -11,6 +11,7 @@ const componentsByLabel = {
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
   'Linja-aikataulu': 'LineTimetable',
+  Kilvitysohje: 'Kilvitysohje',
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
@@ -51,7 +52,8 @@ const store = observable({
     } else {
       rows = stopsToGroupRows(commonStore.stops);
     }
-    const filteredRows = getVisibleRows(rows, commonStore.stopFilter);
+    const visibleRows = getVisibleRows(rows, commonStore.stopFilter);
+    const filteredRows = filterByStopMode(visibleRows, commonStore.stopModeFilter);
     return commonStore.showOnlyCheckedStops
       ? filteredRows.filter(f => store.checkedRows.includes(f.rowId))
       : filteredRows;

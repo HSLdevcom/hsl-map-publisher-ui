@@ -60,6 +60,9 @@ async function getStops() {
             distributionOrder
             stopZone
             stopTariff
+            modes {
+              nodes
+            }
           }
         }
       }

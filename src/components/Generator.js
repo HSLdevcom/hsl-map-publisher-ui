@@ -210,19 +210,22 @@ const Generator = props => {
               disabled={generatorStore.component === 'LineTimetable'}
             />
           </Main>
-          <Main>
-            <SelectTemplate
-              currentTemplate={commonStore.currentTemplate}
-              templates={commonStore.templates}
-              onSelectTemplate={commonStore.selectTemplate}
-              showControls={false}
-            />
-          </Main>
+          {generatorStore.component !== 'Kilvitysohje' && (
+            <Main>
+              <SelectTemplate
+                currentTemplate={commonStore.currentTemplate}
+                templates={commonStore.templates}
+                onSelectTemplate={commonStore.selectTemplate}
+                showControls={false}
+              />
+            </Main>
+          )}
         </div>
       )}
 
       {generatorStore.component !== 'TerminalPoster' &&
-        generatorStore.component !== 'LineTimetable' && (
+        generatorStore.component !== 'LineTimetable' &&
+        generatorStore.component !== 'Kilvitysohje' && (
           <Main>
             <SelectRuleTemplates
               selectedRuleTemplates={generatorStore.selectedRuleTemplates}
