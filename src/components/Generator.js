@@ -78,6 +78,11 @@ const Generator = props => {
       case 'LineTimetable':
         text = generatorStore.selectedLines.length;
         break;
+
+      case 'StopRoutePlate':
+        text = stopCount;
+        break;
+
       default:
         text = 0;
         break;
@@ -318,7 +323,9 @@ const Generator = props => {
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
             (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '') ||
             (generatorStore.component === 'LineTimetable' && !generatorStore.dateBegin) ||
-            (generatorStore.component === 'LineTimetable' && !generatorStore.dateEnd)
+            (generatorStore.component === 'LineTimetable' && !generatorStore.dateEnd) ||
+            (generatorStore.component === 'StopRoutePlate' && !generatorStore.dateBegin) ||
+            (generatorStore.component === 'StopRoutePlate' && !generatorStore.dateEnd)
           }
           onClick={async () => {
             if ((await commonStore.currentTemplate) === undefined) {

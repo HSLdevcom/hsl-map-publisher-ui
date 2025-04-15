@@ -11,7 +11,7 @@ const componentsByLabel = {
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
   'Linja-aikataulu': 'LineTimetable',
-  Kilvitysohje: 'Kilvitysohje',
+  Kilvitysohje: 'StopRoutePlate',
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
@@ -211,6 +211,16 @@ store.generate = () => {
     template: commonStore.currentTemplate.id,
   });
 
+  const stopRoutePlatePropsTemplate = stopIds => ({
+    stopIds,
+    dateBegin: store.dateBegin ? format(store.dateBegin) : null,
+    dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+    routeFilter,
+    selectedRuleTemplates: [],
+    template: 'default',
+    downloadTable: true,
+  });
+
   let props;
 
   switch (store.component) {
@@ -220,6 +230,10 @@ store.generate = () => {
 
     case 'LineTimetable':
       props = store.selectedLines.map(line => lineTimetablePropsTemplate(line.lineId));
+      break;
+
+    case 'StopRoutePlate':
+      props = [stopRoutePlatePropsTemplate(stops)];
       break;
 
     default:

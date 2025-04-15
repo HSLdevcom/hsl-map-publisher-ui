@@ -101,7 +101,7 @@ const Build = props => {
         {props.pending < 1 && props.ready > 0 && (
           <RaisedButton
             onClick={() => downloadBuild({ id: props.id })}
-            label="Lataa PDF"
+            label="Lataa tulosteet"
             style={{ marginLeft: 10 }}
             primary
           />
