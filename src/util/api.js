@@ -219,7 +219,9 @@ function downloadBuild({ id }) {
         downloadPoster({ id: spreadsheet.id });
       });
     }
-    window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+    if (spreadsheets.length < build.posters.length) {
+      window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+    }
   });
 }
 
