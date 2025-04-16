@@ -79,7 +79,7 @@ function StopList(props) {
   const { showOnlyCheckedStops, setShowOnlyCheckedStops } = commonStore;
   const { stopFilter, setStopFilter, stopModeFilter, setStopModeFilter } = commonStore;
   const renderer = rowRenderer(rows, checkedRows, props.onCheck);
-  const renderLineTypeFilter = generatorStore.component === 'Kilvitysohje';
+  const renderLineTypeFilter = generatorStore.component === 'StopRoutePlate';
 
   const stopModeOptions = [
     {
