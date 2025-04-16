@@ -85,26 +85,32 @@ function StopList(props) {
     {
       value: TRANSPORTATION_MODES.BUS,
       label: 'Linja-auto',
+      color: '#007AC9',
     },
     {
       value: TRANSPORTATION_MODES.TRAM,
       label: 'Ratikka',
+      color: '#00985F',
     },
     {
       value: TRANSPORTATION_MODES.SUBWAY,
       label: 'Metro',
+      color: '#FF6319',
     },
     {
       value: TRANSPORTATION_MODES.RAIL,
       label: 'Juna',
+      color: '#963281',
     },
     {
       value: TRANSPORTATION_MODES.L_RAIL,
       label: 'Pikaratikka',
+      color: '#007E79',
     },
     {
       value: TRANSPORTATION_MODES.FERRY,
       label: 'Lossi',
+      color: '#00B9E4',
     },
   ];
 
@@ -163,6 +169,17 @@ function StopList(props) {
               onChange={handleStopModeFilterChange}
               isClearable
               isMulti
+              styles={{
+                multiValue: (styles, { data }) => ({
+                  ...styles,
+                  backgroundColor: data.color,
+                  color: '#ffffff',
+                }),
+                multiValueLabel: styles => ({
+                  ...styles,
+                  color: '#ffffff',
+                }),
+              }}
             />
           </div>
         </Row>
