@@ -161,9 +161,17 @@ const Generator = props => {
         </Column>
 
         <Column>
-          <h3>Voimassaolokausi alkaa</h3>
+          <h3>
+            {generatorStore.component === 'StopRoutePlate'
+              ? 'Vertailuvälin alku'
+              : 'Voimassaolokausi alkaa'}
+          </h3>
           <DatePicker
-            name="Voimassaolokausi alkaa"
+            name={
+              generatorStore.component === 'StopRoutePlate'
+                ? 'Vertailuvälin alku'
+                : 'Voimassaolokausi alkaa'
+            }
             value={generatorStore.dateBegin}
             onChange={(event, value) => generatorStore.setDateBegin(value)}
             hintText="oletus"
@@ -172,9 +180,17 @@ const Generator = props => {
         </Column>
 
         <Column>
-          <h3>Voimassaolokausi loppuu</h3>
+          <h3>
+            {generatorStore.component === 'StopRoutePlate'
+              ? 'Vertailuvälin loppu'
+              : 'Voimassaolokausi loppuu'}
+          </h3>
           <DatePicker
-            name="Voimassaolokausi loppuu"
+            name={
+              generatorStore.component === 'StopRoutePlate'
+                ? 'Vertailuvälin loppu'
+                : 'Voimassaolokausi loppuu'
+            }
             value={generatorStore.dateEnd}
             onChange={(event, value) => generatorStore.setDateEnd(value)}
             hintText="oletus"
@@ -215,7 +231,7 @@ const Generator = props => {
               disabled={generatorStore.component === 'LineTimetable'}
             />
           </Main>
-          {generatorStore.component !== 'Kilvitysohje' && (
+          {generatorStore.component !== 'StopRoutePlate' && (
             <Main>
               <SelectTemplate
                 currentTemplate={commonStore.currentTemplate}
@@ -230,7 +246,7 @@ const Generator = props => {
 
       {generatorStore.component !== 'TerminalPoster' &&
         generatorStore.component !== 'LineTimetable' &&
-        generatorStore.component !== 'Kilvitysohje' && (
+        generatorStore.component !== 'StopRoutePlate' && (
           <Main>
             <SelectRuleTemplates
               selectedRuleTemplates={generatorStore.selectedRuleTemplates}
