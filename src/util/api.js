@@ -229,10 +229,6 @@ function downloadCoverPageBuild({ id }) {
   window.open(`${API_URL}/downloadBuild/${id}?printCoverPage=true`, '_blank');
 }
 
-function downloadCoverPageBuild({ id }) {
-  window.open(`${API_URL}/downloadBuild/${id}?printCoverPage=true`, '_blank');
-}
-
 function downloadBuildSection({ id, first, last }) {
   window.open(`${API_URL}/downloadBuild/${id}?first=${first}&last=${last}`, '_blank');
 }
