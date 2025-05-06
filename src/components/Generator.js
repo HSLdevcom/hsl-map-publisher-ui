@@ -78,6 +78,11 @@ const Generator = props => {
       case 'LineTimetable':
         text = generatorStore.selectedLines.length;
         break;
+
+      case 'StopRoutePlate':
+        text = stopCount;
+        break;
+
       default:
         text = 0;
         break;
@@ -156,9 +161,17 @@ const Generator = props => {
         </Column>
 
         <Column>
-          <h3>Voimassaolokausi alkaa</h3>
+          <h3>
+            {generatorStore.component === 'StopRoutePlate'
+              ? 'Vertailuvälin alku'
+              : 'Voimassaolokausi alkaa'}
+          </h3>
           <DatePicker
-            name="Voimassaolokausi alkaa"
+            name={
+              generatorStore.component === 'StopRoutePlate'
+                ? 'Vertailuvälin alku'
+                : 'Voimassaolokausi alkaa'
+            }
             value={generatorStore.dateBegin}
             onChange={(event, value) => generatorStore.setDateBegin(value)}
             hintText="oletus"
@@ -167,9 +180,17 @@ const Generator = props => {
         </Column>
 
         <Column>
-          <h3>Voimassaolokausi loppuu</h3>
+          <h3>
+            {generatorStore.component === 'StopRoutePlate'
+              ? 'Vertailuvälin loppu'
+              : 'Voimassaolokausi loppuu'}
+          </h3>
           <DatePicker
-            name="Voimassaolokausi loppuu"
+            name={
+              generatorStore.component === 'StopRoutePlate'
+                ? 'Vertailuvälin loppu'
+                : 'Voimassaolokausi loppuu'
+            }
             value={generatorStore.dateEnd}
             onChange={(event, value) => generatorStore.setDateEnd(value)}
             hintText="oletus"
@@ -210,19 +231,22 @@ const Generator = props => {
               disabled={generatorStore.component === 'LineTimetable'}
             />
           </Main>
-          <Main>
-            <SelectTemplate
-              currentTemplate={commonStore.currentTemplate}
-              templates={commonStore.templates}
-              onSelectTemplate={commonStore.selectTemplate}
-              showControls={false}
-            />
-          </Main>
+          {generatorStore.component !== 'StopRoutePlate' && (
+            <Main>
+              <SelectTemplate
+                currentTemplate={commonStore.currentTemplate}
+                templates={commonStore.templates}
+                onSelectTemplate={commonStore.selectTemplate}
+                showControls={false}
+              />
+            </Main>
+          )}
         </div>
       )}
 
       {generatorStore.component !== 'TerminalPoster' &&
-        generatorStore.component !== 'LineTimetable' && (
+        generatorStore.component !== 'LineTimetable' &&
+        generatorStore.component !== 'StopRoutePlate' && (
           <Main>
             <SelectRuleTemplates
               selectedRuleTemplates={generatorStore.selectedRuleTemplates}
@@ -315,7 +339,9 @@ const Generator = props => {
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
             (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '') ||
             (generatorStore.component === 'LineTimetable' && !generatorStore.dateBegin) ||
-            (generatorStore.component === 'LineTimetable' && !generatorStore.dateEnd)
+            (generatorStore.component === 'LineTimetable' && !generatorStore.dateEnd) ||
+            (generatorStore.component === 'StopRoutePlate' && !generatorStore.dateBegin) ||
+            (generatorStore.component === 'StopRoutePlate' && !generatorStore.dateEnd)
           }
           onClick={async () => {
             if ((await commonStore.currentTemplate) === undefined) {

@@ -117,7 +117,7 @@ const Poster = props => (
       <FlatButton
         disabled={props.status !== 'READY'}
         onClick={() => downloadPoster({ id: props.id })}
-        label="Lataa PDF"
+        label={props.component === 'StopRoutePlate' ? 'Lataa CSV' : 'Lataa PDF'}
         primary
       />
       <FlatButton
@@ -164,6 +164,16 @@ class BuildDetails extends Component {
     // Enable timetable cover page only if the build contains timetables
     const hasTimetablePosters = posters.filter(poster => poster.component === 'Timetable');
     return hasTimetablePosters.length > 0;
+  };
+
+  hasSpreadsheetDownload = posters => {
+    const hasCSVFiles = posters.filter(poster => poster.component === 'StopRoutePlate');
+    return hasCSVFiles.length > 0;
+  };
+
+  hasOnlySpreadsheetDownloads = posters => {
+    const hasOnlyCSVFiles = posters.filter(poster => poster.component === 'StopRoutePlate');
+    return hasOnlyCSVFiles.length === posters.length;
   };
 
   render() {

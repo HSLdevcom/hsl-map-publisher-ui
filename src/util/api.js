@@ -1,6 +1,7 @@
 import { execute, makePromise } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
+import { forEach } from 'lodash';
 import get from 'lodash/get';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
@@ -60,6 +61,9 @@ async function getStops() {
             distributionOrder
             stopZone
             stopTariff
+            modes {
+              nodes
+            }
           }
         }
       }
@@ -208,7 +212,17 @@ function downloadPoster({ id }) {
 }
 
 function downloadBuild({ id }) {
-  window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+  getBuild({ id }).then(build => {
+    const spreadsheets = build.posters.filter(poster => poster.component === 'StopRoutePlate');
+    if (spreadsheets.length > 0) {
+      forEach(spreadsheets, spreadsheet => {
+        downloadPoster({ id: spreadsheet.id });
+      });
+    }
+    if (spreadsheets.length < build.posters.length) {
+      window.open(`${API_URL}/downloadBuild/${id}`, '_blank');
+    }
+  });
 }
 
 function downloadCoverPageBuild({ id }) {
