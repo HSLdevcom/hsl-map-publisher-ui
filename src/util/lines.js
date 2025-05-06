@@ -4,10 +4,7 @@ const TRANSPORTATION_MODES = {
   RAIL: 'RAIL',
   SUBWAY: 'SUBWAY',
   TRAM: 'TRAM',
-<<<<<<< HEAD
   L_RAIL: 'L_RAIL',
-=======
->>>>>>> 070ed39 (AB#32085: Improve search UX, generate multiple line timetables at once (#113))
 };
 
 function compareLineNameOrder(a, b) {
@@ -23,4 +20,8 @@ function shortenTrainParsedLineId(lineId) {
   return lineId.replace(/^\d/, '');
 }
 
-export { TRANSPORTATION_MODES, compareLineNameOrder, shortenTrainParsedLineId };
+function truncateLineId(lineId) {
+  return lineId.substring(0, 4);
+}
+
+export { TRANSPORTATION_MODES, compareLineNameOrder, shortenTrainParsedLineId, truncateLineId };
