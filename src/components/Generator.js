@@ -3,6 +3,7 @@ import { inject, observer, PropTypes } from 'mobx-react';
 import styled from 'styled-components';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Switch } from '@material-ui/core';
 import DatePicker from 'material-ui/DatePicker';
 import TextField from 'material-ui/TextField';
 import RadioGroup from './RadioGroup';
@@ -13,7 +14,7 @@ import SelectTemplate from './SelectTemplate';
 import SelectRuleTemplates from './SelectRuleTemplates';
 import { componentsWithMapOptions } from '../stores/generatorStore';
 import TerminalSelect from './TerminalSelect';
-import LineSelect from './LineSelect';
+import { ObservedLineSelect, ObservedSingleLineSelect } from './LineSelect';
 
 const Root = styled.div`
   display: flex;
@@ -80,7 +81,11 @@ const Generator = props => {
         break;
 
       case 'StopRoutePlate':
-        text = stopCount;
+        if (generatorStore.useLineQuery) {
+          text = 1;
+        } else {
+          text = stopCount;
+        }
         break;
 
       default:
@@ -122,6 +127,17 @@ const Generator = props => {
                   defaultValueTrue={generatorStore.isSmallTerminalPoster}
                   onChange={() => generatorStore.setIsSmallTerminalPoster()}
                 />
+              </div>
+            )}
+            {generatorStore.component === 'StopRoutePlate' && (
+              <div>
+                <Switch
+                  label="Linjahaku"
+                  checked={generatorStore.useLineQuery}
+                  onChange={() => generatorStore.toggleUseLineQuery()}
+                  className="muiSwitch-toggle"
+                />
+                <span>Käytä linjahakua</span>
               </div>
             )}
           </div>
@@ -211,7 +227,7 @@ const Generator = props => {
 
       {generatorStore.component === 'LineTimetable' && (
         <Main>
-          <LineSelect
+          <ObservedLineSelect
             setLineQuery={commonStore.setLineQuery}
             lines={commonStore.lines}
             lineQuery={commonStore.lineQuery}
@@ -222,7 +238,20 @@ const Generator = props => {
         </Main>
       )}
 
-      {generatorStore.component !== 'LineTimetable' && (
+      {generatorStore.component === 'StopRoutePlate' && generatorStore.useLineQuery && (
+        <Main>
+          <ObservedSingleLineSelect
+            setLineQuery={commonStore.setLineQuery}
+            lines={commonStore.lines}
+            lineQuery={commonStore.lineQuery}
+            selectedRoutePlateLine={generatorStore.selectedRoutePlateLine}
+            setSelectedRoutePlateLine={generatorStore.setSelectedRoutePlateLine}
+            clearSelectedRoutePlateLine={generatorStore.clearSelectedRoutePlateLine}
+          />
+        </Main>
+      )}
+
+      {generatorStore.component !== 'LineTimetable' && !generatorStore.useLineQuery && (
         <div>
           <Main>
             <StopList
@@ -302,7 +331,7 @@ const Generator = props => {
         </Row>
       )}
 
-      {generatorStore.component !== 'LineTimetable' && (
+      {generatorStore.component !== 'LineTimetable' && !generatorStore.useLineQuery && (
         <div>
           <h3>Poissuodatettavat linjat</h3>
           <Row>
@@ -334,7 +363,9 @@ const Generator = props => {
         <RaisedButton
           data-cy="generate-button"
           disabled={
-            (stopCount < 1 && generatorStore.component !== 'LineTimetable') ||
+            (stopCount < 1 &&
+              generatorStore.component !== 'LineTimetable' &&
+              !generatorStore.useLineQuery) ||
             !generatorStore.buildId ||
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
             (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '') ||

@@ -44,6 +44,8 @@ const store = observable({
   legend: true,
   isSmallTerminalPoster: false,
   selectedLines: [],
+  selectedRoutePlateLine: null,
+  useLineQuery: false,
   get rows() {
     let rows = [];
 
@@ -164,6 +166,22 @@ store.removeLine = line => {
   store.selectedLines.remove(line);
 };
 
+store.clearSelectedLines = () => {
+  store.selectedLines = [];
+};
+
+store.toggleUseLineQuery = () => {
+  store.useLineQuery = !store.useLineQuery;
+};
+
+store.setSelectedRoutePlateLine = line => {
+  store.selectedRoutePlateLine = line;
+};
+
+store.clearSelectedRoutePlateLine = () => {
+  store.selectedRoutePlateLine = null;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -219,6 +237,8 @@ store.generate = () => {
     selectedRuleTemplates: [],
     template: 'default',
     downloadTable: true,
+    useLineQuery: store.useLineQuery,
+    lineId: store.selectedRoutePlateLine.lineId,
   });
 
   let props;
@@ -242,6 +262,9 @@ store.generate = () => {
   }
 
   store.resetChecked();
+  store.clearSelectedRoutePlateLine();
+  store.clearSelectedLines();
+
   commonStore.addPosters(store.buildId, store.component, props);
 };
 
