@@ -171,6 +171,7 @@ store.clearSelectedLines = () => {
 };
 
 store.toggleUseLineQuery = () => {
+  store.clearSelectedRoutePlateLine();
   store.useLineQuery = !store.useLineQuery;
 };
 
@@ -238,7 +239,7 @@ store.generate = () => {
     template: 'default',
     downloadTable: true,
     useLineQuery: store.useLineQuery,
-    lineId: store.selectedRoutePlateLine.lineId,
+    lineId: store.selectedRoutePlateLine ? store.selectedRoutePlateLine.lineId : null,
   });
 
   let props;

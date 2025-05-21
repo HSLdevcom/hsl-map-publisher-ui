@@ -81,7 +81,7 @@ const Generator = props => {
         break;
 
       case 'StopRoutePlate':
-        if (generatorStore.useLineQuery) {
+        if (generatorStore.useLineQuery && generatorStore.selectedRoutePlateLine) {
           text = 1;
         } else {
           text = stopCount;
@@ -371,6 +371,7 @@ const Generator = props => {
             (stopCount < 1 &&
               generatorStore.component !== 'LineTimetable' &&
               !generatorStore.useLineQuery) ||
+            (generatorStore.useLineQuery && generatorStore.selectedRoutePlateLine === null) ||
             !generatorStore.buildId ||
             (generatorStore.component === 'TerminalPoster' && generatorStore.terminalId === '') ||
             (generatorStore.component === 'LineTimetable' && generatorStore.lineId === '') ||
