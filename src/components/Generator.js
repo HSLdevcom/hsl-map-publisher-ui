@@ -130,14 +130,19 @@ const Generator = props => {
               </div>
             )}
             {generatorStore.component === 'StopRoutePlate' && (
-              <div>
+              <div style={{ marginLeft: '20px' }}>
+                <span style={{ opacity: generatorStore.useLineQuery ? 0.4 : 1.0 }}>
+                  Pysäkkihaku
+                </span>
                 <Switch
-                  label="Linjahaku"
                   checked={generatorStore.useLineQuery}
                   onChange={() => generatorStore.toggleUseLineQuery()}
+                  color="primary"
+                  inputProps={{ 'aria-label': 'Linjahaku' }}
                   className="muiSwitch-toggle"
+                  style={{ color: '#0077c7' }}
                 />
-                <span>Käytä linjahakua</span>
+                <span style={{ opacity: generatorStore.useLineQuery ? 1.0 : 0.4 }}>Linjahaku</span>
               </div>
             )}
           </div>
