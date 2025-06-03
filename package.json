@@ -2,7 +2,7 @@
   "name": "hsl-map-publisher-ui",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
