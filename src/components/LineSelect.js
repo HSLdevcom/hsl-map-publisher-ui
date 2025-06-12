@@ -24,7 +24,7 @@ const ListContainer = styled.div`
 `;
 
 const mapLineItems = (lines, onClick) => {
-  if (lines.length > 0) {
+  if (lines.length > 0 && lines[0] !== null) {
     return lines.map((line, index) => (
       <ListItem onClick={() => onClick(line)} key={index}>
         <ListItemTitle>{line.lineIdParsed}</ListItemTitle> <p>{line.nameFi}</p>
@@ -54,6 +54,26 @@ const LineSelect = props => (
   </div>
 );
 
+const SingleLineSelect = props => (
+  <div>
+    <SectionHeading>Linjahaku</SectionHeading>
+    <TextField
+      id="line-select"
+      hintText="Hae linjaa..."
+      onChange={event =>
+        event.target.value ? props.setLineQuery(event.target.value) : props.setLineQuery('')
+      }
+      value={props.lineQuery}
+      style={{ width: '100%' }}
+    />
+    <ListContainer>{mapLineItems(props.lines, props.setSelectedRoutePlateLine)}</ListContainer>
+    <div>
+      <SelectedLinesTitle>Valittu linja</SelectedLinesTitle>
+      {mapLineItems([props.selectedRoutePlateLine], props.clearSelectedRoutePlateLine)}
+    </div>
+  </div>
+);
+
 LineSelect.propTypes = {
   setLineQuery: PropTypes.func.isRequired,
   lineQuery: PropTypes.string.isRequired,
@@ -63,4 +83,20 @@ LineSelect.propTypes = {
   selectedLines: PropTypes.object.isRequired,
 };
 
-export default observer(LineSelect);
+SingleLineSelect.propTypes = {
+  setLineQuery: PropTypes.func.isRequired,
+  lineQuery: PropTypes.string.isRequired,
+  lines: PropTypes.object.isRequired,
+  selectedRoutePlateLine: PropTypes.object,
+  setSelectedRoutePlateLine: PropTypes.func.isRequired,
+  clearSelectedRoutePlateLine: PropTypes.func.isRequired,
+};
+
+SingleLineSelect.defaultProps = {
+  selectedRoutePlateLine: null,
+};
+
+export const ObservedLineSelect = observer(LineSelect);
+export const ObservedSingleLineSelect = observer(SingleLineSelect);
+
+export default { ObservedLineSelect, ObservedSingleLineSelect };

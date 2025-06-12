@@ -1,5 +1,6 @@
 import groupBy from 'lodash/groupBy';
 import flatMap from 'lodash/flatMap';
+import { forEach } from 'lodash';
 
 function shelterText(stopType) {
   switch (stopType) {
@@ -85,11 +86,12 @@ function groupStops(stops) {
 }
 
 function stopsToRows(stops) {
-  return stops.map(({ shortId, posterCount, nameFi, stopId, stopType }) => ({
+  return stops.map(({ shortId, posterCount, nameFi, stopId, stopType, modes }) => ({
     rowId: stopId,
     title: `${shortId} ${nameFi}`,
     subtitle: `(${stopId}) - ${shelterText(stopType)}, ${posterCountText(posterCount)}`,
     stopIds: [stopId],
+    stopModes: [...modes.nodes],
   }));
 }
 
@@ -135,4 +137,22 @@ function getVisibleRows(rows, filterValue) {
   );
 }
 
-export { stopsToRows, stopsToGroupRows, getVisibleRows, getFilterKeywords };
+function filterByStopMode(rows, filter) {
+  if (filter === '' || filter.length === 0) {
+    return rows;
+  }
+
+  const filteredRows = rows.filter(row => {
+    const { stopModes } = row;
+    let hasSelectedStopMode = false;
+    forEach(filter, filterStopMode => {
+      if (!hasSelectedStopMode) {
+        hasSelectedStopMode = stopModes.includes(filterStopMode.value);
+      }
+    });
+    return hasSelectedStopMode;
+  });
+  return filteredRows;
+}
+
+export { stopsToRows, stopsToGroupRows, getVisibleRows, getFilterKeywords, filterByStopMode };

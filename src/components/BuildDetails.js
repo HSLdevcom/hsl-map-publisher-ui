@@ -10,7 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
-import { downloadPoster, downloadBuildSection } from '../util/api';
+import { downloadPoster, downloadBuildSection, downloadCoverPageBuild } from '../util/api';
 
 const Root = styled.div`
   overflow: auto;
@@ -117,7 +117,7 @@ const Poster = props => (
       <FlatButton
         disabled={props.status !== 'READY'}
         onClick={() => downloadPoster({ id: props.id })}
-        label="Lataa PDF"
+        label={props.component === 'StopRoutePlate' ? 'Lataa CSV' : 'Lataa PDF'}
         primary
       />
       <FlatButton
@@ -158,6 +158,22 @@ class BuildDetails extends Component {
     const first = parseInt(this.state.first.value, 10);
     const isValid = value >= first && value <= this.props.posters.length;
     this.setState({ last: { value, isValid } });
+  };
+
+  isCoverPagePrintingAllowed = posters => {
+    // Enable timetable cover page only if the build contains timetables
+    const hasTimetablePosters = posters.filter(poster => poster.component === 'Timetable');
+    return hasTimetablePosters.length > 0;
+  };
+
+  hasSpreadsheetDownload = posters => {
+    const hasCSVFiles = posters.filter(poster => poster.component === 'StopRoutePlate');
+    return hasCSVFiles.length > 0;
+  };
+
+  hasOnlySpreadsheetDownloads = posters => {
+    const hasOnlyCSVFiles = posters.filter(poster => poster.component === 'StopRoutePlate');
+    return hasOnlyCSVFiles.length === posters.length;
   };
 
   render() {
@@ -220,6 +236,21 @@ class BuildDetails extends Component {
                 })
               }
               label="Lataa PDF"
+              primary
+            />
+            <RaisedButton
+              disabled={
+                buildDownloadEnabled ? !this.isCoverPagePrintingAllowed(this.props.posters) : true
+              }
+              style={{ marginLeft: '1rem' }}
+              onClick={() =>
+                downloadCoverPageBuild({
+                  id: this.props.id,
+                  first: this.state.first.value - 1,
+                  last: this.state.last.value,
+                })
+              }
+              label="Lataa kansilehdellinen PDF"
               primary
             />
           </Buttons>

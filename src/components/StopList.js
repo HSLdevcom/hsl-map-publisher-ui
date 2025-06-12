@@ -10,6 +10,8 @@ import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import { observer, inject } from 'mobx-react';
+import Select from 'react-select';
+import { TRANSPORTATION_MODES } from '../util/lines';
 
 const Root = styled.div`
   flex-grow: 1;
@@ -75,8 +77,47 @@ function StopList(props) {
   const { generatorStore, commonStore } = props;
   const { rows, checkedRows } = generatorStore;
   const { showOnlyCheckedStops, setShowOnlyCheckedStops } = commonStore;
-  const { stopFilter, setStopFilter } = commonStore;
+  const { stopFilter, setStopFilter, stopModeFilter, setStopModeFilter } = commonStore;
   const renderer = rowRenderer(rows, checkedRows, props.onCheck);
+  const renderLineTypeFilter = generatorStore.component === 'StopRoutePlate';
+
+  const stopModeOptions = [
+    {
+      value: TRANSPORTATION_MODES.BUS,
+      label: 'Linja-auto',
+      color: '#007AC9',
+    },
+    {
+      value: TRANSPORTATION_MODES.TRAM,
+      label: 'Ratikka',
+      color: '#00985F',
+    },
+    {
+      value: TRANSPORTATION_MODES.SUBWAY,
+      label: 'Metro',
+      color: '#FF6319',
+    },
+    {
+      value: TRANSPORTATION_MODES.RAIL,
+      label: 'Juna',
+      color: '#963281',
+    },
+    {
+      value: TRANSPORTATION_MODES.L_RAIL,
+      label: 'Pikaratikka',
+      color: '#007E79',
+    },
+    {
+      value: TRANSPORTATION_MODES.FERRY,
+      label: 'Lossi',
+      color: '#00B9E4',
+    },
+  ];
+
+  const selected = stopModeOptions.find(t => t.value === stopModeFilter);
+
+  const handleStopModeFilterChange = newValue =>
+    newValue ? setStopModeFilter(newValue) : setStopModeFilter('');
 
   return (
     <Root>
@@ -118,6 +159,31 @@ function StopList(props) {
           label={!showOnlyCheckedStops ? 'Näytä valitut' : 'Näytä kaikki'}
         />
       </Row>
+      {renderLineTypeFilter && (
+        <Row>
+          <div>
+            <Select
+              placeholder="Pysäkkityyppi..."
+              options={stopModeOptions}
+              defaultValue={selected}
+              onChange={handleStopModeFilterChange}
+              isClearable
+              isMulti
+              styles={{
+                multiValue: (styles, { data }) => ({
+                  ...styles,
+                  backgroundColor: data.color,
+                  color: '#ffffff',
+                }),
+                multiValueLabel: styles => ({
+                  ...styles,
+                  color: '#ffffff',
+                }),
+              }}
+            />
+          </div>
+        </Row>
+      )}
       <ListContainer>
         <AutoSizer>
           {({ height, width }) => (

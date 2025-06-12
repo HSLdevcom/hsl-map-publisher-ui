@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import moment from 'moment';
 
-import { stopsToRows, stopsToGroupRows, getVisibleRows } from '../util/stops';
+import { stopsToRows, stopsToGroupRows, getVisibleRows, filterByStopMode } from '../util/stops';
 
 import commonStore from './commonStore';
 
@@ -11,6 +11,7 @@ const componentsByLabel = {
   PysäkkijulisteA3: 'A3StopPoster',
   Terminaalijuliste: 'TerminalPoster',
   'Linja-aikataulu': 'LineTimetable',
+  Kilvitysohje: 'StopRoutePlate',
 };
 
 export const componentsWithMapOptions = ['StopPoster', 'TerminalPoster'];
@@ -43,6 +44,8 @@ const store = observable({
   legend: true,
   isSmallTerminalPoster: false,
   selectedLines: [],
+  selectedRoutePlateLine: null,
+  useLineQuery: false,
   get rows() {
     let rows = [];
 
@@ -51,7 +54,8 @@ const store = observable({
     } else {
       rows = stopsToGroupRows(commonStore.stops);
     }
-    const filteredRows = getVisibleRows(rows, commonStore.stopFilter);
+    const visibleRows = getVisibleRows(rows, commonStore.stopFilter);
+    const filteredRows = filterByStopMode(visibleRows, commonStore.stopModeFilter);
     return commonStore.showOnlyCheckedStops
       ? filteredRows.filter(f => store.checkedRows.includes(f.rowId))
       : filteredRows;
@@ -162,6 +166,23 @@ store.removeLine = line => {
   store.selectedLines.remove(line);
 };
 
+store.clearSelectedLines = () => {
+  store.selectedLines = [];
+};
+
+store.toggleUseLineQuery = () => {
+  store.clearSelectedRoutePlateLine();
+  store.useLineQuery = !store.useLineQuery;
+};
+
+store.setSelectedRoutePlateLine = line => {
+  store.selectedRoutePlateLine = line;
+};
+
+store.clearSelectedRoutePlateLine = () => {
+  store.selectedRoutePlateLine = null;
+};
+
 store.generate = () => {
   const user = commonStore.getUser();
   const routeFilter = commonStore.routeFilter;
@@ -209,6 +230,18 @@ store.generate = () => {
     template: commonStore.currentTemplate.id,
   });
 
+  const stopRoutePlatePropsTemplate = stopIds => ({
+    stopIds,
+    dateBegin: store.dateBegin ? format(store.dateBegin) : null,
+    dateEnd: store.dateEnd ? format(store.dateEnd) : null,
+    routeFilter,
+    selectedRuleTemplates: [],
+    template: 'default',
+    downloadTable: true,
+    useLineQuery: store.useLineQuery,
+    lineId: store.selectedRoutePlateLine ? store.selectedRoutePlateLine.lineId : null,
+  });
+
   let props;
 
   switch (store.component) {
@@ -220,12 +253,19 @@ store.generate = () => {
       props = store.selectedLines.map(line => lineTimetablePropsTemplate(line.lineId));
       break;
 
+    case 'StopRoutePlate':
+      props = [stopRoutePlatePropsTemplate(stops)];
+      break;
+
     default:
       props = stops.map(stopId => propsTemplate(stopId));
       break;
   }
 
   store.resetChecked();
+  store.clearSelectedRoutePlateLine();
+  store.clearSelectedLines();
+
   commonStore.addPosters(store.buildId, store.component, props);
 };
 
