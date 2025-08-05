@@ -11,7 +11,7 @@
     "cypress": "^3.8.2",
     "cypress-commands": "^1.0.0",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-adapter-react-16": "^1.15.8",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "history": "^4.9.0",
