@@ -20,4 +20,8 @@ function shortenTrainParsedLineId(lineId) {
   return lineId.replace(/^\d/, '');
 }
 
-export { TRANSPORTATION_MODES, compareLineNameOrder, shortenTrainParsedLineId };
+function truncateLineId(lineId) {
+  return lineId.substring(0, 4);
+}
+
+export { TRANSPORTATION_MODES, compareLineNameOrder, shortenTrainParsedLineId, truncateLineId };

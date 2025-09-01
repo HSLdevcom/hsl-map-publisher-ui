@@ -4,6 +4,7 @@ import moment from 'moment';
 import { stopsToRows, stopsToGroupRows, getVisibleRows, filterByStopMode } from '../util/stops';
 
 import commonStore from './commonStore';
+import { truncateLineId } from '../util/lines';
 
 const componentsByLabel = {
   Pysäkkijuliste: 'StopPoster',
@@ -222,7 +223,7 @@ store.generate = () => {
   });
 
   const lineTimetablePropsTemplate = id => ({
-    lineId: id,
+    lineId: truncateLineId(id), // Truncate the lineId to remove the letter postfixes
     dateBegin: store.dateBegin ? format(store.dateBegin) : null,
     dateEnd: store.dateEnd ? format(store.dateEnd) : null,
     printAsA5: true,
