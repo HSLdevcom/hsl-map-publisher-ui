@@ -81,7 +81,13 @@ class TemplateImage extends Component {
 
     return (
       <UploadDrop className={className} onDrop={this.onDrop} name="footer_image" disablePreview>
-        <Item dangerouslySetInnerHTML={{ __html: svg }} />
+        <Item>
+          <iframe
+            title="SVG"
+            srcDoc={`<html><body>${svg}</body></html>`}
+            style={{ border: 'none', width: '100%', height: '100%' }}
+          />
+        </Item>
       </UploadDrop>
     );
   }
