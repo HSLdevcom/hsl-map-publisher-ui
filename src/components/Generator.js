@@ -106,6 +106,15 @@ const Generator = props => {
             onChange={value => generatorStore.setComponent(value)}
           />
           <div>
+            {generatorStore.component === 'StopPoster' && (
+              <div>
+                <Checkbox
+                  label="Vuoroväliaikataulu"
+                  defaultValueTrue={generatorStore.intervalTimetable}
+                  onChange={value => generatorStore.setIntervalTimetable(value)}
+                />
+              </div>
+            )}
             {generatorStore.component === 'Timetable' && (
               <div>
                 <Checkbox

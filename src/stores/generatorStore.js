@@ -34,6 +34,7 @@ const store = observable({
   isSummerTimetable: false,
   buildId: null,
   timetableAsA4Format: true,
+  intervalTimetable: false,
   timetableAsGreyscale: false,
   checkedRows: [],
   selectedRuleTemplates: [],
@@ -72,6 +73,10 @@ store.setComponent = value => {
 
 store.setTimetableA4Format = value => {
   store.timetableAsA4Format = value;
+};
+
+store.setIntervalTimetable = value => {
+  store.intervalTimetable = value;
 };
 
 store.setTimetableGreyscale = value => {
@@ -202,6 +207,8 @@ store.generate = () => {
     dateEnd: store.dateEnd ? format(store.dateEnd) : null,
     printTimetablesAsA4:
       store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
+    intervalTimetable:
+      store.intervalTimetable && store.component === componentsByLabel.Pysäkkijuliste,
     printTimetablesAsGreyscale:
       store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
     template: commonStore.currentTemplate.id,
