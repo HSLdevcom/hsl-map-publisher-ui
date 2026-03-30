@@ -268,7 +268,7 @@ class TemplateArea extends Component {
         <Area
           resizeable={area.resizeable}
           orientation={area.orientation}
-          innerRef={this.areaRef}
+          ref={this.areaRef}
           resizing={area.resizeable && this.resizing.index !== -1}
           onMouseUp={this.onHandleMouseUp}
           onMouseMove={this.onHandleMouseMove}

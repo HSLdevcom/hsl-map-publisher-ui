@@ -1,6 +1,6 @@
-FROM node:16-alpine as builder
+FROM node:20-alpine AS builder
 
-ENV WORK /opt/publisher
+ENV WORK=/opt/publisher
 
 # Create app directory
 RUN mkdir -p ${WORK}
