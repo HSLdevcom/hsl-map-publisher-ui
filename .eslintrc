@@ -1,25 +1,63 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
-  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "jest": true
   },
   "rules": {
-    "react/jsx-filename-extension": ["error", {
-      "extensions": [".js"]
-    }],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [
+          ".js"
+        ]
+      }
+    ],
     "import/first": 0,
     "react/forbid-prop-types": 0,
     "react/no-array-index-key": 0,
     "react/jsx-closing-bracket-location": "off",
     "react/sort-comp": 0,
-    "react/prefer-stateless-function": false,
-    "react/no-unescaped-entities": false,
+    "react/prefer-stateless-function": "off",
+    "react/no-unescaped-entities": "off",
     "operator-assignment": 0,
     "no-nested-ternary": "off",
     "prefer-destructuring": "off",
-    "prettier": true
+    "react/destructuring-assignment": "off",
+    "react/function-component-definition": "off",
+    "react/static-property-placement": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/no-unused-class-component-methods": "off",
+    "react/no-deprecated": "off",
+    "class-methods-use-this": "off",
+    "import/no-import-module-exports": "off",
+    "import/no-cycle": "off",
+    "default-param-last": "off",
+    "lines-between-class-members": "off",
+    "import/order": "off",
+    "no-else-return": "off",
+    "react/jsx-fragments": "off",
+    "react/no-access-state-in-setstate": "off"
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "plugins": [
+        [
+          "@babel/plugin-proposal-decorators",
+          {
+            "legacy": true
+          }
+        ],
+        "@babel/plugin-proposal-class-properties"
+      ]
+    }
   }
 }

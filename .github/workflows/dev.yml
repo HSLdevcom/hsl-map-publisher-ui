@@ -13,10 +13,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          config-file: /cypress.dev.json
         env:
           CYPRESS_BASE_URL: https://dev.kartat.hsl.fi/julkaisin
+          CYPRESS_API_URL: https://dev.kartat.hsl.fi/julkaisin-api
           CYPRESS_HSLID_CLIENT_ID: ${{ secrets.CYPRESS_HSLID_CLIENT_ID }}
           CYPRESS_HSLID_CLIENT_SECRET: ${{ secrets.CYPRESS_HSLID_CLIENT_SECRET }}
           CYPRESS_TESTING_HSLID_USERNAME: ${{ secrets.CYPRESS_TESTING_HSLID_USERNAME }}

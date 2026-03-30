@@ -1,4 +1,4 @@
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 const API_URL = Cypress.config().apiUrl;
 const TEST_PREFIX = 'CY-TEST';
@@ -87,9 +87,8 @@ describe('General tests', () => {
     cy.get('[data-cy=prompt-textfield]').should('have.value', uuid);
     cy.get('[data-cy=prompt-ok]').should('have.enabled');
 
-    cy.server();
-    cy.route('POST', `${API_URL}/templates`).as('postTemplate');
-    cy.route('DELETE', `${API_URL}/templates`).as('deleteTemplate');
+    cy.intercept('POST', `${API_URL}/templates`).as('postTemplate');
+    cy.intercept('DELETE', `${API_URL}/templates/*`).as('deleteTemplate');
 
     cy.get('[data-cy=prompt-ok]').click();
 
@@ -118,8 +117,7 @@ describe('General tests', () => {
   it('Create and delete build', () => {
     const uuid = `${TEST_PREFIX}-${uuidv4()}`;
 
-    cy.server();
-    cy.route('POST', `${API_URL}/builds`).as('postBuild');
+    cy.intercept('POST', `${API_URL}/builds`).as('postBuild');
 
     cy.get('[data-cy=create-build]').click();
     cy.get('[data-cy=prompt-textfield]').type(uuid, { force: true });
@@ -136,12 +134,16 @@ describe('General tests', () => {
       .its('body')
       .then(buildArr => {
         const build = buildArr.find(build => build.title === uuid);
-        cy.route('DELETE', `${API_URL}/builds/${build.id}`).as('deleteBuild');
+        if (build) {
+          cy.intercept('DELETE', `${API_URL}/builds/${build.id}`).as('deleteBuild');
+        }
 
         cy.get(`[data-cy=${uuid}-remove]`).click();
         cy.get('[data-cy=confirm-ok]').click();
 
-        cy.wait('@deleteBuild');
+        if (build) {
+          cy.wait('@deleteBuild');
+        }
         cy.get(`[data-cy=${uuid}]`).should('not.exist');
       });
   });
@@ -150,10 +152,9 @@ describe('General tests', () => {
     const buildTitle = `${TEST_PREFIX}-${uuidv4()}`;
     const templateId = `${TEST_PREFIX}-${uuidv4()}`;
 
-    cy.server();
-    cy.route('POST', `${API_URL}/builds`).as('postBuild');
-    cy.route('POST', `${API_URL}/templates`).as('postTemplate');
-    cy.route('POST', `${API_URL}/posters`).as('postPoster');
+    cy.intercept('POST', `${API_URL}/builds`).as('postBuild');
+    cy.intercept('POST', `${API_URL}/templates`).as('postTemplate');
+    cy.intercept('POST', `${API_URL}/posters`).as('postPoster');
 
     cy.get('[data-cy=create-build]').click();
     cy.get('[data-cy=prompt-textfield]').type(buildTitle, { force: true });
