@@ -14,6 +14,7 @@ RUN yarn
 COPY . ${WORK}
 
 ARG BUILD_ENV=prod
+RUN find ${WORK} -maxdepth 1 -name ".env*" -delete
 COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
 # TODO: Fix tests to enable yarn build again
