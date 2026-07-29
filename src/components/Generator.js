@@ -113,6 +113,15 @@ const Generator = props => {
                   defaultValueTrue={generatorStore.intervalTimetable}
                   onChange={value => generatorStore.setIntervalTimetable(value)}
                 />
+                {generatorStore.intervalTimetable && (
+                  <div style={{ marginLeft: '20px' }}>
+                    <Checkbox
+                      label="Sisällytä varikolähdöt"
+                      defaultValueTrue={generatorStore.showDepotRuns}
+                      onChange={value => generatorStore.setShowDepotRuns(value)}
+                    />
+                  </div>
+                )}
               </div>
             )}
             {generatorStore.component === 'Timetable' && (

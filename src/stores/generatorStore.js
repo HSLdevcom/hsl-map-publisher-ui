@@ -35,6 +35,7 @@ const store = observable({
   buildId: null,
   timetableAsA4Format: true,
   intervalTimetable: false,
+  showDepotRuns: false,
   timetableAsGreyscale: false,
   checkedRows: [],
   selectedRuleTemplates: [],
@@ -77,6 +78,11 @@ store.setTimetableA4Format = value => {
 
 store.setIntervalTimetable = value => {
   store.intervalTimetable = value;
+  if (!value) store.showDepotRuns = false;
+};
+
+store.setShowDepotRuns = value => {
+  store.showDepotRuns = value;
 };
 
 store.setTimetableGreyscale = value => {
@@ -209,6 +215,10 @@ store.generate = () => {
       store.timetableAsA4Format && store.component === componentsByLabel.Aikataulu,
     intervalTimetable:
       store.intervalTimetable && store.component === componentsByLabel.Pysäkkijuliste,
+    showDepotRuns:
+      store.showDepotRuns &&
+      store.intervalTimetable &&
+      store.component === componentsByLabel.Pysäkkijuliste,
     printTimetablesAsGreyscale:
       store.timetableAsGreyscale && store.component === componentsByLabel.Aikataulu,
     template: commonStore.currentTemplate.id,
