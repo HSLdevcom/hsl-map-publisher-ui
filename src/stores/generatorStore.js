@@ -41,7 +41,6 @@ const store = observable({
   selectedRuleTemplates: [],
   mapZones: true,
   mapZoneSymbols: true,
-  salesPoint: true,
   minimapZones: true,
   minimapZoneSymbols: true,
   legend: true,
@@ -150,10 +149,6 @@ store.setMapZoneSymbols = () => {
   store.mapZoneSymbols = !store.mapZoneSymbols;
 };
 
-store.setSalesPoint = () => {
-  store.salesPoint = !store.salesPoint;
-};
-
 store.setMinimapZones = () => {
   store.minimapZones = !store.minimapZones;
 };
@@ -227,7 +222,6 @@ store.generate = () => {
     mapZoneSymbols: componentsWithMapOptions.includes(store.component)
       ? store.mapZoneSymbols
       : null,
-    salesPoint: componentsWithMapOptions.includes(store.component) ? store.salesPoint : null,
     minimapZones: componentsWithMapOptions.includes(store.component) ? store.minimapZones : null,
     minimapZoneSymbols: componentsWithMapOptions.includes(store.component)
       ? store.minimapZoneSymbols
