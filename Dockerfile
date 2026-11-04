@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 ENV WORK=/opt/publisher
 
@@ -22,5 +22,5 @@ COPY .env.${BUILD_ENV} ${WORK}/.env.production
 RUN yarn bundle
 
 # Copy builded files from builder to nginx
-FROM nginx:1.21-alpine
+FROM nginx:1-alpine
 COPY --from=builder /opt/publisher/build /usr/share/nginx/html
