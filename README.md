@@ -1,40 +1,41 @@
-HSL Map Publisher UI
-====================
+# HSL Map Publisher UI
 
 React UI for `hsl-map-publisher`
 
-### Development
+## Development
 
 Requires Node 24 (see `.nvmrc`).
 
 Install dependencies:
 
-```
+```sh
 npm install
 ```
 
 Start development server:
-```
+
+```sh
 npm start
 ```
 
 Open [http://localhost:3000/](http://localhost:3000/)
 
 Lint, run unit tests and build (the same command CI runs):
-```
+
+```sh
 npm run check-and-build
 ```
 
-### Running in Docker
+## Running in Docker
 
-```
+```sh
 docker build --target production --build-arg BUILD_ENV=dev -t hsl-map-publisher-ui .
 docker run -d -p 80:80 hsl-map-publisher-ui
 ```
 
 `BUILD_ENV` selects which `.env.<BUILD_ENV>` file is baked into the bundle (default `prod`).
 
-### Releases
+## Releases
 
 CI (`.github/workflows/ci-cd.yml`) publishes `hsldevcom/hsl-map-publisher-ui:edge` from `main`
 and version tags from `v*` git tags. To release, run `npm version <x.y.z>` and

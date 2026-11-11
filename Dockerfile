@@ -19,6 +19,8 @@ COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
 RUN npm run build
 
-# Serve the built static files with nginx
+# Serve the built static files with nginx. It stays on the stock root master process
+# because k8s (map-publisher-ui.yaml) expects port 80; nginx workers drop to the nginx user.
 FROM nginx:1-alpine AS production
+# checkov:skip=CKV_DOCKER_3: stock nginx image must bind port 80 as root; workers run as nginx
 COPY --from=builder /opt/publisher/build /usr/share/nginx/html
