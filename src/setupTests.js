@@ -1,4 +1,9 @@
-const { TextDecoder, TextEncoder, ReadableStream, WritableStream, TransformStream } = require('util');
+import { TextDecoder, TextEncoder } from 'util';
+import {
+  ReadableStream as WebReadableStream,
+  WritableStream as WebWritableStream,
+  TransformStream as WebTransformStream,
+} from 'stream/web';
 
 if (typeof global.TextDecoder === 'undefined') {
   global.TextDecoder = TextDecoder;
@@ -9,8 +14,7 @@ if (typeof global.TextEncoder === 'undefined') {
 
 // Polyfill web streams for cheerio/undici in jest jsdom environment
 if (typeof global.ReadableStream === 'undefined') {
-  const { ReadableStream, WritableStream, TransformStream } = require('stream/web');
-  global.ReadableStream = ReadableStream;
-  global.WritableStream = WritableStream;
-  global.TransformStream = TransformStream;
+  global.ReadableStream = WebReadableStream;
+  global.WritableStream = WebWritableStream;
+  global.TransformStream = WebTransformStream;
 }

@@ -16,7 +16,7 @@
     "graphql-tag": "2",
     "history": "^4.9.0",
     "lodash": "^4.18.1",
-    "material-ui": "0",
+    "material-ui": "^0.20.2",
     "mobx": "^4",
     "mobx-react": "^5.2.3",
     "moment": "^2.29.4",
@@ -37,13 +37,18 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "bundle": "react-app-rewired build",
-    "build": "yarn lint && CI=true yarn test && yarn bundle",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
+    "test:unit": "CI=true react-app-rewired test --env=jsdom --watchAll=false --coverage --coverageReporters=lcov --coverageReporters=text-summary --reporters=default --reporters=jest-junit",
+    "lint": "NODE_ENV=development eslint src --fix",
+    "lint:check": "NODE_ENV=development eslint src",
+    "lint:mega": "npx --yes mega-linter-runner@9 --flavor all --release v9.6.0",
+    "lint:mega:fix": "npx --yes mega-linter-runner@9 --flavor all --release v9.6.0 --fix",
+    "lint:mega:changed": "npx --yes mega-linter-runner@9 --flavor all --release v9.6.0 -e VALIDATE_ALL_CODEBASE=false",
+    "check-and-build": "npm run lint:check && npm run test:unit && npm run build",
     "eject": "react-app-rewired eject",
-    "lint": "NODE_ENV=development yarn eslint src",
     "serve": "serve build",
-    "prettier": "prettier src/**/* --write",
+    "prettier": "prettier \"src/**/*.js\" --write",
     "cypress": "cypress open"
   },
   "devDependencies": {
@@ -62,10 +67,17 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "jest-fetch-mock": "^3.0.3",
-    "prettier": "^1.13.5",
+    "jest-junit": "^16.0.0",
+    "prettier": "^3.6.2",
     "react-app-rewired": "^2.0.0"
   },
-  "resolutions": {
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "overrides": {
     "sha.js": "2.4.12",
     "cipher-base": "1.0.6",
     "pbkdf2": "3.1.3",
@@ -74,35 +86,50 @@
     "eventsource": "1.1.2",
     "form-data": "2.5.6",
     "loader-utils": "1.4.2",
-    "minimatch": "3.1.4",
+    "minimatch": {
+      ".": "3.1.4",
+      "brace-expansion": "1.1.18"
+    },
     "shell-quote": "1.9.0",
     "node-fetch": "2.7.0",
     "nth-check": "2.0.1",
     "serialize-javascript": "7.0.3",
     "underscore": "1.13.8",
     "cheerio": "1.0.0-rc.12",
-    "lodash": "4.18.1",
+    "lodash": "$lodash",
     "node-forge": "1.4.0",
     "path-to-regexp": "0.1.13",
-    "minimatch/brace-expansion": "1.1.18",
     "browserslist": "^4.28.7",
-    "@istanbuljs/load-nyc-config/js-yaml": "3.15.2",
-    "eslint/@eslint/eslintrc/js-yaml": "^4.3.2",
-    "react-scripts/resolve-url-loader": "5.0.0",
-    "postcss/nanoid": "^3.3.18",
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "3.15.2"
+    },
+    "@eslint/eslintrc": {
+      "js-yaml": "^4.3.2"
+    },
+    "react-scripts": {
+      "resolve-url-loader": "5.0.0"
+    },
+    "postcss": {
+      "nanoid": "^3.3.18"
+    },
     "fast-uri": "^3.1.6",
     "tmp": "^0.2.6",
     "websocket-driver": "^0.7.5",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
-    "react-scripts/**/@svgr/plugin-svgo/svgo": "^2.8.4",
-    "react-scripts/**/postcss-svgo/svgo": "^2.8.4",
-    "react-scripts/**/webpack-dev-server/ws": "^8.21.0",
-    "react-scripts/**/jsdom/ws": "^7.5.11"
+    "@svgr/plugin-svgo": {
+      "svgo": "^2.8.4"
+    },
+    "postcss-svgo": {
+      "svgo": "^2.8.4"
+    },
+    "webpack-dev-server": {
+      "ws": "^8.21.0"
+    },
+    "jsdom": {
+      "ws": "^7.5.11"
+    }
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "engines": {
+    "node": ">=24"
+  }
 }

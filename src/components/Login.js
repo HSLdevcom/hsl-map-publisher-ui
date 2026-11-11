@@ -23,7 +23,9 @@ const Wrapper = styled.div`
   width: 405px;
   height: 275px;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 14px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 3px 14px rgba(0, 0, 0, 0.4);
   border-radius: 2px;
   text-align: center;
   overflow-y: auto;

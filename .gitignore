@@ -1,10 +1,11 @@
 /node_modules
 /coverage
 /build
+/lcov.info
+/junit.xml
+/megalinter-reports
 
 .DS_Store
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 !.env*
 .env.*.local

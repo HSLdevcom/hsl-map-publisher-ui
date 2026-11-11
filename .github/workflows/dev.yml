@@ -1,18 +1,25 @@
+---
 name: Test
 
-on:
+"on":
   pull_request:
     branches:
-      - development
+      - main
+
+permissions: {}
 
 jobs:
   test-dev:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        with:
+          persist-credentials: false
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7  # v6.10.9
         env:
           CYPRESS_BASE_URL: https://dev.kartat.hsl.fi/julkaisin
           CYPRESS_API_URL: https://dev.kartat.hsl.fi/julkaisin-api
@@ -21,13 +28,13 @@ jobs:
           CYPRESS_TESTING_HSLID_USERNAME: ${{ secrets.CYPRESS_TESTING_HSLID_USERNAME }}
           CYPRESS_TESTING_HSLID_PASSWORD: ${{ secrets.CYPRESS_TESTING_HSLID_PASSWORD }}
       - name: Upload screenshot artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       - name: Upload video artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         if: always()
         with:
           name: cypress-videos

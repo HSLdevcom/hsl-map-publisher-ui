@@ -1,14 +1,14 @@
-FROM node:22-alpine AS builder
+FROM hsldevcom/infodevops-docker-base-images:1.1.0-24-node AS builder
 
 ENV WORK=/opt/publisher
+# Cypress is only used for local/e2e testing; skip its binary download in image builds.
+ENV CYPRESS_INSTALL_BINARY=0
 
-# Create app directory
-RUN mkdir -p ${WORK}
 WORKDIR ${WORK}
 
 # Install app dependencies
-COPY package.json yarn.lock ${WORK}/
-RUN yarn
+COPY package.json package-lock.json ${WORK}/
+RUN npm ci
 
 # Bundle app source
 COPY . ${WORK}
@@ -17,10 +17,8 @@ ARG BUILD_ENV=prod
 RUN find ${WORK} -maxdepth 1 -name ".env*" -delete
 COPY .env.${BUILD_ENV} ${WORK}/.env.production
 
-# TODO: Fix tests to enable yarn build again
-# RUN yarn build
-RUN yarn bundle
+RUN npm run build
 
-# Copy builded files from builder to nginx
-FROM nginx:1-alpine
+# Serve the built static files with nginx
+FROM nginx:1-alpine AS production
 COPY --from=builder /opt/publisher/build /usr/share/nginx/html

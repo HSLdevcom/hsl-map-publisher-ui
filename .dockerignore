@@ -4,3 +4,6 @@ node_modules
 coverage
 build
 .env
+junit.xml
+lcov.info
+megalinter-reports

@@ -51,7 +51,12 @@ const TextFieldContainer = styled.div`
 const TextWrapper = styled.div`
   padding-top: 8px;
   align-self: center;
-  font-family: Gotham Rounded SSm A, Gotham Rounded SSm B, Arial, Georgia, Serif;
+  font-family:
+    Gotham Rounded SSm A,
+    Gotham Rounded SSm B,
+    Arial,
+    Georgia,
+    Serif;
 `;
 
 const InputWrapper = styled.div`

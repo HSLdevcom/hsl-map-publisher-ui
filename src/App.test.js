@@ -50,6 +50,7 @@ const MOCK_DATA = {
     stopTariff: '01',
     stopType: '04',
     stopZone: 'A',
+    modes: { nodes: ['BUS'] },
   },
 };
 
