@@ -29,11 +29,17 @@ npm run check-and-build
 ## Running in Docker
 
 ```sh
-docker build --target production --build-arg BUILD_ENV=dev -t hsl-map-publisher-ui .
-docker run -d -p 80:80 hsl-map-publisher-ui
+docker build --target production -t hsl-map-publisher-ui .
+docker run -d -p 80:80 -e APP_ENV=dev hsl-map-publisher-ui
 ```
 
-`BUILD_ENV` selects which `.env.<BUILD_ENV>` file is baked into the bundle (default `prod`).
+One image serves every environment. At container start,
+`docker/generate-config.sh` writes `config.js` (`window.PublisherUiConfig`, read by
+`src/config.js`):
+
+- `APP_ENV=dev|prod` loads the `REACT_APP_*` values of `.env.<APP_ENV>`.
+- Any `REACT_APP_*` environment variable overrides a single value.
+- Values left unset fall back to the ones baked in at build time (`.env.prod`).
 
 ## Releases
 

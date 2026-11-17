@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import hslLogo from '../assets/hsl-logo.png';
 import InfoIcon from './icons/InfoIcon';
 import LoginIcon from './icons/LoginIcon';
+import config from '../config';
 
 const Root = styled.div`
   position: fixed;
@@ -96,7 +97,7 @@ const InfoWrapper = styled.div`
 class Login extends Component {
   openLoginForm = () => {
     window.location.replace(
-      `${process.env.REACT_APP_LOGIN_PROVIDER_URI}/openid/auth?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
+      `${config.loginProviderUri}/openid/auth?client_id=${config.clientId}&redirect_uri=${config.redirectUri}&response_type=code&scope=email+https://oneportal.trivore.com/scope/groups.readonly`,
     );
   };
 
@@ -108,7 +109,7 @@ class Login extends Component {
             title={
               <React.Fragment>
                 Käytä nimiavaruuteen kirjattua tunnusta. <br />
-                {`Nimiavaruus: ${process.env.REACT_APP_NAMESPACE}`}
+                {`Nimiavaruus: ${config.namespace}`}
               </React.Fragment>
             }
             placement="right-end">

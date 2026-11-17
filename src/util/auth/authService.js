@@ -1,3 +1,5 @@
+import config from '../../config';
+
 const RequestMethod = {
   GET: 'GET',
   POST: 'POST',
@@ -11,8 +13,7 @@ const Endpoint = {
   LOGOUT: '/logout',
 };
 
-const BACKEND_API_URL =
-  process.env.REACT_APP_API_URL || 'https://dev-kartat.hsldev.com/julkaisin-api';
+const BACKEND_API_URL = config.apiUrl || 'https://dev-kartat.hsldev.com/julkaisin-api';
 
 const sendRequest = async (method, requestBody) => {
   try {

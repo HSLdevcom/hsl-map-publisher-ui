@@ -3,9 +3,10 @@ import { HttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
 import { forEach } from 'lodash';
 import get from 'lodash/get';
+import config from '../config';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
-const JORE_API_URL = process.env.REACT_APP_JORE_API_URL || 'https://kartat.hsl.com/jore/graphql';
+const API_URL = config.apiUrl || 'http://localhost:4000';
+const JORE_API_URL = config.joreApiUrl || 'https://kartat.hsl.com/jore/graphql';
 
 async function createRequest(path, method = 'GET', body) {
   const options =
