@@ -19,7 +19,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Cypress run
-        uses: cypress-io/github-action@f790eee7a50d9505912f50c2095510be7de06aa7  # v6.10.9
+        uses: cypress-io/github-action@4ce68f262a3888d22cf3175d62010a145ba737ee  # v7.4.8
         env:
           CYPRESS_BASE_URL: https://dev.kartat.hsl.fi/julkaisin
           CYPRESS_API_URL: https://dev.kartat.hsl.fi/julkaisin-api
