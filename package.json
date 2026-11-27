@@ -9,7 +9,7 @@
     "apollo-link": "^1.2.2",
     "apollo-link-http": "^1.5.4",
     "cypress": "15.21",
-    "cypress-commands": "^1.0.0",
+    "cypress-commands": "^3.0.0",
     "enzyme": "3",
     "enzyme-adapter-react-16": "1",
     "graphql": "15",
